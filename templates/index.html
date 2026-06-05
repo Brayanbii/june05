@@ -2,83 +2,203 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Adivina el Número</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nokia Cup 2026 - Control Center</title>
     <style>
+        :root {
+            --nokia-screen: #adc6a5;
+            --nokia-dark: #1e251c;
+            --nokia-border: #4a5343;
+        }
         body {
-            background: #f4f4f4;
-            font-family: Arial;
+            background-color: #232731;
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--nokia-dark);
             display: flex;
-            height: 100vh;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
         }
-        .card {
-            background: white;
-            padding: 25px 35px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
+        .nokia-phone {
+            background: #4f5a69;
+            border-radius: 35px;
+            padding: 25px 20px;
+            box-shadow: 0px 15px 35px rgba(0,0,0,0.6);
+            width: 100%;
+            max-width: 440px;
+            border: 5px solid #38404c;
+        }
+        .screen {
+            background-color: var(--nokia-screen);
+            border: 8px solid var(--nokia-border);
+            border-radius: 6px;
+            padding: 15px;
+            min-height: 420px;
+            box-shadow: inset 0px 0px 12px rgba(0,0,0,0.3);
+        }
+        h1, h2 {
             text-align: center;
-            width: 300px;
+            text-transform: uppercase;
+            margin-top: 0;
+            border-bottom: 2px dashed var(--nokia-dark);
+            padding-bottom: 5px;
+            font-size: 1.25rem;
         }
-        input {
-            padding: 8px;
-            width: 90%;
-            margin-top: 10px;
-            margin-bottom: 15px;
+        h2 { font-size: 1.1rem; margin-top: 20px; }
+        .form-group {
+            margin-bottom: 8px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+            background: transparent;
+            border: 2px solid var(--nokia-dark);
+            color: var(--nokia-dark);
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            background-color: rgba(0,0,0,0.05);
+            outline: none;
         }
         button {
-            padding: 10px;
             width: 100%;
-            background: #007bff;
-            color: white;
+            padding: 8px;
+            background: var(--nokia-dark);
+            color: var(--nokia-screen);
             border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .button {
-            padding: 10px;
-            width: 100%;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .button:hover {
-            background: #0056b3;
-        }
-        a{
-            text-decoration:none;
-            font-family: Arial;
-        }
-        .msg {
-            margin-top: 10px;
-            font-size: 18px;
+            font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
-            color: #333;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 2px 2px 0px var(--nokia-border);
+        }
+        button:active {
+            box-shadow: 0px 0px 0px;
+        }
+        .alert {
+            padding: 6px;
+            margin: 10px 0;
+            border: 2px solid var(--nokia-dark);
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        .alert-success { background-color: rgba(0, 150, 0, 0.15); }
+        .alert-danger { background-color: rgba(200, 0, 0, 0.15); }
+        
+        .tabla-scroll {
+            margin-top: 10px;
+            overflow-x: auto;
+            max-height: 180px;
+            border-top: 2px dashed var(--nokia-dark);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+        th {
+            border-bottom: 2px solid var(--nokia-dark);
+            text-transform: uppercase;
+            text-align: left;
+        }
+        td, th {
+            padding: 4px;
+        }
+        .btn-play {
+            background: var(--nokia-dark);
+            color: var(--nokia-screen);
+            padding: 1px 4px;
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
         }
     </style>
 </head>
-
 <body>
-<div class="card">
-    <h2>Adivina el número</h2>
-    <p>Estoy pensando un número entre 1 y 100</p>
 
-    <form method="POST">
-        <input type="number" name="intento" placeholder="Ingresa un número" required>
-        <button type="submit">Probar</button>
-    </form>
+<div class="nokia-phone">
+    <div class="screen">
+        <h1>🎮 NOKIA CUP 2026</h1>
+        
+        {% if mensaje %}
+            <div class="alert alert-{{ tipo_mensaje }}">
+                {{ mensaje }}
+            </div>
+        {% endif %}
 
-    {% if mensaje %}
-    <p class="msg">{{ mensaje }}</p>
-    {% endif %}
-    <br>
+        <form method="POST" action="/">
+            <div class="form-group">
+                <label>Documento ID:</label>
+                <input type="text" name="documento" required placeholder="Número identificador">
+            </div>
+            <div class="form-group">
+                <label>Nombre DT / Jugador:</label>
+                <input type="text" name="nombre" required placeholder="Tu Nickname">
+            </div>
+            <div class="form-group">
+                <label>Correo Electrónico:</label>
+                <input type="email" name="correo" required placeholder="entrenador@nokia.com">
+            </div>
+            <div class="form-group">
+                <label>Selección Mundialista:</label>
+                <select name="equipo" required>
+                    <option value="">-- Elige un País --</option>
+                    <option value="Colombia">Colombia 🇨🇴</option>
+                    <option value="México">México 🇲🇽</option>
+                    <option value="Estados Unidos">Estados Unidos 🇺🇸</option>
+                    <option value="Canadá">Canadá 🇨🇦</option>
+                    <option value="Argentina">Argentina 🇦🇷</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Ficha del Grupo:</label>
+                <input type="text" name="ficha" required placeholder="Ej: 271123">
+            </div>
+            <button type="submit">💾 Guardar Registro</button>
+        </form>
+
+        <h2>📊 LÍDERES DE LA COPA</h2>
+        <div class="tabla-scroll">
+            {% if jugadores %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DT (Doc)</th>
+                            <th>País (Ficha)</th>
+                            <th>Estadísticas</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for j in jugadores %}
+                            <tr>
+                                <td><strong>{{ j.nombre }}</strong><br>ID: {{ j.documento }}</td>
+                                <td>{{ j.equipo }}<br>F: {{ j.ficha }}</td>
+                                <td>🏆 {{ j.puntos }} PTS<br>⚽ {{ j.goles_favor }} GF</td>
+                                <td><a href="/simular/{{ j.documento }}" class="btn-play">🕹️ Jugar</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="font-size: 0.75rem; text-align: center; margin-top: 10px;">Ningún DT registrado en MongoDB Atlas.</p>
+            {% endif %}
+        </div>
+    </div>
 </div>
-</body>
 
+</body>
 </html>
