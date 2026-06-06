@@ -2,348 +2,537 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SENA - Interactive Match Engine</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA 2026 - Nokia Soccer League Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #030408;
+            background-color: #020204;
             color: #fff;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Courier Prime', monospace;
             margin: 0;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
-            background-image: radial-gradient(circle at center, #0c1020 0%, #030408 100%);
         }
 
-        .hud {
+        .arcade-cabinet {
+            background: #12131a;
+            border: 4px solid #232533;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 800px;
-            background: rgba(13, 15, 26, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 15px 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            margin-bottom: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            box-sizing: border-box;
-        }
-
-        .team {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            max-width: 320px;
-        }
-
-        .flag {
-            width: 46px;
-            height: 32px;
-            object-fit: cover;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        }
-
-        .score-center {
-            display: flex;
-            align-items: center;
             gap: 20px;
         }
 
-        .score {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.2rem;
-            font-weight: 900;
-            color: #00ff87;
-            text-shadow: 0 0 15px rgba(0,255,135,0.5);
+        .screen-container {
+            position: relative;
         }
 
-        .timer {
+        /* Marcador Vertical Retro */
+        .hud-retro {
+            background: #08090d;
+            border: 2px solid #3cff00;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.6rem;
-            background: #181d30;
-            padding: 6px 18px;
-            border-radius: 30px;
-            color: #ff4d4d;
-            border: 1px solid rgba(255,77,77,0.2);
-            box-shadow: 0 0 10px rgba(255,77,77,0.2);
         }
+
+        .hud-team { font-size: 0.9rem; color: #fff; text-transform: uppercase; }
+        .hud-score { font-size: 1.8rem; color: #3cff00; font-weight: 900; }
 
         canvas {
-            border-radius: 16px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+            background: #1c522a;
+            border: 4px solid #fff;
+            border-radius: 4px;
+            display: block;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
         }
 
-        .controls {
-            margin-top: 20px;
-            color: #505875;
-            font-size: 0.9rem;
+        /* Panel Lateral del Campeonato */
+        .tournament-panel {
+            width: 260px;
+            background: #08090d;
+            border: 2px solid #232533;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tournament-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: #dfb857;
+            text-align: center;
+            margin-top: 0;
+            border-bottom: 1px solid #232533;
+            padding-bottom: 10px;
+        }
+
+        .phase-badge {
+            background: #1d2030;
+            color: #00ffaa;
+            text-align: center;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 3px;
         }
 
-        #gameOverScreen {
-            position: fixed;
+        .fixture-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Pantallas Flotantes */
+        .overlay-screen {
+            position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 4, 8, 0.95);
-            display: none;
+            background: rgba(5, 6, 10, 0.95);
+            border-radius: 4px;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(15px);
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        #gameOverScreen h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
-            background: linear-gradient(180deg, #fff, #39A900);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-        }
+        .overlay-screen h3 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: #dfb857; margin-bottom: 10px; }
 
-        .btn-finish {
-            background: linear-gradient(135deg, #00ff87, #00b359);
+        .btn-arcade {
+            background: #39A900;
+            color: #fff;
             border: none;
-            padding: 18px 45px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 900;
-            border-radius: 14px;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
             cursor: pointer;
             text-transform: uppercase;
-            color: #000;
-            box-shadow: 0 10px 25px rgba(0,255,135,0.3);
-            transition: 0.2s;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 4px 10px rgba(57,169,0,0.4);
+            margin-top: 15px;
         }
 
-        .btn-finish:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 35px rgba(0,255,135,0.5);
-        }
+        .btn-arcade:hover { background: #4cd400; }
     </style>
 </head>
 <body>
 
-    <div class="hud">
-        <div class="team">
-            <img src="https://flagcdn.com/w80/{{ estudiante.iso }}.png" class="flag" alt="Local">
-            <div>
-                <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">{{ estudiante.nombre }}</h3>
-                <span style="font-size: 0.8rem; color: #39A900; font-weight: bold;">{{ estudiante.programa }}</span>
-            </div>
+<div class="arcade-cabinet">
+    <div class="screen-container">
+        <div class="hud-retro">
+            <div class="hud-team" id="nameL">{{ dt.equipo }}</div>
+            <div class="hud-score"><span id="scoreL">0</span>-<span id="scoreV">0</span></div>
+            <div class="hud-team" id="nameV" style="color: #ff4d4d;">IA</div>
+            <div class="timer" id="timerDisplay" style="color: #ffcc00; font-weight: bold;">45'</div>
         </div>
-        <div class="score-center">
-            <div class="score" id="scoreL">0</div>
-            <div class="timer" id="timerDisplay">60</div>
-            <div class="score" id="scoreV" style="color: #ff4d4d; text-shadow: 0 0 15px rgba(255,77,77,0.5);">0</div>
-        </div>
-        <div class="team" style="flex-direction: row-reverse; text-align: right;">
-            <img src="https://flagcdn.com/w80/{{ rival.iso }}.png" class="flag" alt="Rival">
-            <div>
-                <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">Rival Académico</h3>
-                <span style="font-size: 0.8rem; color: #ffaa00; font-weight: bold;">{{ rival.nombre }}</span>
+
+        <canvas id="gameCanvas" width="440" height="600"></canvas>
+
+        <div id="screenIntro" class="overlay-screen">
+            <h3>MUNDIAL FIFA 2026</h3>
+            <p style="color: #8b8f9e; font-size: 0.85rem;">Inspirado en Nokia Soccer League. Controlas al jugador más cercano al balón con círculos concéntricos.</p>
+            <div style="font-size: 0.75rem; color: #00ffaa; text-align: left; margin: 10px 0;">
+                🕹️ MOVER: Flechas / WASD<br>
+                ⚽ PASAR: Tecla X / M<br>
+                🔥 PATEAR AL ARCO: Barra Espaciadora
             </div>
+            <button class="btn-arcade" onclick="iniciarPartidoActual()">Jugar Cuartos</button>
+        </div>
+
+        <div id="screenPostMatch" class="overlay-screen" style="display: none;">
+            <h3 id="postMatchTitle">FIN DEL PARTIDO</h3>
+            <p id="postMatchDesc" style="font-size: 0.9rem; margin-bottom: 20px;"></p>
+            <button class="btn-arcade" id="btnPostMatchAction" onclick="avanzarTorneo()">Siguiente Fase</button>
         </div>
     </div>
 
-    <canvas id="gameCanvas" width="800" height="450"></canvas>
-    
-    <div class="controls">🕹️ MANDOS: W,A,S,D / ARROWS | ⚡ POTENCIA: ESPACIO (KICK)</div>
-
-    <div id="gameOverScreen">
-        <h1>CICLO COMPLETADO</h1>
-        <p style="color: #6c7693; font-size: 1.2rem; margin-bottom: 40px;">Métricas consolidadas en base de datos.</p>
-        <button class="btn-finish" onclick="volverAlMenu()">Persistir Datos e Ir al Panel</button>
+    <div class="tournament-panel">
+        <h2>FIXTURE FIFA 2026</h2>
+        <div class="phase-badge" id="currentPhaseBadge">CUARTOS DE FINAL</div>
+        <div style="flex: 1; overflow-y: auto;" id="fixtureContainer">
+            </div>
+        <div style="font-size: 0.7rem; color: #505875; text-align: center; border-top: 1px solid #232533; padding-top: 10px;">
+            Métricas sincronizadas con MongoDB Atlas
+        </div>
     </div>
+</div>
 
-    <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
 
-        const doc_id = "{{ estudiante.documento }}";
-        const colorL1 = "{{ estudiante.color1 }}"; const colorL2 = "{{ estudiante.color2 }}";
-        const colorV1 = "{{ rival.color1 }}"; const colorV2 = "{{ rival.color2 }}";
+    // Datos del DT Inyectados por Python
+    const documentoDT = "{{ dt.documento }}";
+    const miEquipoNombre = "{{ dt.equipo }}";
+    const miColor1 = "{{ dt.color1 }}";
+    const miColor2 = "{{ dt.color2 }}";
+    const todasSelecciones = {{ todas_selecciones|tojson }};
 
-        let scoreL = 0, scoreV = 0, timeLeft = 60, isGameOver = false;
-        const keys = {}; const friction = 0.96;
+    // Variables de Control del Campeonato (Fases del Torneo en Cliente)
+    let fasesValidas = ["CUARTOS DE FINAL", "SEMIFINAL", "GRAN FINAL", "CAMPEÓN"];
+    let faseActualIndex = 0;
+    let rivalActual = null;
+    let fixtureMundial = [];
 
-        // Variables de Efectos Visuales (Pro Juicing)
-        let screenShake = 0;
-        let particles = [];
-        let ballHistory = [];
+    // Estadísticas Acumuladas de la Sesión para Mongo
+    let totalPartidosJugados = 0;
+    let totalPuntosAcumulados = 0;
+    let totalGolesFavor = 0;
+    let totalGolesContra = 0;
 
-        const ball = { x: 400, y: 225, radius: 9, vx: 0, vy: 0 };
-        const p1 = { x: 200, y: 225, radius: 16, vx: 0, vy: 0, speed: 0.65, maxSpeed: 4.5, color: colorL1, outline: colorL2 };
-        const p2 = { x: 600, y: 225, radius: 16, vx: 0, vy: 0, speed: 0.48, maxSpeed: 3.8, color: colorV1, outline: colorV2 };
+    // Estado del Partido de Fútbol Vertical
+    let scoreL = 0, scoreV = 0, timeRemaining = 45, gameInterval = null;
+    let keys = {};
+    const friction = 0.95;
 
-        const goalH = 130, goalW = 15; const goalY = (canvas.height / 2) - (goalH / 2);
+    // Entidades de Campo
+    const ball = { x: 220, y: 300, radius: 7, vx: 0, vy: 0 };
+    let equipoLocal = [];
+    let equipoRival = [];
 
-        window.addEventListener("keydown", e => keys[e.key] = true);
-        window.addEventListener("keyup", e => keys[e.key] = false);
+    window.addEventListener("keydown", e => { keys[e.key.toLowerCase()] = true; handleActionKeys(e.key.toLowerCase()); });
+    window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
 
-        function createExplosion(x, y, color) {
-            for(let i=0; i<25; i++) {
-                particles.push({
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 8,
-                    vy: (Math.random() - 0.5) * 8,
-                    radius: Math.random() * 3 + 2,
-                    alpha: 1,
-                    color: color
-                });
-            }
-        }
+    // Inicializar el Fixture Estructurado del Mundial
+    function generarFixtureMundial() {
+        let pool = todasSelecciones.filter(s => s.nombre !== miEquipoNombre);
+        // Mezclar aleatoriamente las selecciones rivales
+        pool.sort(() => Math.random() - 0.5);
 
-        function drawPitch() {
-            // Fondo sintético premium estilo Cyberpunk
-            let bgGrad = ctx.createRadialGradient(400, 225, 50, 400, 225, 400);
-            bgGrad.addColorStop(0, "#153a21");
-            bgGrad.addColorStop(1, "#0a1c10");
-            ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Seleccionar rivales para Cuartos de Final
+        rivalActual = pool[0];
+        document.getElementById("nameV").innerText = rivalActual.nombre.substring(0,3).toUpperCase();
+        
+        fixtureMundial = [
+            { equipo1: miEquipoNombre, equipo2: rivalActual.nombre, estado: "PENDIENTE" },
+            { equipo1: pool[1].nombre, equipo2: pool[2].nombre, estado: "PENDIENTE" },
+            { equipo1: pool[3].nombre, equipo2: pool[4].nombre, estado: "PENDIENTE" },
+            { equipo1: pool[5].nombre, equipo2: pool[6].nombre, estado: "PENDIENTE" }
+        ];
+        renderizarVisualFixture();
+    }
 
-            // Líneas de campo de neón sutil
-            ctx.strokeStyle = "rgba(255,255,255,0.15)";
-            ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.moveTo(400, 0); ctx.lineTo(400, 450); ctx.stroke();
-            ctx.beginPath(); ctx.arc(400, 225, 70, 0, Math.PI*2); ctx.stroke();
-            
-            // Áreas
-            ctx.strokeRect(0, goalY - 30, 90, goalH + 60);
-            ctx.strokeRect(canvas.width - 90, goalY - 30, 90, goalH + 60);
+    function renderizarVisualFixture() {
+        const container = document.getElementById("fixtureContainer");
+        container.innerHTML = "";
+        fixtureMundial.forEach(match => {
+            let div = document.createElement("div");
+            div.className = "fixture-item";
+            div.innerHTML = `<span>${match.equipo1.substring(0,10)}</span> <b style="color:#dfb857;">VS</b> <span>${match.equipo2.substring(0,10)}</span>`;
+            container.appendChild(div);
+        });
+    }
 
-            // Arcos Brillantes
-            ctx.fillStyle = "rgba(0, 255, 135, 0.2)";
-            ctx.fillRect(0, goalY, goalW, goalH);
-            ctx.fillStyle = "rgba(255, 77, 77, 0.2)";
-            ctx.fillRect(canvas.width - goalW, goalY, goalW, goalH);
-        }
+    // Configurar alineación de jugadores (Perspectiva Vertical de Nokia Soccer)
+    function armarEquipos() {
+        // Tu Equipo (Ataca hacia ARRIBA, defiende su arco ABAJO)
+        equipoLocal = [
+            { id: 0, rol: "POR", x: 220, y: 570, radius: 12, color: "#ffaa00", outline: "#000", vx:0, vy:0 },
+            { id: 1, rol: "DEF", x: 140, y: 460, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 },
+            { id: 2, rol: "MED", x: 220, y: 360, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 },
+            { id: 3, rol: "DEL", x: 300, y: 240, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 }
+        ];
 
-        function drawEntity(entity, isBall=false) {
-            ctx.save();
-            // Sombras dinámicas
-            ctx.shadowBlur = isBall ? 12 : 8;
-            ctx.shadowColor = isBall ? "#fff" : entity.color;
-            ctx.beginPath(); ctx.arc(entity.x, entity.y, entity.radius, 0, Math.PI * 2);
-            ctx.fillStyle = isBall ? "#ffffff" : entity.color; ctx.fill();
-            ctx.restore();
+        // Equipo Rival IA (Ataca hacia ABAJO, defiende su arco ARRIBA)
+        equipoRival = [
+            { id: 4, rol: "POR", x: 220, y: 30, radius: 12, color: "#00e5ff", outline: "#000", vx:0, vy:0 },
+            { id: 5, rol: "DEF", x: 280, y: 140, radius: 11, color: rivalActual.color1, outline: rivalActual.color2, vx:0, vy:0 },
+            { id: 6, rol: "MED", x: 220, y: 240, radius: 11, color: rivalActual.color1, outline: rivalActual.color2, vx:0, vy:0 },
+            { id: 7, rol: "DEL", x: 140, y: 360, radius: 11, color: rivalActual.color1, outline: rivalActual.color2, vx:0, vy:0 }
+        ];
+    }
 
-            if (!isBall) {
-                ctx.strokeStyle = entity.outline; ctx.lineWidth = 4; ctx.stroke();
-                // Detalle interno estético para jugadores
-                ctx.fillStyle = "rgba(255,255,255,0.2)";
-                ctx.beginPath(); ctx.arc(entity.x, entity.y, entity.radius - 6, 0, Math.PI*2); ctx.fill();
-            }
-        }
-
-        function handleCollision(obj1, obj2, isKicking) {
-            let dx = obj1.x - obj2.x; let dy = obj1.y - obj2.y; let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < obj1.radius + obj2.radius) {
-                let angle = Math.atan2(dy, dx); 
-                let power = isKicking ? 15 : 4.5;
-                obj2.vx -= Math.cos(angle) * power; obj2.vy -= Math.sin(angle) * power;
-                if (isKicking) screenShake = 6; // Pequeña sacudida al golpear fuerte
-            }
-        }
-
-        function update() {
-            if (isGameOver) return;
-
-            // Movimiento local fluido (Teclado híbrido)
-            if ((keys["ArrowUp"] || keys["w"]) && p1.vy > -p1.maxSpeed) p1.vy -= p1.speed;
-            if ((keys["ArrowDown"] || keys["s"]) && p1.vy < p1.maxSpeed) p1.vy += p1.speed;
-            if ((keys["ArrowLeft"] || keys["a"]) && p1.vx > -p1.maxSpeed) p1.vx -= p1.speed;
-            if ((keys["ArrowRight"] || keys["d"]) && p1.vx < p1.maxSpeed) p1.vx += p1.speed;
-
-            // IA optimizada predictiva
-            let dxAI = ball.x - p2.x; let dyAI = ball.y - p2.y; let angleAI = Math.atan2(dyAI, dxAI);
-            p2.vx += Math.cos(angleAI) * p2.speed; p2.vy += Math.sin(angleAI) * p2.speed;
-
-            p1.vx *= friction; p1.vy *= friction; p2.vx *= friction; p2.vy *= friction; ball.vx *= friction; ball.vy *= friction;
-            p1.x += p1.vx; p1.y += p1.vy; p2.x += p2.vx; p2.y += p2.vy; ball.x += ball.vx; ball.y += ball.vy;
-
-            // Guardar historial para efecto estela (balón)
-            ballHistory.push({x: ball.x, y: ball.y});
-            if (ballHistory.length > 6) ballHistory.shift();
-
-            // Bordes físicos
-            [p1, p2, ball].forEach(obj => {
-                if (obj.x - obj.radius < 0) { obj.x = obj.radius; obj.vx *= -0.8; }
-                if (obj.x + obj.radius > canvas.width) { obj.x = canvas.width - obj.radius; obj.vx *= -0.8; }
-                if (obj.y - obj.radius < 0) { obj.y = obj.radius; obj.vy *= -0.8; }
-                if (obj.y + obj.radius > canvas.height) { obj.y = canvas.height - obj.radius; obj.vy *= -0.8; }
-            });
-
-            handleCollision(p1, ball, keys[" "]); handleCollision(p2, ball, false);
-
-            // Goles
-            if (ball.x - ball.radius <= goalW && ball.y > goalY && ball.y < goalY + goalH) { 
-                scoreV++; document.getElementById("scoreV").innerText = scoreV; 
-                createExplosion(ball.x, ball.y, "#ff4d4d"); screenShake = 20; resetCancha(); 
-            }
-            if (ball.x + ball.radius >= canvas.width - goalW && ball.y > goalY && ball.y < goalY + goalH) { 
-                scoreL++; document.getElementById("scoreL").innerText = scoreL; 
-                createExplosion(ball.x, ball.y, "#00ff87"); screenShake = 20; resetCancha(); 
-            }
-        }
-
-        function resetCancha() { ball.x = 400; ball.y = 225; ball.vx = 0; ball.vy = 0; p1.x = 200; p1.y = 225; p2.x = 600; p2.y = 225; }
-
-        function loop() {
-            ctx.save();
-            // Aplicar Screen Shake en goles o balonazos
-            if (screenShake > 0) {
-                let dx = (Math.random() - 0.5) * screenShake;
-                let dy = (Math.random() - 0.5) * screenShake;
-                ctx.translate(dx, dy);
-                screenShake *= 0.9;
-                if (screenShake < 0.5) screenShake = 0;
-            }
-
-            update();
-            drawPitch();
-
-            // Renderizar Estela de movimiento del balón (Trail)
-            ballHistory.forEach((pos, i) => {
-                ctx.beginPath(); ctx.arc(pos.x, pos.y, ball.radius * (i/ballHistory.length), 0, Math.PI*2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${0.15 * (i/ballHistory.length)})`; ctx.fill();
-            });
-
-            // Dibujar Partículas de Goles
-            particles.forEach((p, idx) => {
-                p.x += p.vx; p.y += p.vy; p.alpha -= 0.02;
-                if (p.alpha <= 0) particles.splice(idx, 1);
-                ctx.save(); ctx.globalAlpha = p.alpha;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
-                ctx.fillStyle = p.color; ctx.fill(); ctx.restore();
-            });
-
-            drawEntity(p1); drawEntity(p2); drawEntity(ball, true);
-            ctx.restore();
-
-            if (!isGameOver) requestAnimationFrame(loop);
-        }
-
-        const timer = setInterval(() => {
-            timeLeft--; document.getElementById("timerDisplay").innerText = timeLeft;
-            if (timeLeft <= 0) { clearInterval(timer); isGameOver = true; document.getElementById("gameOverScreen").style.display = "flex"; }
+    function iniciarPartidoActual() {
+        document.getElementById("screenIntro").style.display = "none";
+        document.getElementById("screenPostMatch").style.display = "none";
+        scoreL = 0; scoreV = 0; timeRemaining = 45;
+        document.getElementById("scoreL").innerText = "0";
+        document.getElementById("scoreV").innerText = "0";
+        resetPosicionesCancha();
+        armarEquipos();
+        
+        if (gameInterval) clearInterval(gameInterval);
+        gameInterval = setInterval(gameLoop, 1000 / 60);
+        
+        // Reloj del Partido
+        timerId = setInterval(() => {
+            timeRemaining--;
+            document.getElementById("timerDisplay").innerText = timeRemaining + "'";
+            if (timeRemaining <= 0) finalizacionPartido();
         }, 1000);
+    }
 
-        function volverAlMenu() {
-            fetch('/guardar_resultado', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ documento: doc_id, goles_l: scoreL, goles_v: scoreV })
-            }).then(() => window.location.href = "/");
+    function resetPosicionesCancha() {
+        ball.x = 220; ball.y = 300; ball.vx = 0; ball.vy = 0;
+    }
+
+    // Identificar dinámicamente qué jugador controlas según cercanía al balón (Mecánica Nokia)
+    function obtenerJugadorMasCercano() {
+        let masCercano = equipoLocal[1];
+        let dMin = Infinity;
+        equipoLocal.forEach(p => {
+            if (p.rol !== "POR") {
+                let d = Math.hypot(p.x - ball.x, p.y - ball.y);
+                if (d < dMin) { dMin = d; masCercano = p; }
+            }
+        });
+        return masCercano;
+    }
+
+    function gameLoop() {
+        actualizarFisicas();
+        dibujarCanchaCompleta();
+    }
+
+    function actualizarFisicas() {
+        let usuarioActivo = obtenerJugadorMasCercano();
+
+        // Mandos de Movimiento del Jugador Activo
+        if (keys["arrowup"] || keys["w"]) usuarioActivo.vy -= 0.6;
+        if (keys["arrowdown"] || keys["s"]) usuarioActivo.vy += 0.6;
+        if (keys["arrowleft"] || keys["a"]) usuarioActivo.vx -= 0.6;
+        if (keys["arrowright"] || keys["d"]) usuarioActivo.vx += 0.6;
+
+        // Fricción y Límites para el Humano
+        equipoLocal.forEach(p => {
+            p.vx *= friction; p.vy *= friction;
+            p.x += p.vx; p.y += p.vy;
+            restringirBordes(p);
+        });
+
+        // IA Avanzada del Rival y Compañeros
+        procesarInteligenciaArtificial(usuarioActivo);
+
+        // Movimiento Físico del Balón
+        ball.vx *= 0.98; ball.vy *= 0.98;
+        ball.x += ball.vx; ball.y += ball.vy;
+
+        // Colisión Balón y Bordes de Cancha
+        if (ball.x - ball.radius < 20 || ball.x + ball.radius > 420) ball.vx *= -1;
+        
+        // Control de Línea de Goles Verticales
+        if (ball.y - ball.radius <= 10) {
+            if (ball.x > 160 && ball.x < 280) { scoreL++; document.getElementById("scoreL").innerText = scoreL; resetPosicionesCancha(); } 
+            else { ball.vy *= -1; }
         }
-        loop();
-    </script>
+        if (ball.y + ball.radius >= 590) {
+            if (ball.x > 160 && ball.x < 280) { scoreV++; document.getElementById("scoreV").innerText = scoreV; resetPosicionesCancha(); } 
+            else { ball.vy *= -1; }
+        }
+
+        // Colisiones de Cuerpo Completo entre Jugadores y Esfera
+        [...equipoLocal, ...equipoRival].forEach(p => {
+            let dist = Math.hypot(p.x - ball.x, p.y - ball.y);
+            if (dist < p.radius + ball.radius) {
+                let angulo = Math.atan2(ball.y - p.y, ball.x - p.x);
+                ball.vx = Math.cos(angulo) * 5 + p.vx;
+                ball.vy = Math.sin(angulo) * 5 + p.vy;
+            }
+        });
+    }
+
+    function handleActionKeys(key) {
+        let activo = obtenerJugadorMasCercano();
+        let distBalon = Math.hypot(activo.x - ball.x, activo.y - ball.y);
+        
+        if (distBalon < activo.radius + ball.radius + 12) {
+            if (key === " ") { // Remate Potente Vertical al Arco Rival (Arriba: Y=10)
+                let anguloArco = Math.atan2(10 - ball.y, 220 - ball.x);
+                ball.vx = Math.cos(anguloArco) * 14;
+                ball.vy = Math.sin(anguloArco) * 14;
+            }
+            if (key === "x" || key === "m") { // Pase Seguro al compañero más cercano
+                let companeros = equipoLocal.filter(p => p.id !== activo.id && p.rol !== "POR");
+                if (companeros.length > 0) {
+                    let destino = companeros[0];
+                    let anguloPase = Math.atan2(destino.y - ball.y, destino.x - ball.x);
+                    ball.vx = Math.cos(anguloPase) * 9;
+                    ball.vy = Math.sin(anguloPase) * 9;
+                }
+            }
+        }
+    }
+
+    function procesarInteligenciaArtificial(usuarioActivo) {
+        // Portero Local Automático (Sigue el balón en el eje X)
+        let porLocal = equipoLocal[0];
+        porLocal.x += (ball.x - porLocal.x) * 0.1;
+        porLocal.x = Math.max(170, Math.min(270, porLocal.x));
+
+        // Compañeros de Equipo Autónomos
+        equipoLocal.forEach(p => {
+            if (p.id !== usuarioActivo.id && p.rol !== "POR") {
+                let targetY = ball.y + (p.rol === "DEF" ? 80 : -40);
+                p.y += (targetY - p.y) * 0.03;
+                p.x += (ball.x - p.x) * 0.02;
+                restringirBordes(p);
+            }
+        });
+
+        // Bloque del Rival Completo IA (Persiguen y atacan hacia abajo)
+        let porRival = equipoRival[0];
+        porRival.x += (ball.x - porRival.x) * 0.1;
+        porRival.x = Math.max(170, Math.min(270, porRival.x));
+
+        equipoRival.forEach(r => {
+            if (r.rol !== "POR") {
+                let distBalon = Math.hypot(ball.x - r.x, ball.y - r.y);
+                if (distBalon > 10) {
+                    let ang = Math.atan2(ball.y - r.y, ball.x - r.x);
+                    r.x += Math.cos(ang) * r.speed;
+                    r.y += Math.sin(ang) * r.speed;
+                } else { // Si la IA tiene el balón, patea hacia tu portería (Abajo: Y=590)
+                    let angTiro = Math.atan2(590 - ball.y, 220 - ball.x);
+                    ball.vx = Math.cos(angTiro) * 8;
+                    ball.vy = Math.sin(angTiro) * 8;
+                }
+                restringirBordes(r);
+            }
+        });
+    }
+
+    function restringirBordes(p) {
+        p.x = Math.max(25, Math.min(415, p.x));
+        p.y = Math.max(25, Math.min(575, p.y));
+    }
+
+    function dibujarCanchaCompleta() {
+        ctx.clearRect(0,0, canvas.width, canvas.height);
+        
+        // Líneas Verdes de Campo Longitudinal Cortado
+        ctx.fillStyle = "#1c522a"; ctx.fillRect(0,0, canvas.width, canvas.height);
+        ctx.fillStyle = "#164221";
+        for(let y=0; y<canvas.height; y+=60) { if((y/60)%2===0) ctx.fillRect(0, y, canvas.width, 30); }
+
+        // Marcaciones Reglamentarias
+        ctx.strokeStyle = "rgba(255,255,255,0.6)"; ctx.lineWidth = 3;
+        ctx.strokeRect(20, 10, 400, 580);
+        ctx.beginPath(); ctx.arc(220, 300, 50, 0, Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(20, 300); ctx.lineTo(420, 300); ctx.stroke();
+
+        // Áreas de Portería Verticales
+        ctx.strokeRect(130, 10, 180, 80);
+        ctx.strokeRect(130, 510, 180, 80);
+
+        // Renderizado de Redes
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.fillRect(160, 0, 120, 10);
+        ctx.fillRect(160, 590, 120, 10);
+
+        // Dibujar Jugadores Locales
+        let pActivo = obtenerJugadorMasCercano();
+        equipoLocal.forEach(p => {
+            drawPlayerSprite(p);
+            if (p.id === pActivo.id) { // Círculo Indicador Estilo Nokia
+                ctx.strokeStyle = "#00ffaa"; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius + 6, 0, Math.PI*2); ctx.stroke();
+            }
+        });
+
+        // Dibujar Rivales
+        equipoRival.forEach(r => drawPlayerSprite(r));
+
+        // Balón de Fútbol con Sombra
+        ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(ball.x + 3, ball.y + 3, ball.radius, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill();
+    }
+
+    function drawPlayerSprite(p) {
+        ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = p.outline; ctx.lineWidth = 3; ctx.stroke();
+        ctx.fillStyle = "#fff"; ctx.font = "bold 9px Arial"; ctx.fillText(p.rol, p.x - 9, p.y + 3);
+    }
+
+    // Lógica del Campeonato Mundial (Gestión de Fases y Resultados)
+    function finalizacionPartido() {
+        clearInterval(gameInterval);
+        clearInterval(timerId);
+        
+        totalPartidosJugados++;
+        totalGolesFavor += scoreL;
+        totalGolesContra += scoreV;
+
+        let pantalla = document.getElementById("screenPostMatch");
+        let titulo = document.getElementById("postMatchTitle");
+        let desc = document.getElementById("postMatchDesc");
+        let boton = document.getElementById("btnPostMatchAction");
+
+        pantalla.style.display = "flex";
+
+        if (scoreL > scoreV) { // Victoria de tu Selección
+            totalPuntosAcumulados += 3;
+            faseActualIndex++;
+            let siguienteFase = fasesValidas[faseActualIndex];
+            document.getElementById("currentPhaseBadge").innerText = siguienteFase;
+
+            if (siguienteFase === "CAMPEÓN") {
+                titulo.innerText = "🏆 ¡CAMPEÓN DEL MUNDO!";
+                desc.innerText = `Has ganado la gran final de la Copa Mundial 2026. Marcador Final: ${scoreL} - ${scoreV}.`;
+                boton.innerText = "Sincronizar y Finalizar";
+                boton.onclick = enviarDatosABackend;
+            } else {
+                titulo.innerText = "¡VICTORIA CLASIFICATORIA!";
+                desc.innerText = `Avanzas a la fase de ${siguienteFase}. Marcador: ${scoreL} - ${scoreV}.`;
+                boton.innerText = `Iniciar ${siguienteFase}`;
+                boton.onclick = prepararSiguienteRival;
+            }
+        } else { // Empate o Derrota implica Eliminación Automática
+            if(scoreL === scoreV) totalPuntosAcumulados += 1;
+            titulo.innerText = "❌ ELIMINADO DEL MUNDIAL";
+            desc.innerText = `Tu selección ha quedado eliminada en la fase de ${fasesValidas[faseActualIndex]}. Marcador: ${scoreL} - ${scoreV}.`;
+            boton.innerText = "Enviar Estadísticas al Panel";
+            boton.onclick = enviarDatosABackend;
+        }
+    }
+
+    function prepararSiguienteRival() {
+        let pool = todasSelecciones.filter(s => s.nombre !== miEquipoNombre);
+        rivalActual = pool[Math.floor(Math.random() * pool.length)];
+        document.getElementById("nameV").innerText = rivalActual.nombre.substring(0,3).toUpperCase();
+        
+        fixtureMundial.unshift({ equipo1: miEquipoNombre, equipo2: rivalActual.nombre, estado: "EN CURSO" });
+        renderizarVisualFixture();
+        iniciarPartidoActual();
+    }
+
+    // Persistencia Directa a MongoDB Atlas mediante Fetch API sin romper variables
+    function enviarDatosABackend() {
+        fetch('/guardar_resultado', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                documento: documentoDT,
+                partidos_jugados: totalPartidosJugados,
+                puntos_acumulados: totalPuntosAcumulados,
+                goles_favor: totalGolesFavor,
+                goles_contra: totalGolesContra
+            })
+        }).then(() => window.location.href = "/");
+    }
+
+    // Arranque Inicial
+    generarFixtureMundial();
+</script>
+
 </body>
 </html>
