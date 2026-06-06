@@ -3,992 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA World Cup 2026 — Manager Arena</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>FIFA World Cup 2026 - Central Management</title>
     <style>
         :root {
-            --gold: #F0C040;
-            --gold-dim: #9A7A1A;
-            --navy: #040B1E;
-            --navy-mid: #071228;
-            --navy-card: #0C1A3A;
-            --navy-lift: #111E40;
-            --red: #E8222A;
-            --green: #00C853;
-            --text: #EAE9F0;
-            --muted: #7A8AAD;
-            --border: rgba(255,255,255,0.07);
-            --border-gold: rgba(240,192,64,0.35);
+            --fifa-dark: #070b19;
+            --fifa-gold: #e2b955;
+            --panel-bg: #111a36;
+            --text-light: #f3f4f6;
+            --success: #00ff87;
+            --danger: #ff4d4d;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
         body {
-            background-color: var(--navy);
-            color: var(--text);
-            font-family: 'Barlow', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* ─── SCANLINES OVERLAY ─── */
-        body::before {
-            content: '';
-            pointer-events: none;
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent 2px,
-                rgba(0,0,0,0.06) 2px,
-                rgba(0,0,0,0.06) 4px
-            );
-        }
-
-        /* ─── ANIMATED BG MESH ─── */
-        .bg-mesh {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            overflow: hidden;
-        }
-        .bg-mesh::before {
-            content: '';
-            position: absolute;
-            width: 800px; height: 800px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(240,192,64,0.07) 0%, transparent 70%);
-            top: -200px; right: -200px;
-            animation: pulse-bg 8s ease-in-out infinite alternate;
-        }
-        .bg-mesh::after {
-            content: '';
-            position: absolute;
-            width: 600px; height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(232,34,42,0.05) 0%, transparent 70%);
-            bottom: -100px; left: -100px;
-            animation: pulse-bg 10s ease-in-out infinite alternate-reverse;
-        }
-        @keyframes pulse-bg {
-            from { transform: scale(1); opacity: 0.6; }
-            to   { transform: scale(1.2); opacity: 1; }
-        }
-
-        /* ─── GRID LINES ─── */
-        .grid-lines {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
-
-        .site-wrapper {
-            position: relative;
-            z-index: 1;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 20px 60px;
-        }
-
-        /* ─── HEADER HERO ─── */
-        header {
-            text-align: center;
-            padding: 50px 20px 40px;
-            position: relative;
-        }
-        .badge-year {
-            display: inline-block;
-            background: var(--red);
-            color: white;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-weight: 700;
-            font-size: 0.75rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            padding: 6px 20px;
-            border-radius: 2px;
-            margin-bottom: 18px;
-            animation: badge-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
-        }
-        @keyframes badge-pop {
-            from { transform: scale(0.5); opacity: 0; }
-            to   { transform: scale(1); opacity: 1; }
-        }
-        .hero-title {
-            font-family: 'Anton', sans-serif;
-            font-size: clamp(3.5rem, 10vw, 8rem);
-            line-height: 0.9;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-            color: white;
-            animation: title-rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both;
-        }
-        @keyframes title-rise {
-            from { transform: translateY(40px); opacity: 0; }
-            to   { transform: translateY(0); opacity: 1; }
-        }
-        .hero-title span {
-            color: var(--gold);
-            -webkit-text-stroke: 1px var(--gold-dim);
-            display: block;
-        }
-        .hero-sub {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 6px;
-            color: var(--muted);
-            text-transform: uppercase;
-            margin-top: 14px;
-            animation: title-rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.25s both;
-        }
-        .host-cities {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-            animation: title-rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.4s both;
-        }
-        .city-chip {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--gold);
-            background: rgba(240,192,64,0.1);
-            border: 1px solid var(--border-gold);
-            padding: 5px 12px;
-            border-radius: 2px;
-        }
-
-        /* ─── TROPHY LINE ─── */
-        .trophy-divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 36px 0;
-            animation: title-rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both;
-        }
-        .trophy-divider::before, .trophy-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
-        }
-        .trophy-divider .icon { font-size: 1.5rem; }
-
-        /* ─── ALERT ─── */
-        .alert {
-            padding: 14px 20px;
-            border-radius: 4px;
-            margin-bottom: 28px;
-            font-weight: 600;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-align: center;
-            border-left: 4px solid;
-            animation: slide-in-alert 0.4s ease both;
-        }
-        @keyframes slide-in-alert {
-            from { transform: translateX(-20px); opacity: 0; }
-            to   { transform: translateX(0); opacity: 1; }
-        }
-        .alert-success { background: rgba(0,200,83,0.1); color: #00FF87; border-color: #00FF87; }
-        .alert-danger  { background: rgba(232,34,42,0.1); color: #FF6B6B; border-color: #FF6B6B; }
-
-        /* ─── MAIN GRID ─── */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 420px 1fr;
-            gap: 24px;
-            align-items: start;
-        }
-        @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
-
-        /* ─── PANEL ─── */
-        .panel {
-            background: var(--navy-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            animation: panel-in 0.7s cubic-bezier(0.22,1,0.36,1) 0.5s both;
-        }
-        @keyframes panel-in {
-            from { transform: translateY(30px); opacity: 0; }
-            to   { transform: translateY(0); opacity: 1; }
-        }
-        .panel-header {
-            background: linear-gradient(135deg, var(--navy-lift), var(--navy-card));
-            border-bottom: 1px solid var(--border);
-            padding: 18px 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .panel-header .ph-icon {
-            width: 36px; height: 36px;
-            border-radius: 6px;
-            background: rgba(240,192,64,0.15);
-            border: 1px solid var(--border-gold);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-        .panel-header h2 {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gold);
+            background-color: var(--fifa-dark);
+            color: var(--text-light);
+            font-family: system-ui, -apple-system, sans-serif;
             margin: 0;
+            padding: 30px 15px;
         }
-        .panel-header p {
-            font-size: 0.8rem;
-            color: var(--muted);
-            margin: 2px 0 0;
-        }
-        .panel-body { padding: 24px; }
-
-        /* ─── FORM ─── */
-        .form-row { margin-bottom: 20px; }
-        .form-row label {
-            display: block;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 2.5px;
+        .wrapper { max-width: 1200px; margin: 0 auto; }
+        .hero { text-align: center; margin-bottom: 40px; }
+        .hero h1 {
+            font-size: 2.6rem;
+            margin: 0;
             text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
-        .form-row label .req { color: var(--gold); }
-        .form-input {
-            width: 100%;
-            padding: 13px 16px;
-            background: var(--navy);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 4px;
-            color: var(--text);
-            font-family: 'Barlow', sans-serif;
-            font-size: 0.95rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(240,192,64,0.12);
-        }
-        .form-input::placeholder { color: rgba(122,138,173,0.5); }
-
-        /* ─── NATION SELECTOR ─── */
-        .nation-selector-wrap { position: relative; }
-        .nation-display {
-            width: 100%;
-            padding: 13px 16px;
-            background: var(--navy);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 4px;
-            color: var(--text);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            user-select: none;
-        }
-        .nation-display:hover, .nation-display.open {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(240,192,64,0.12);
-        }
-        .nation-display .flag-em { font-size: 1.4rem; line-height: 1; }
-        .nation-display .nd-text { flex: 1; }
-        .nation-display .nd-name {
-            font-size: 0.95rem;
-            color: var(--text);
-        }
-        .nation-display .nd-group {
-            font-size: 0.72rem;
-            color: var(--muted);
-            font-family: 'Barlow Condensed', sans-serif;
             letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff, var(--fifa-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .nation-display .nd-arrow {
-            color: var(--muted);
-            font-size: 0.7rem;
-            transition: transform 0.2s;
+        .hero p { color: #8ea1db; margin-top: 6px; font-size: 1.05rem; }
+        .grid-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        @media(max-width: 900px){ .grid-layout { grid-template-columns: 1fr; } }
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
-        .nation-display.open .nd-arrow { transform: rotate(180deg); }
-
-        .nation-dropdown {
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0; right: 0;
-            background: #0A1530;
-            border: 1px solid var(--border-gold);
-            border-radius: 6px;
-            z-index: 100;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            display: none;
-            overflow: hidden;
+        h2 { color: var(--fifa-gold); text-transform: uppercase; font-size: 1.25rem; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; }
+        .form-control { margin-bottom: 16px; }
+        label { display: block; font-size: 0.8rem; color: #a2b1cc; margin-bottom: 6px; text-transform: uppercase; font-weight: bold; }
+        input, select {
+            width: 100%; padding: 12px; background: #090e22; border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px; color: white; font-size: 0.95rem; box-sizing: border-box;
         }
-        .nation-dropdown.open { display: block; }
-        .nation-search-wrap {
-            padding: 10px 10px 6px;
-            border-bottom: 1px solid var(--border);
-        }
-        .nation-search {
-            width: 100%;
-            padding: 9px 14px;
-            background: var(--navy);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 4px;
-            color: var(--text);
-            font-family: 'Barlow', sans-serif;
-            font-size: 0.9rem;
-        }
-        .nation-search:focus { outline: none; border-color: var(--gold); }
-        .nation-groups-scroll {
-            max-height: 320px;
-            overflow-y: auto;
-        }
-        .nation-groups-scroll::-webkit-scrollbar { width: 4px; }
-        .nation-groups-scroll::-webkit-scrollbar-track { background: transparent; }
-        .nation-groups-scroll::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
-        .nd-group-header {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.65rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gold);
-            padding: 10px 14px 5px;
-            opacity: 0.7;
-        }
-        .nation-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 14px;
-            cursor: pointer;
-            transition: background 0.12s;
-        }
-        .nation-option:hover { background: rgba(240,192,64,0.08); }
-        .nation-option.selected { background: rgba(240,192,64,0.12); }
-        .nation-option .flag-em { font-size: 1.25rem; line-height: 1; }
-        .nation-option .no-name { font-size: 0.9rem; color: var(--text); flex: 1; }
-        .nation-option .no-group {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.7rem;
-            color: var(--muted);
-            letter-spacing: 1px;
-        }
-        input[type="hidden"] { display: none; }
-
-        /* ─── SUBMIT BUTTON ─── */
+        input:focus, select:focus { border-color: var(--fifa-gold); outline: none; }
         .btn-submit {
-            width: 100%;
-            padding: 16px 24px;
-            background: linear-gradient(135deg, #F0C040, #C8960A);
-            color: var(--navy);
-            border: none;
-            border-radius: 4px;
-            font-family: 'Anton', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.15s;
-            position: relative;
-            overflow: hidden;
-            margin-top: 6px;
+            width: 100%; padding: 14px; background: linear-gradient(135deg, var(--fifa-gold), #bca044);
+            color: #070b19; border: none; border-radius: 8px; font-weight: bold; font-size: 0.95rem;
+            cursor: pointer; text-transform: uppercase; transition: opacity 0.2s;
         }
-        .btn-submit::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 60%;
-            height: 100%;
-            background: rgba(255,255,255,0.2);
-            transform: skewX(-20deg);
-            transition: left 0.4s;
+        .btn-submit:hover { opacity: 0.9; }
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; border: 1px solid; font-size: 0.9rem; }
+        .alert-success { background: rgba(0,255,135,0.1); color: var(--success); border-color: var(--success); }
+        .alert-danger { background: rgba(255,77,77,0.1); color: var(--danger); border-color: var(--danger); }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { font-size: 0.8rem; color: #8ea1db; text-transform: uppercase; }
+        .badge-team { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; display: inline-block; color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .action-link {
+            background: linear-gradient(135deg, var(--success), #00b35b); color: #070b19;
+            padding: 8px 14px; border-radius: 6px; text-decoration: none; font-weight: bold;
+            font-size: 0.8rem; text-transform: uppercase; display: inline-block;
         }
-        .btn-submit:hover::before { left: 160%; }
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(240,192,64,0.35);
-        }
-        .btn-submit:active { transform: translateY(0); }
-
-        /* ─── STATS BAR ─── */
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .stat-cell {
-            background: var(--navy-card);
-            padding: 14px;
-            text-align: center;
-        }
-        .stat-cell .sv { font-family: 'Anton', sans-serif; font-size: 1.8rem; color: var(--gold); }
-        .stat-cell .sl {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.65rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-top: 2px;
-        }
-
-        /* ─── LEADERBOARD TABLE ─── */
-        .lb-table { width: 100%; border-collapse: collapse; }
-        .lb-table thead tr {
-            background: var(--navy-lift);
-            border-bottom: 2px solid var(--border-gold);
-        }
-        .lb-table th {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--muted);
-            padding: 10px 14px;
-            text-align: left;
-        }
-        .lb-table tbody tr {
-            border-bottom: 1px solid var(--border);
-            transition: background 0.15s;
-            animation: row-in 0.5s ease both;
-        }
-        .lb-table tbody tr:hover { background: var(--navy-lift); }
-        @keyframes row-in {
-            from { opacity: 0; transform: translateX(-10px); }
-            to   { opacity: 1; transform: translateX(0); }
-        }
-        .lb-table td { padding: 12px 14px; font-size: 0.9rem; vertical-align: middle; }
-        .pos-num {
-            font-family: 'Anton', sans-serif;
-            font-size: 1.1rem;
-            color: var(--muted);
-            width: 30px;
-        }
-        .pos-num.top3 { color: var(--gold); }
-        .dt-info .dt-name { font-weight: 600; font-size: 0.95rem; }
-        .dt-info .dt-meta {
-            font-size: 0.72rem;
-            color: var(--muted);
-            font-family: 'Barlow Condensed', sans-serif;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
-        .team-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 10px 5px 6px;
-            border-radius: 3px;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-        .team-badge .tf { font-size: 1.1rem; }
-        .pts-cell { text-align: center; }
-        .pts-big { font-family: 'Anton', sans-serif; font-size: 1.3rem; color: var(--text); }
-        .pts-sub {
-            font-size: 0.68rem;
-            color: var(--muted);
-            font-family: 'Barlow Condensed', sans-serif;
-            letter-spacing: 0.5px;
-        }
-        .play-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 9px 16px;
-            background: linear-gradient(135deg, rgba(0,200,83,0.2), rgba(0,200,83,0.08));
-            border: 1px solid rgba(0,200,83,0.4);
-            border-radius: 4px;
-            color: var(--green);
-            text-decoration: none;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
-            white-space: nowrap;
-        }
-        .play-btn:hover {
-            background: rgba(0,200,83,0.25);
-            box-shadow: 0 0 16px rgba(0,200,83,0.25);
-            transform: translateY(-1px);
-        }
-        .play-btn::before { content: '▶'; font-size: 0.65rem; }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--muted);
-        }
-        .empty-state .es-icon { font-size: 3rem; margin-bottom: 14px; opacity: 0.3; }
-        .empty-state p { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; letter-spacing: 1px; }
-
-        /* ─── FLAGS PARADE ─── */
-        .flags-parade {
-            overflow: hidden;
-            margin: 30px 0;
-            position: relative;
-            mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-        }
-        .flags-track {
-            display: flex;
-            gap: 6px;
-            animation: scroll-flags 40s linear infinite;
-            width: max-content;
-        }
-        .flags-track:hover { animation-play-state: paused; }
-        @keyframes scroll-flags {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
-        }
-        .flag-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: var(--navy-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            color: var(--muted);
-            transition: border-color 0.2s;
-        }
-        .flag-pill:hover { border-color: var(--border-gold); color: var(--text); }
-        .flag-pill span { font-size: 1.2rem; }
-
-        /* ─── TICKER ─── */
-        .ticker-wrap {
-            border-top: 1px solid var(--border-gold);
-            border-bottom: 1px solid var(--border-gold);
-            background: rgba(240,192,64,0.04);
-            overflow: hidden;
-            margin-bottom: 28px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-        }
-        .ticker-label {
-            background: var(--gold);
-            color: var(--navy);
-            font-family: 'Anton', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            padding: 0 14px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .ticker-scroll {
-            overflow: hidden;
-            flex: 1;
-        }
-        .ticker-inner {
-            display: flex;
-            gap: 60px;
-            animation: ticker-move 30s linear infinite;
-            white-space: nowrap;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.78rem;
-            letter-spacing: 1px;
-            color: var(--muted);
-        }
-        @keyframes ticker-move {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
-        }
-        .ticker-sep { color: var(--gold); margin: 0 10px; }
+        .action-link:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
-<div class="bg-mesh"></div>
-<div class="grid-lines"></div>
-
-<div class="site-wrapper">
-
-    <!-- HERO -->
-    <header>
-        <div class="badge-year">⚽ OFFICIAL MANAGER EDITION</div>
-        <h1 class="hero-title">FIFA<br><span>WORLD CUP</span><br>2026</h1>
-        <p class="hero-sub">Sistema de Gestión de Selecciones &amp; Arena de Directores Técnicos</p>
-        <div class="host-cities">
-            <span class="city-chip">🇺🇸 USA</span>
-            <span class="city-chip">🇨🇦 Canadá</span>
-            <span class="city-chip">🇲🇽 México</span>
-            <span class="city-chip">48 Selecciones</span>
-            <span class="city-chip">104 Partidos</span>
-            <span class="city-chip">16 Sedes</span>
-        </div>
-    </header>
-
-    <!-- FLAGS PARADE -->
-    <div class="flags-parade">
-        <div class="flags-track" id="flagsTrack"></div>
+<div class="wrapper">
+    <div class="hero">
+        <h1>🏆 COPA MUNDIAL DE LA FIFA 2026 🏆</h1>
+        <p>Módulo de Control de Estudiantes y Simulación de Alto Rendimiento</p>
     </div>
 
-    <!-- TICKER -->
-    <div class="ticker-wrap">
-        <div class="ticker-label">EN VIVO</div>
-        <div class="ticker-scroll">
-            <div class="ticker-inner" id="tickerInner"></div>
-        </div>
-    </div>
-
-    <!-- ALERT (Jinja placeholder) -->
     {% if mensaje %}
         <div class="alert alert-{{ tipo_mensaje }}">{{ mensaje }}</div>
     {% endif %}
 
-    <!-- MAIN GRID -->
-    <div class="main-grid">
-
-        <!-- FORM PANEL -->
-        <div class="panel" style="animation-delay: 0.5s">
-            <div class="panel-header">
-                <div class="ph-icon">🎽</div>
-                <div>
-                    <h2>Acreditación de DT</h2>
-                    <p>Inscripción oficial al torneo</p>
+    <div class="grid-layout">
+        <div class="panel">
+            <h2>Acreditación de Mánager</h2>
+            <form method="POST" action="/">
+                <div class="form-control">
+                    <label>Documento de Identidad</label>
+                    <input type="text" name="documento" required placeholder="Ingresa solo números">
                 </div>
-            </div>
-            <div class="panel-body">
-                <form method="POST" action="/" autocomplete="off">
-
-                    <div class="form-row">
-                        <label>Documento de Identidad <span class="req">*</span></label>
-                        <input class="form-input" type="text" name="documento" required placeholder="Ej: 10234567" maxlength="20">
-                    </div>
-
-                    <div class="form-row">
-                        <label>Nombre Completo del DT <span class="req">*</span></label>
-                        <input class="form-input" type="text" name="nombre" required placeholder="Nombre del director técnico">
-                    </div>
-
-                    <div class="form-row">
-                        <label>Correo Electrónico Institucional <span class="req">*</span></label>
-                        <input class="form-input" type="email" name="correo" required placeholder="brian@sena.edu.co">
-                    </div>
-
-                    <!-- NATION SELECTOR -->
-                    <div class="form-row">
-                        <label>Selección Asignada <span class="req">*</span></label>
-                        <input type="hidden" name="equipo" id="equipoHidden" required>
-                        <div class="nation-selector-wrap">
-                            <div class="nation-display" id="nationDisplay" onclick="toggleDropdown()">
-                                <span class="flag-em" id="selFlag">🌍</span>
-                                <div class="nd-text">
-                                    <div class="nd-name" id="selName">— Elige una Nación —</div>
-                                    <div class="nd-group" id="selGroup"></div>
-                                </div>
-                                <span class="nd-arrow">▼</span>
-                            </div>
-                            <div class="nation-dropdown" id="nationDropdown">
-                                <div class="nation-search-wrap">
-                                    <input class="nation-search" type="text" id="nationSearch" placeholder="🔍  Buscar selección..." oninput="filterNations(this.value)" autocomplete="off">
-                                </div>
-                                <div class="nation-groups-scroll" id="nationList"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <label>Número de Ficha Académica <span class="req">*</span></label>
-                        <input class="form-input" type="text" name="ficha" required placeholder="Ej: 271123" maxlength="10">
-                    </div>
-
-                    <button type="submit" class="btn-submit">⚽ Inscribirse al Mundial</button>
-                </form>
-            </div>
+                <div class="form-control">
+                    <label>Nombre Completo del Estudiante</label>
+                    <input type="text" name="nombre" required placeholder="Nombre del DT">
+                </div>
+                <div class="form-control">
+                    <label>Correo Electrónico</label>
+                    <input type="email" name="correo" required placeholder="usuario@sena.edu.co">
+                </div>
+                <div class="form-control">
+                    <label>Programa de Formación (Selección)</label>
+                    <select name="equipo" required>
+                        <option value="">-- Elige un País --</option>
+                        {% for pais in selecciones %}
+                            <option value="{{ pais.nombre }}">{{ pais.nombre }} (Grupo {{ pais.grupo }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label>Ficha de Formación</label>
+                    <input type="text" name="ficha" required placeholder="Código de Ficha">
+                </div>
+                <button type="submit" class="btn-submit">Registrar Estudiante</button>
+            </form>
         </div>
 
-        <!-- LEADERBOARD PANEL -->
-        <div class="panel" style="animation-delay: 0.65s">
-            <div class="panel-header">
-                <div class="ph-icon">🏆</div>
-                <div>
-                    <h2>Clasificación General</h2>
-                    <p>Arena de directores técnicos inscritos</p>
-                </div>
-            </div>
-            <div class="panel-body" style="padding: 16px">
-
-                <!-- Stats bar (sample/live from template) -->
-                <div class="stats-bar">
-                    <div class="stat-cell">
-                        <div class="sv">{% if dts %}{{ dts|length }}{% else %}0{% endif %}</div>
-                        <div class="sl">DTs Activos</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="sv">48</div>
-                        <div class="sl">Selecciones</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="sv">104</div>
-                        <div class="sl">Partidos</div>
-                    </div>
-                </div>
-
+        <div class="panel">
+            <h2>Clasificación General (MongoDB Atlas)</h2>
+            <div style="overflow-x: auto;">
                 {% if dts %}
-                    <div style="overflow-x: auto;">
-                        <table class="lb-table">
-                            <thead>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estudiante (DT)</th>
+                                <th>Programa Asignado</th>
+                                <th>Estadísticas del Torneo</th>
+                                <th>Gestión</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dt in dts %}
                                 <tr>
-                                    <th style="width:36px">#</th>
-                                    <th>Director Técnico</th>
-                                    <th>Selección</th>
-                                    <th style="text-align:center">Pts</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for dt in dts %}
-                                <tr style="animation-delay: {{ loop.index * 0.06 }}s">
+                                    <td><strong>{{ dt.nombre }}</strong><br><span style="color:#718096; font-size:0.75rem;">Ficha: {{ dt.ficha }}</span></td>
                                     <td>
-                                        <div class="pos-num {% if loop.index <= 3 %}top3{% endif %}">
-                                            {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="dt-info">
-                                            <div class="dt-name">{{ dt.nombre }}</div>
-                                            <div class="dt-meta">FICHA {{ dt.ficha }} · PJ {{ dt.partidos_jugados }} · GF {{ dt.goles_favor }} · GC {{ dt.goles_contra }}</div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="team-badge" style="background: {{ dt.color_kit }}22; border: 1px solid {{ dt.color_kit }}55; color: {{ dt.color_kit }};">
-                                            <span class="tf">{{ dt.flag if dt.flag else '⚽' }}</span>
-                                            {{ dt.equipo }} G{{ dt.grupo }}
+                                        <span class="badge-team" style="background-color: {{ dt.color_kit }}; color: {% if dt.color_kit == '#FFFFFF' or dt.color_kit == '#74ACDF' %}#000{% else %}#FFF{% endif %};">
+                                            {{ dt.equipo }} (Gr. {{ dt.grupo }})
                                         </span>
                                     </td>
-                                    <td class="pts-cell">
-                                        <div class="pts-big">{{ dt.puntos }}</div>
-                                        <div class="pts-sub">PTS</div>
+                                    <td>
+                                        <strong>🏆 {{ dt.puntos }} PTS</strong><br>
+                                        <span style="font-size:0.75rem; color:#a2b1cc;">PJs: {{ dt.partidos_jugados }} | GF: {{ dt.goles_favor }} | GC: {{ dt.goles_contra }}</span>
                                     </td>
                                     <td>
-                                        <a href="/partido/{{ dt.documento }}" class="play-btn">Jugar</a>
+                                        <a href="/partido/{{ dt.documento }}" class="action-link">🕹️ Jugar</a>
                                     </td>
                                 </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 {% else %}
-                    <div class="empty-state">
-                        <div class="es-icon">🏟️</div>
-                        <p>No hay DTs registrados aún.<br>¡Sé el primero en inscribirte!</p>
-                    </div>
+                    <p style="text-align: center; color: #a2b1cc; padding: 25px 0; font-size: 0.9rem;">No se registran directores técnicos en la nube.</p>
                 {% endif %}
             </div>
         </div>
-
-    </div><!-- /main-grid -->
-</div><!-- /site-wrapper -->
-
-<script>
-// ─── ALL 48 WORLD CUP 2026 NATIONS ───
-const NATIONS = [
-  { name:"Alemania",      group:"A", flag:"🇩🇪", color:"#DD0000" },
-  { name:"Arabia Saudita",group:"A", flag:"🇸🇦", color:"#006600" },
-  { name:"México",        group:"A", flag:"🇲🇽", color:"#006847" },
-  { name:"Polonia",       group:"A", flag:"🇵🇱", color:"#DC143C" },
-  { name:"Francia",       group:"B", flag:"🇫🇷", color:"#002395" },
-  { name:"Perú",          group:"B", flag:"🇵🇪", color:"#D91023" },
-  { name:"Dinamarca",     group:"B", flag:"🇩🇰", color:"#C60C30" },
-  { name:"Túnez",         group:"B", flag:"🇹🇳", color:"#E70013" },
-  { name:"Argentina",     group:"C", flag:"🇦🇷", color:"#74ACDF" },
-  { name:"Canadá",        group:"C", flag:"🇨🇦", color:"#FF0000" },
-  { name:"Marruecos",     group:"C", flag:"🇲🇦", color:"#C1272D" },
-  { name:"Croacia",       group:"C", flag:"🇭🇷", color:"#FF0000" },
-  { name:"Brasil",        group:"D", flag:"🇧🇷", color:"#009C3B" },
-  { name:"Suiza",         group:"D", flag:"🇨🇭", color:"#FF0000" },
-  { name:"Camerún",       group:"D", flag:"🇨🇲", color:"#007A5E" },
-  { name:"Serbia",        group:"D", flag:"🇷🇸", color:"#C6363C" },
-  { name:"España",        group:"E", flag:"🇪🇸", color:"#AA151B" },
-  { name:"Costa Rica",    group:"E", flag:"🇨🇷", color:"#002B7F" },
-  { name:"Alemania",      group:"E", flag:"🇩🇪", color:"#DD0000" },
-  { name:"Japón",         group:"E", flag:"🇯🇵", color:"#BC002D" },
-  { name:"Bélgica",       group:"F", flag:"🇧🇪", color:"#EF3340" },
-  { name:"Canadá",        group:"F", flag:"🇨🇦", color:"#FF0000" },
-  { name:"Marruecos",     group:"F", flag:"🇲🇦", color:"#C1272D" },
-  { name:"Croacia",       group:"F", flag:"🇭🇷", color:"#FF0000" },
-  { name:"Portugal",      group:"G", flag:"🇵🇹", color:"#006600" },
-  { name:"Ghana",         group:"G", flag:"🇬🇭", color:"#006B3F" },
-  { name:"Uruguay",       group:"G", flag:"🇺🇾", color:"#5EB6E4" },
-  { name:"Corea del Sur", group:"G", flag:"🇰🇷", color:"#CD2E3A" },
-  { name:"Inglaterra",    group:"H", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", color:"#CF091B" },
-  { name:"Estados Unidos",group:"H", flag:"🇺🇸", color:"#3C3B6E" },
-  { name:"Irán",          group:"H", flag:"🇮🇷", color:"#239F40" },
-  { name:"Gales",         group:"H", flag:"🏴󠁧󠁢󠁷󠁬󠁳󠁿", color:"#C8102E" },
-  { name:"Países Bajos",  group:"I", flag:"🇳🇱", color:"#FF6600" },
-  { name:"Senegal",       group:"I", flag:"🇸🇳", color:"#00853F" },
-  { name:"Ecuador",       group:"I", flag:"🇪🇨", color:"#FFD100" },
-  { name:"Qatar",         group:"I", flag:"🇶🇦", color:"#8D1B3D" },
-  { name:"Australia",     group:"J", flag:"🇦🇺", color:"#00008B" },
-  { name:"Túnez",         group:"J", flag:"🇹🇳", color:"#E70013" },
-  { name:"Francia",       group:"J", flag:"🇫🇷", color:"#002395" },
-  { name:"Polonia",       group:"J", flag:"🇵🇱", color:"#DC143C" },
-  { name:"Italia",        group:"K", flag:"🇮🇹", color:"#009246" },
-  { name:"Colombia",      group:"K", flag:"🇨🇴", color:"#FCD116" },
-  { name:"Austria",       group:"K", flag:"🇦🇹", color:"#ED2939" },
-  { name:"Nigeria",       group:"K", flag:"🇳🇬", color:"#008751" },
-  { name:"Venezuela",     group:"L", flag:"🇻🇪", color:"#CF142B" },
-  { name:"Chile",         group:"L", flag:"🇨🇱", color:"#D52B1E" },
-  { name:"Turquía",       group:"L", flag:"🇹🇷", color:"#E30A17" },
-  { name:"Egipto",        group:"L", flag:"🇪🇬", color:"#CE1126" }
-];
-
-// deduplicate by name
-const seen = new Set();
-const UNIQUE_NATIONS = NATIONS.filter(n => {
-    const k = n.name + n.group;
-    if(seen.has(k)) return false;
-    seen.add(k);
-    return true;
-});
-
-// ─── FLAGS PARADE ───
-(function buildParade() {
-    const track = document.getElementById('flagsTrack');
-    const allItems = [...UNIQUE_NATIONS, ...UNIQUE_NATIONS]; // double for seamless loop
-    allItems.forEach(n => {
-        const pill = document.createElement('div');
-        pill.className = 'flag-pill';
-        pill.innerHTML = `<span>${n.flag}</span>${n.name}`;
-        track.appendChild(pill);
-    });
-})();
-
-// ─── TICKER ───
-(function buildTicker() {
-    const msgs = [
-        "⚽ FIFA WORLD CUP 2026 · USA · CANADA · MEXICO",
-        "🏆 48 SELECCIONES COMPITEN POR LA COPA DEL MUNDO",
-        "🎮 INSCRIBE TU SELECCIÓN Y COMPITE EN EL TORNEO",
-        "🌍 104 PARTIDOS · 16 SEDES · 6 CONTINENTES",
-        "⭐ EL MUNDIAL MÁS GRANDE DE LA HISTORIA",
-        "🔥 ¿TIENES LO QUE SE NECESITA PARA SER CAMPEÓN?",
-        "🏟️ NEW YORK · LOS ANGELES · TORONTO · CIUDAD DE MEXICO",
-        "📊 GESTIONA TU SELECCIÓN Y LLÉVALA A LA GLORIA",
-    ];
-    const doubled = [...msgs, ...msgs];
-    const inner = document.getElementById('tickerInner');
-    doubled.forEach(m => {
-        const span = document.createElement('span');
-        span.innerHTML = `${m} <span class="ticker-sep">|</span>`;
-        inner.appendChild(span);
-    });
-})();
-
-// ─── NATION DROPDOWN ───
-let dropOpen = false;
-
-function buildNationList(filter) {
-    const list = document.getElementById('nationList');
-    list.innerHTML = '';
-    const groups = {};
-    UNIQUE_NATIONS.forEach(n => {
-        const name = n.name.toLowerCase();
-        if(filter && !name.includes(filter.toLowerCase())) return;
-        if(!groups[n.group]) groups[n.group] = [];
-        groups[n.group].push(n);
-    });
-    const sortedGroups = Object.keys(groups).sort();
-    sortedGroups.forEach(g => {
-        const header = document.createElement('div');
-        header.className = 'nd-group-header';
-        header.textContent = `Grupo ${g}`;
-        list.appendChild(header);
-        groups[g].forEach(n => {
-            const opt = document.createElement('div');
-            opt.className = 'nation-option';
-            opt.dataset.name  = n.name;
-            opt.dataset.group = n.group;
-            opt.dataset.flag  = n.flag;
-            opt.dataset.color = n.color;
-            opt.innerHTML = `
-                <span class="flag-em">${n.flag}</span>
-                <span class="no-name">${n.name}</span>
-                <span class="no-group">G: ${n.group}</span>`;
-            opt.onclick = () => selectNation(n);
-            list.appendChild(opt);
-        });
-    });
-    if(list.innerHTML === '') {
-        list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.85rem">Sin resultados</div>';
-    }
-}
-
-function selectNation(n) {
-    document.getElementById('selFlag').textContent  = n.flag;
-    document.getElementById('selName').textContent  = n.name;
-    document.getElementById('selGroup').textContent = `Grupo ${n.group} — ${CONF_MAP[n.group] || 'Confederación'}`;
-    document.getElementById('equipoHidden').value   = n.name;
-    closeDropdown();
-}
-
-const CONF_MAP = {
-    A:'Europa/Asia',B:'Europa/Suramérica',C:'Suramérica/África',D:'Suramérica/África',
-    E:'Europa/Suramérica',F:'Europa/África',G:'Europa/Suramérica',H:'Europa/América',
-    I:'Europa/Suramérica',J:'Oceanía/Europa',K:'Europa/Suramérica',L:'Suramérica/Europa'
-};
-
-function toggleDropdown() {
-    dropOpen ? closeDropdown() : openDropdown();
-}
-function openDropdown() {
-    dropOpen = true;
-    document.getElementById('nationDropdown').classList.add('open');
-    document.getElementById('nationDisplay').classList.add('open');
-    buildNationList('');
-    setTimeout(() => document.getElementById('nationSearch').focus(), 50);
-}
-function closeDropdown() {
-    dropOpen = false;
-    document.getElementById('nationDropdown').classList.remove('open');
-    document.getElementById('nationDisplay').classList.remove('open');
-}
-function filterNations(v) { buildNationList(v); }
-document.addEventListener('click', e => {
-    if(!e.target.closest('.nation-selector-wrap')) closeDropdown();
-});
-
-// ─── JINJA SERVER-SIDE NATIONS FOR SELECT ───
-// These are also consumed by the backend template engine via: {% for pais in selecciones %}
-// The JS dropdown replaces the static select for the frontend, while the hidden input submits the value
-</script>
+    </div>
+</div>
 
 </body>
 </html>
