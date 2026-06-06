@@ -2,19 +2,19 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SENA - Interactive Evaluation Arena</title>
+    <title>SENA - Entorno de Simulación Interactiva</title>
     <style>
         body { background-color: #0a0a0c; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
         .hud { display: flex; justify-content: space-between; align-items: center; width: 800px; background: #14151a; padding: 15px 30px; border-radius: 12px; border: 1px solid #2a2c36; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); box-sizing: border-box; }
-        .team { display: flex; align-items: center; gap: 15px; max-width: 350px; }
+        .team { display: flex; align-items: center; gap: 15px; max-width: 340px; }
         .flag { width: 40px; border-radius: 4px; }
         .score { font-size: 3rem; font-weight: 900; color: #39A900; margin: 0 20px; }
         .timer { font-size: 1.5rem; font-weight: bold; color: #00ff66; }
         canvas { background: #2b7a3e; border: 6px solid #fff; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.6); }
         .controls { margin-top: 15px; color: #888c99; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
         #gameOverScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 12, 0.9); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100; }
-        #gameOverScreen h1 { font-size: 3.5rem; color: #39A900; text-transform: uppercase; text-align: center; }
-        .btn-finish { background: linear-gradient(135deg, #39A900, #267300); border: none; padding: 15px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 30px; cursor: pointer; text-transform: uppercase; color: #fff; box-shadow: 0 4px 15px rgba(57,169,0,0.4); }
+        #gameOverScreen h1 { font-size: 4rem; color: #39A900; text-transform: uppercase; }
+        .btn-finish { background: linear-gradient(135deg, #39A900, #267300); border: none; padding: 15px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 30px; cursor: pointer; text-transform: uppercase; color: #fff; }
     </style>
 </head>
 <body>
@@ -22,32 +22,26 @@
     <div class="hud">
         <div class="team">
             <img src="https://flagcdn.com/w80/{{ estudiante.iso }}.png" class="flag" alt="Local">
-            <div>
-                <h3 style="margin: 0; font-size: 1rem; color: #fff;">{{ estudiante.nombre }}</h3>
-                <span style="font-size: 0.75rem; color: #39A900;">{{ estudiante.programa }}</span>
-            </div>
+            <h2>{{ estudiante.nombre }} <br><span style="font-size: 0.7rem; color: #888c99;">({{ estudiante.programa }})</span></h2>
         </div>
         <div style="display: flex; align-items: center;">
             <div class="score" id="scoreL">0</div>
             <div class="timer" id="timerDisplay">60</div>
             <div class="score" id="scoreV">0</div>
         </div>
-        <div class="team" style="flex-direction: row-reverse; text-align: right;">
+        <div class="team" style="flex-direction: row-reverse;">
             <img src="https://flagcdn.com/w80/{{ rival.iso }}.png" class="flag" alt="Rival">
-            <div>
-                <h3 style="margin: 0; font-size: 1rem; color: #fff;">Rival Académico</h3>
-                <span style="font-size: 0.75rem; color: #dfb857;">{{ rival.nombre }}</span>
-            </div>
+            <h2 style="text-align: right;">Oponente de Formación <br><span style="font-size: 0.7rem; color: #888c99;">({{ rival.nombre }})</span></h2>
         </div>
     </div>
 
     <canvas id="gameCanvas" width="800" height="450"></canvas>
-    <div class="controls">🕹️ Mover: Flechas / WASD | ⚽ Patear: Espacio</div>
+    
+    <div class="controls">🕹️ Mover: Flechas / WASD | ⚽ Acción: Espacio</div>
 
     <div id="gameOverScreen">
         <h1>Simulación Finalizada</h1>
-        <p style="color: #888c99; margin-bottom: 25px;">Resultados procesados con éxito en la nube de MongoDB Atlas.</p>
-        <button class="btn-finish" onclick="volverAlMenu()">Guardar y Regresar al Panel</button>
+        <button class="btn-finish" onclick="volverAlMenu()">Guardar y Salir al Panel</button>
     </div>
 
     <script>
