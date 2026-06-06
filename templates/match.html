@@ -2,99 +2,88 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>FIFA World Cup 2026 - Live Match Arena</title>
+    <title>FIFA World Cup 2026 - Live Simulation</title>
     <style>
         body {
-            background-color: #050a18;
+            background-color: #040814;
             color: #fff;
             font-family: system-ui, sans-serif;
             margin: 0;
-            padding: 40px 20px;
+            padding: 40px 15px;
             display: flex;
             justify-content: center;
         }
-        .arena-container {
+        .arena {
             max-width: 700px;
             width: 100%;
-            background: #0f172a;
-            border-radius: 20px;
+            background: #0f162b;
+            border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.08);
         }
-        .scoreboard-card {
-            background: linear-gradient(180deg, #1e293b, #0f172a);
+        .scoreboard {
+            background: linear-gradient(180deg, #1d2844, #0f162b);
             border-radius: 12px;
             padding: 25px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            text-align: center;
-            border-bottom: 4px solid #dfb857;
+            border-bottom: 4px solid #e2b955;
         }
-        .team-block { width: 35%; }
-        .kit-preview {
-            width: 45px; height: 45px; margin: 0 auto 10px; border-radius: 50%;
-            border: 3px solid #fff; box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        .team { width: 35%; text-align: center; }
+        .jersey {
+            width: 40px; height: 40px; margin: 0 auto 10px; border-radius: 50%;
+            border: 2px solid #fff; box-shadow: 0 0 8px rgba(255,255,255,0.2);
         }
-        .team-name { font-size: 1.3rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .score-center { font-size: 3.5rem; font-weight: 900; color: #dfb857; font-family: monospace; }
-        .status-badge {
-            text-align: center; margin: 20px 0; font-weight: bold;
-            font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase;
+        .name { font-size: 1.2rem; font-weight: bold; text-transform: uppercase; }
+        .score { font-size: 3.5rem; font-weight: 900; color: #e2b955; font-family: monospace; }
+        .badge { text-align: center; margin: 25px 0; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .logs {
+            background: #030612; border-radius: 8px; padding: 18px;
+            max-height: 250px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05);
         }
-        .logs-panel {
-            background: #020617; border-radius: 10px; padding: 20px;
-            max-height: 300px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .log-line {
-            padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
-            font-size: 0.95rem; font-family: 'Courier New', monospace; color: #cbd5e1;
-        }
+        .line { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.9rem; font-family: monospace; color: #cbd5e1; }
         .btn-back {
-            display: block; width: fit-content; margin: 25px auto 0; padding: 12px 30px;
-            background: #dfb857; color: #050a18; text-decoration: none; font-weight: bold;
-            border-radius: 8px; text-transform: uppercase; font-size: 0.9rem;
+            display: block; width: fit-content; margin: 25px auto 0; padding: 12px 28px;
+            background: #e2b955; color: #040814; text-decoration: none; font-weight: bold;
+            border-radius: 6px; text-transform: uppercase; font-size: 0.85rem;
         }
-        .btn-back:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
-<div class="arena-container">
-    <div style="text-align: center; color: #dfb857; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px;">
-        ⚽ TRANSMISIÓN EN VIVO - DIRECTO DESDE EL ESTADIO ⚽
+<div class="arena">
+    <div style="text-align: center; color: #e2b955; font-weight: bold; margin-bottom: 15px; font-size: 0.85rem; letter-spacing: 1px;">
+        ⚽ MATCH ENGINE EN TIEMPO REAL - TRANSMISIÓN DE JUEGO ⚽
     </div>
     
-    <div class="scoreboard-card">
-        <div class="team-block">
-            <div class="kit-preview" style="background-color: {{ partido.color_local }};"></div>
-            <div class="team-name">{{ partido.local }}</div>
-            <div style="font-size: 0.8rem; color:#94a3b8; margin-top:4px;">DT: {{ partido.manager }}</div>
+    <div class="scoreboard">
+        <div class="team">
+            <div class="jersey" style="background-color: {{ partido.color_local }};"></div>
+            <div class="name">{{ partido.local }}</div>
+            <div style="font-size: 0.75rem; color:#94a3b8; margin-top:4px;">DT: {{ partido.manager }}</div>
         </div>
-        <div class="score-center">
-            {{ partido.goles_l }} - {{ partido.goles_v }}
-        </div>
-        <div class="team-block">
-            <div class="kit-preview" style="background-color: {{ partido.color_visitante }};"></div>
-            <div class="team-name">{{ partido.visitante }}</div>
-            <div style="font-size: 0.8rem; color:#94a3b8; margin-top:4px;">Rival de Grupo</div>
+        <div class="score">{{ partido.goles_l }} - {{ partido.goles_v }}</div>
+        <div class="team">
+            <div class="jersey" style="background-color: {{ partido.color_visitante }};"></div>
+            <div class="name">{{ partido.visitante }}</div>
+            <div style="font-size: 0.75rem; color:#94a3b8; margin-top:4px;">Rival de Grupo</div>
         </div>
     </div>
 
-    <div class="status-badge">
-        Resultado Final: <span style="color: #dfb857;">{{ partido.resultado }}</span>
+    <div class="badge">
+        Estatus: <span style="color: #e2b955;">{{ partido.resultado }}</span>
     </div>
 
-    <h3 style="color: #94a3b8; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px;">Eventos del Encuentro:</h3>
-    <div class="logs-panel">
+    <div class="logs">
         {% for evento in partido.eventos %}
-            <div class="log-line">{{ evento }}</div>
+            <div class="line">{{ evento }}</div>
         {% endfor %}
-        <div class="log-line" style="color: #dfb857; font-weight: bold;">⏱️ Min 90'+3: ¡Pitazo final del árbitro! Fin del partido.</div>
+        <div class="line" style="color: #e2b955; font-weight: bold;">⏱️ Min 90'+3: Final del partido. Estadísticas enviadas a MongoDB Atlas.</div>
     </div>
 
-    <a href="/" class="btn-back">Regresar al Panel Central</a>
+    <a href="/" class="btn-back">Volver al Panel</a>
 </div>
 
 </body>
