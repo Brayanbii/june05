@@ -41,7 +41,6 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
 
-        /* --- MEJORA CRÍTICA DE CONTRASTE EN FORMULARIOS --- */
         .form-label-custom {
             color: var(--text-labels) !important;
             font-weight: 700;
@@ -60,13 +59,11 @@
             padding: 12px 16px;
             font-size: 0.95rem;
             font-weight: 500;
-            transition: all 0.2s ease;
         }
 
-        /* Estilo explícito para textos de ayuda y marcadores de posición */
         .form-control::placeholder {
             color: #cbd5e1 !important;
-            opacity: 1;
+            opacity: 0.7;
         }
 
         .form-select option {
@@ -104,17 +101,13 @@
             padding: 15px;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(57, 169, 0, 0.3);
-            transition: all 0.2s ease;
         }
 
         .btn-sena-action:hover {
             filter: brightness(1.1);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(57, 169, 0, 0.45);
             color: #ffffff;
         }
 
-        /* --- MEJORA DE CONTRASTE EN TABLAS --- */
         .table-pro {
             color: var(--text-bright);
             margin-bottom: 0;
@@ -126,7 +119,6 @@
             font-weight: 700;
             text-transform: uppercase;
             font-size: 0.8rem;
-            letter-spacing: 0.5px;
             padding: 16px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.15);
         }
@@ -134,11 +126,6 @@
         .table-pro tbody td {
             padding: 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            background-color: transparent;
-        }
-
-        .table-pro tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.03) !important;
         }
 
         .badge-program {
@@ -158,8 +145,6 @@
             padding: 6px 14px;
             border-radius: 20px;
             font-weight: 700;
-            font-size: 0.85rem;
-            display: inline-block;
         }
 
         .progress-custom {
@@ -174,14 +159,14 @@
     <header class="main-header sticky-top shadow-lg">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-3">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/SENA_logo.svg" alt="SENA Logo" style="height: 48px; filter: drop-shadow(0 0 4px rgba(255,255,255,0.1));">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/SENA_logo.svg" alt="SENA Logo" style="height: 48px;">
                 <div class="border-start border-secondary border-2 ps-3">
-                    <span class="fs-4 fw-bold tracking-tight text-white d-block" style="font-family: sans-serif; letter-spacing: 0.5px;">CORE ENGINE v2.0</span>
-                    <small class="text-success fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">SISTEMA DE CONTROL ACADÉMICO</small>
+                    <span class="fs-4 fw-bold tracking-tight text-white d-block">CORE ENGINE v2.0</span>
+                    <small class="text-success fw-bold" style="font-size: 0.75rem;">SISTEMA DE CONTROL ACADÉMICO</small>
                 </div>
             </div>
-            <div class="d-flex align-items-center gap-2 bg-black bg-opacity-40 px-3 py-2 rounded-3 border border-secondary border-opacity-50">
-                <small class="text-white-50 fw-bold me-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">INFRAESTRUCTURA CLOUD:</small>
+            <div class="d-flex align-items-center gap-2 bg-black bg-opacity-40 px-3 py-2 rounded-3 border border-secondary">
+                <small class="text-white-50 fw-bold me-1" style="font-size: 0.7rem;">INFRAESTRUCTURA CLOUD:</small>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" alt="MongoDB Logo" style="height: 24px;">
             </div>
         </div>
@@ -189,21 +174,11 @@
 
     <div class="container my-5">
         
-        {% if mensaje %}
-        <div class="alert alert-{{ tipo_mensaje }} alert-dismissible fade show border-0 shadow card-pro text-white mb-4" role="alert" style="background: rgba(220, 38, 38, 0.2); border-left: 5px solid #dc2626 !important;">
-            <div class="d-flex align-items-center gap-2">
-                <i class="fa-solid fa-circle-exclamation text-danger fs-5"></i>
-                <div class="fw-semibold">Atención: {{ mensaje }}</div>
-            </div>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-
         <div class="row g-4 mb-5">
             <div class="col-md-4">
                 <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid var(--sena-green);">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1" style="letter-spacing: 0.5px;">Aprendices Registrados</p>
+                        <p class="text-uppercase text-muted small fw-bold mb-1">Aprendices Registrados</p>
                         <h2 class="fw-bold mb-0 text-white font-monospace">{{ estudiantes|length }}</h2>
                     </div>
                     <div class="fs-2 text-success opacity-75"><i class="fa-solid fa-users"></i></div>
@@ -212,7 +187,7 @@
             <div class="col-md-4">
                 <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid var(--mongo-green);">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1" style="letter-spacing: 0.5px;">Persistencia Cloud</p>
+                        <p class="text-uppercase text-muted small fw-bold mb-1">Persistencia Cloud</p>
                         <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-circle-check me-2"></i>Cluster0 Online</h5>
                     </div>
                     <div class="fs-2 text-success opacity-75"><i class="fa-solid fa-cloud-bolt"></i></div>
@@ -221,7 +196,7 @@
             <div class="col-md-4">
                 <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid #00d2ff;">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1" style="letter-spacing: 0.5px;">Seguridad del Sistema</p>
+                        <p class="text-uppercase text-muted small fw-bold mb-1">Seguridad del Sistema</p>
                         <h5 class="fw-bold mb-0 text-info"><i class="fa-solid fa-shield-halved me-2"></i>Try-Except Activo</h5>
                     </div>
                     <div class="fs-2 text-info opacity-75"><i class="fa-solid fa-microchip"></i></div>
@@ -230,6 +205,7 @@
         </div>
 
         <div class="row g-4">
+            <!-- FORMULARIO CORREGIDO CON EJEMPLOS ANÓNIMOS -->
             <div class="col-lg-4">
                 <div class="card-pro p-4">
                     <h4 class="fw-bold mb-4 text-white d-flex align-items-center gap-2 border-bottom border-secondary pb-2">
@@ -241,7 +217,7 @@
                             <label class="form-label-custom">Documento de Identidad</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-address-card"></i></span>
-                                <input type="text" name="documento" class="form-control form-control-with-icon" placeholder="Ej: 1015393194" required autocomplete="off">
+                                <input type="text" name="documento" class="form-control form-control-with-icon" placeholder="Ej: 1000123456" required autocomplete="off">
                             </div>
                         </div>
 
@@ -249,7 +225,7 @@
                             <label class="form-label-custom">Nombre Completo</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-user"></i></span>
-                                <input type="text" name="nombre" class="form-control form-control-with-icon" placeholder="Ej: Brayan Bareño" required>
+                                <input type="text" name="nombre" class="form-control form-control-with-icon" placeholder="Ej: Juan Pérez" required>
                             </div>
                         </div>
 
@@ -257,7 +233,7 @@
                             <label class="form-label-custom">Correo Electrónico</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-envelope"></i></span>
-                                <input type="email" name="correo" class="form-control form-control-with-icon" placeholder="Ej: tu_correo@misena.edu.co" required>
+                                <input type="email" name="correo" class="form-control form-control-with-icon" placeholder="Ej: aprendiz@misena.edu.co" required>
                             </div>
                         </div>
 
@@ -268,7 +244,7 @@
                                 <select name="programa" class="form-select form-control-with-icon" required>
                                     <option value="" disabled selected style="color: #cbd5e1;">Seleccione una especialidad...</option>
                                     {% for prog in programas %}
-                                    <option value="{{ prog.nombre }}">{{ prog.nombre }}</option>
+                                    <option value="{{ prog }}">{{ prog }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -278,7 +254,7 @@
                             <label class="form-label-custom">Ficha Académica</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-hashtag"></i></span>
-                                <input type="text" name="ficha" class="form-control form-control-with-icon" placeholder="Ej: 3065826" required>
+                                <input type="text" name="ficha" class="form-control form-control-with-icon" placeholder="Ej: 2500123" required>
                             </div>
                         </div>
 
@@ -289,6 +265,7 @@
                 </div>
             </div>
 
+            <!-- TABLA GENERAL -->
             <div class="col-lg-8">
                 <div class="card-pro overflow-hidden">
                     <div class="p-4 d-flex justify-content-between align-items-center border-bottom border-secondary" style="background-color: #0d131f;">
@@ -342,7 +319,6 @@
                                         <td colspan="5" class="text-center text-muted py-5">
                                             <div class="fs-2 mb-2 opacity-50"><i class="fa-solid fa-folder-open text-secondary"></i></div>
                                             <p class="mb-0 fs-5 text-white-50">Cero registros detectados en MongoDB Atlas.</p>
-                                            <small class="text-muted">Utiliza el formulario de acreditación para insertar datos.</small>
                                         </td>
                                     </tr>
                                 {% endif %}
