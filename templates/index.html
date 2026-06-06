@@ -3,159 +3,689 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA World Cup 2026 - Central Management</title>
+    <title>FIFA World Cup 2026 - Official Main Menu</title>
     <style>
+        /* ==========================================================================
+           VARIABLES PREMIUM DE COLOR Y ESTILOS (FIFA 2026 CYBER-SPORT)
+           ========================================================================== */
         :root {
-            --fifa-dark: #070b19;
-            --fifa-gold: #e2b955;
-            --panel-bg: #111a36;
-            --text-light: #f3f4f6;
-            --success: #00ff87;
-            --danger: #ff4d4d;
+            --matrix-dark: #030712;
+            --fifa-deep-blue: #0b122c;
+            --fifa-gold: #dfb857;
+            --fifa-gold-glow: #ffea9f;
+            --neon-cyan: #00f0ff;
+            --neon-green: #00ff87;
+            --neon-error: #ff3366;
+            --glass-bg: rgba(13, 20, 44, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --text-main: #f3f4f6;
+            --text-muted: #8fa1cb;
         }
+
+        /* Base y Animación de Fondo Dinámico */
         body {
-            background-color: var(--fifa-dark);
-            color: var(--text-light);
-            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, var(--matrix-dark) 20%, var(--fifa-deep-blue) 100%);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            color: var(--text-main);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
-            padding: 30px 15px;
+            padding: 40px 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        .wrapper { max-width: 1200px; margin: 0 auto; }
-        .hero { text-align: center; margin-bottom: 40px; }
-        .hero h1 {
-            font-size: 2.6rem;
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .wrapper {
+            max-width: 1300px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* ==========================================================================
+           HEADER / INTRO CINEMÁTICA
+           ========================================================================== */
+        .intro-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .live-badge {
+            background: rgba(0, 255, 135, 0.12);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin-bottom: 12px;
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.3);
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.2); }
+            100% { transform: scale(1.03); box-shadow: 0 0 20px rgba(0, 255, 135, 0.5); }
+        }
+
+        .intro-header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
             margin: 0;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #fff, var(--fifa-gold));
+            letter-spacing: -1px;
+            line-height: 1;
+            background: linear-gradient(180deg, #ffffff 40%, var(--fifa-gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
-        .hero p { color: #8ea1db; margin-top: 6px; font-size: 1.05rem; }
-        .grid-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
-        @media(max-width: 900px){ .grid-layout { grid-template-columns: 1fr; } }
-        .panel {
-            background: var(--panel-bg);
-            border: 1px solid rgba(255,255,255,0.07);
+
+        .intro-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin: 10px 0 0 0;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        /* ==========================================================================
+           DISTRIBUCIÓN DEL DASHBOARD (GRID)
+           ========================================================================== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Estilo Contenedor de Cristal (Glassmorphism Pro) */
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(226, 185, 85, 0.2);
+            box-shadow: 0 25px 60px rgba(226, 185, 85, 0.05);
+        }
+
+        .panel-title {
+            color: var(--fifa-gold);
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--fifa-gold);
+            padding-left: 12px;
+        }
+
+        /* ==========================================================================
+           FORMULARIO DE ACREDITACIÓN PRO
+           ========================================================================== */
+        .form-group {
+            position: relative;
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(5, 9, 26, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            background: rgba(5, 9, 26, 0.85);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+        }
+
+        /* Botón disparador del selector de países Pro */
+        .custom-select-trigger {
+            width: 100%;
+            padding: 14px 16px;
+            background: linear-gradient(90deg, rgba(226, 185, 85, 0.08) 0%, rgba(5, 9, 26, 0.6) 100%);
+            border: 1px solid rgba(226, 185, 85, 0.25);
+            border-radius: 12px;
+            color: var(--fifa-gold);
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .custom-select-trigger:hover {
+            border-color: var(--fifa-gold);
+            background: rgba(226, 185, 85, 0.15);
+            box-shadow: 0 0 15px rgba(226, 185, 85, 0.1);
+        }
+
+        .selected-badge-indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #fff;
+            display: inline-block;
+            box-shadow: 0 0 8px rgba(255,255,255,0.4);
+        }
+
+        .btn-submit-pro {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--fifa-gold) 0%, #b8923a 100%);
+            color: #040714;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(226, 185, 85, 0.25);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 10px;
+        }
+
+        .btn-submit-pro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(226, 185, 85, 0.4);
+            filter: brightness(1.1);
+        }
+
+        /* ==========================================================================
+           LEADERBOARD / CLASIFICACIÓN ESTILO ULTIMATE TEAM
+           ========================================================================== */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-top: -10px;
+        }
+
+        th {
+            padding: 12px 16px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        tr.dt-row {
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        tr.dt-row:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.008);
+        }
+
+        td {
+            padding: 16px;
+            vertical-align: middle;
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        td:first-child {
+            border-left: 1px solid var(--glass-border);
+            border-top-left-radius: 14px;
+            border-bottom-left-radius: 14px;
+        }
+
+        td:last-child {
+            border-right: 1px solid var(--glass-border);
+            border-top-right-radius: 14px;
+            border-bottom-right-radius: 14px;
+        }
+
+        .manager-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #fff;
+        }
+
+        .manager-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .team-pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .stat-highlight {
+            color: var(--neon-cyan);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .btn-play-action {
+            background: rgba(0, 255, 135, 0.1);
+            color: var(--neon-green);
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            padding: 8px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-play-action:hover {
+            background: var(--neon-green);
+            color: #030712;
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Alerts Estilizados */
+        .notification {
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+            border: 1px solid;
+            animation: fadeInDown 0.4s;
+        }
+        .notification-success { background: rgba(0,255,135,0.1); color: var(--neon-green); border-color: rgba(0,255,135,0.3); }
+        .notification-danger { background: rgba(255,51,102,0.1); color: var(--neon-error); border-color: rgba(255,51,102,0.3); }
+
+        /* ==========================================================================
+           SELECTOR FLOTANTE DE PANTALLA COMPLETA (MODAL OVERLAY PRO)
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 5, 15, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-wrapper {
+            background: #0d142d;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 28px;
+            width: 90%;
+            max-width: 950px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-wrapper {
+            transform: scale(1);
+        }
+
+        .modal-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--fifa-gold);
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .btn-close-modal {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            transition: background 0.2s;
+        }
+
+        .btn-close-modal:hover { background: var(--neon-error); }
+
+        .search-box-container {
+            margin-bottom: 25px;
+        }
+
+        .search-input-pro {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(5, 9, 26, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 14px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
         }
-        h2 { color: var(--fifa-gold); text-transform: uppercase; font-size: 1.25rem; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; }
-        .form-control { margin-bottom: 16px; }
-        label { display: block; font-size: 0.8rem; color: #a2b1cc; margin-bottom: 6px; text-transform: uppercase; font-weight: bold; }
-        input, select {
-            width: 100%; padding: 12px; background: #090e22; border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 8px; color: white; font-size: 0.95rem; box-sizing: border-box;
+
+        .search-input-pro:focus {
+            outline: none;
+            border-color: var(--fifa-gold);
         }
-        input:focus, select:focus { border-color: var(--fifa-gold); outline: none; }
-        .btn-submit {
-            width: 100%; padding: 14px; background: linear-gradient(135deg, var(--fifa-gold), #bca044);
-            color: #070b19; border: none; border-radius: 8px; font-weight: bold; font-size: 0.95rem;
-            cursor: pointer; text-transform: uppercase; transition: opacity 0.2s;
+
+        /* Grid Dinámico de las 48 Selecciones */
+        .country-scroller {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
         }
-        .btn-submit:hover { opacity: 0.9; }
-        .alert { padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; border: 1px solid; font-size: 0.9rem; }
-        .alert-success { background: rgba(0,255,135,0.1); color: var(--success); border-color: var(--success); }
-        .alert-danger { background: rgba(255,77,77,0.1); color: var(--danger); border-color: var(--danger); }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { font-size: 0.8rem; color: #8ea1db; text-transform: uppercase; }
-        .badge-team { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; display: inline-block; color: white; border: 1px solid rgba(255,255,255,0.2); }
-        .action-link {
-            background: linear-gradient(135deg, var(--success), #00b35b); color: #070b19;
-            padding: 8px 14px; border-radius: 6px; text-decoration: none; font-weight: bold;
-            font-size: 0.8rem; text-transform: uppercase; display: inline-block;
+
+        .country-grid-pro {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
         }
-        .action-link:hover { opacity: 0.9; }
+
+        .country-card-pro {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .country-card-pro:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--fifa-gold);
+            transform: translateY(-2px);
+        }
+
+        .jersey-badge-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+
+        .card-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-country-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .card-country-group {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-top: 1px;
+        }
+
+        /* Animación General */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="hero">
-        <h1>🏆 COPA MUNDIAL DE LA FIFA 2026 🏆</h1>
-        <p>Módulo de Control de Estudiantes y Simulación de Alto Rendimiento</p>
+    <div class="intro-header">
+        <div class="live-badge">Live Server Hub</div>
+        <h1>FIFA World Cup 2026</h1>
+        <p>Acreditación de Estudiantes & Simulador de Rendimiento Táctico</p>
     </div>
 
     {% if mensaje %}
-        <div class="alert alert-{{ tipo_mensaje }}">{{ mensaje }}</div>
+        <div class="notification notification-{{ 'success' if tipo_mensaje == 'success' else 'danger' }}">
+            {{ mensaje }}
+        </div>
     {% endif %}
 
-    <div class="grid-layout">
-        <div class="panel">
-            <h2>Acreditación de Mánager</h2>
+    <div class="main-grid">
+        <div class="glass-panel">
+            <h2 class="panel-title">Registro de Mánager</h2>
+            
             <form method="POST" action="/">
-                <div class="form-control">
-                    <label>Documento de Identidad</label>
-                    <input type="text" name="documento" required placeholder="Ingresa solo números">
+                <div class="form-group">
+                    <label>Documento de Identidad (ID)</label>
+                    <input type="text" name="documento" required placeholder="Solo números permitidos">
                 </div>
-                <div class="form-control">
+                
+                <div class="form-group">
                     <label>Nombre Completo del Estudiante</label>
-                    <input type="text" name="nombre" required placeholder="Nombre del DT">
+                    <input type="text" name="nombre" required placeholder="Nombre del Director Técnico">
                 </div>
-                <div class="form-control">
-                    <label>Correo Electrónico</label>
-                    <input type="email" name="correo" required placeholder="usuario@sena.edu.co">
+                
+                <div class="form-group">
+                    <label>Correo Electrónico Corporativo</label>
+                    <input type="email" name="correo" required placeholder="ejemplo@sena.edu.co">
                 </div>
-                <div class="form-control">
-                    <label>Programa de Formación (Selección)</label>
-                    <select name="equipo" required>
+
+                <div class="form-group">
+                    <label>Selección Asignada (48 Opciones)</label>
+                    <div class="custom-select-trigger" id="countryTrigger" onclick="toggleModal(true)">
+                        <span id="selectedCountryText">-- Pulsar para Elegir --</span>
+                        <span class="selected-badge-indicator" id="selectedCountryColor" style="display: none;"></span>
+                    </div>
+                    <select name="equipo" id="realCountrySelect" required style="display: none;">
                         <option value="">-- Elige un País --</option>
                         {% for pais in selecciones %}
-                            <option value="{{ pais.nombre }}">{{ pais.nombre }} (Grupo {{ pais.grupo }})</option>
+                            <option value="{{ pais.nombre }}">{{ pais.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="form-control">
-                    <label>Ficha de Formación</label>
-                    <input type="text" name="ficha" required placeholder="Código de Ficha">
+
+                <div class="form-group">
+                    <label>Número de Ficha de Formación</label>
+                    <input type="text" name="ficha" required placeholder="Código de ficha académica">
                 </div>
-                <button type="submit" class="btn-submit">Registrar Estudiante</button>
+
+                <button type="submit" class="btn-submit-pro">Inscribir en la Competencia</button>
             </form>
         </div>
 
-        <div class="panel">
-            <h2>Clasificación General (MongoDB Atlas)</h2>
-            <div style="overflow-x: auto;">
+        <div class="glass-panel">
+            <h2 class="panel-title">Clasificación de Grupos (Live Atlas Feed)</h2>
+            
+            <div class="table-container">
                 {% if dts %}
                     <table>
                         <thead>
                             <tr>
-                                <th>Estudiante (DT)</th>
-                                <th>Programa Asignado</th>
-                                <th>Estadísticas del Torneo</th>
-                                <th>Gestión</th>
+                                <th>Director Técnico</th>
+                                <th>Selección / Grupo</th>
+                                <th>Estadísticas de Torneo</th>
+                                <th>Acción Táctica</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for dt in dts %}
-                                <tr>
-                                    <td><strong>{{ dt.nombre }}</strong><br><span style="color:#718096; font-size:0.75rem;">Ficha: {{ dt.ficha }}</span></td>
+                                <tr class="dt-row">
                                     <td>
-                                        <span class="badge-team" style="background-color: {{ dt.color_kit }}; color: {% if dt.color_kit == '#FFFFFF' or dt.color_kit == '#74ACDF' %}#000{% else %}#FFF{% endif %};">
+                                        <div class="manager-name">{{ dt.nombre }}</div>
+                                        <div class="manager-sub">ID: {{ dt.documento }} | Ficha: {{ dt.ficha }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="team-pill-badge" style="background-color: {{ dt.color_kit }}; color: {% if dt.color_kit == '#FFFFFF' or dt.color_kit == '#74ACDF' %}#05091a{% else %}#fff{% endif %};">
                                             {{ dt.equipo }} (Gr. {{ dt.grupo }})
-                                        </span>
+                                        </div>
                                     </td>
                                     <td>
-                                        <strong>🏆 {{ dt.puntos }} PTS</strong><br>
-                                        <span style="font-size:0.75rem; color:#a2b1cc;">PJs: {{ dt.partidos_jugados }} | GF: {{ dt.goles_favor }} | GC: {{ dt.goles_contra }}</span>
+                                        <div class="stat-highlight">🏆 {{ dt.puntos }} PTS</div>
+                                        <div class="manager-sub">PJs: {{ dt.partidos_jugados }} | GF: {{ dt.goles_favor }} | GC: {{ dt.goles_contra }}</div>
                                     </td>
                                     <td>
-                                        <a href="/partido/{{ dt.documento }}" class="action-link">🕹️ Jugar</a>
+                                        <a href="/partido/{{ dt.documento }}" class="btn-play-action">Simular Partido</a>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 {% else %}
-                    <p style="text-align: center; color: #a2b1cc; padding: 25px 0; font-size: 0.9rem;">No se registran directores técnicos en la nube.</p>
+                    <p style="text-align: center; color: var(--text-muted); padding: 40px 0; margin: 0;">
+                        Estación de monitoreo limpia. Registra al primer mánager para desplegar el panel táctico.
+                    </p>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal-overlay" id="countryModal">
+    <div class="modal-wrapper">
+        <div class="modal-header-container">
+            <h3 class="modal-title">Elegir Nación Mundialista</h3>
+            <button class="btn-close-modal" onclick="toggleModal(false)">✕</button>
+        </div>
+        
+        <div class="search-box-container">
+            <input type="text" class="search-input-pro" id="modalSearch" onkeyup="filterCountries()" placeholder="Filtrar por nombre de país...">
+        </div>
+
+        <div class="country-scroller">
+            <div class="country-grid-pro">
+                {% for pais in selecciones %}
+                    <div class="country-card-pro" data-name="{{ pais.nombre | lower }}" onclick="selectCountryPro('{{ pais.nombre }}', '{{ pais.color_kit }}')">
+                        <div class="jersey-badge-circle" style="background-color: {{ pais.color_kit }};"></div>
+                        <div class="card-details">
+                            <span class="card-country-name">{{ pais.nombre }}</span>
+                            <span class="card-country-group">GRUPO {{ pais.grupo }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleModal(show) {
+        const modal = document.getElementById('countryModal');
+        if(show) {
+            modal.classList.add('active');
+            document.getElementById('modalSearch').focus();
+        } else {
+            modal.classList.remove('active');
+        }
+    }
+
+    function selectCountryPro(countryName, colorHex) {
+        // Actualizar el texto e indicador visual premium del trigger
+        document.getElementById('selectedCountryText').innerText = countryName;
+        const colorIndicator = document.getElementById('selectedCountryColor');
+        colorIndicator.style.backgroundColor = colorHex;
+        colorIndicator.style.display = 'inline-block';
+        
+        // Sincronizar el select real de HTML para que viaje de forma transparente a Python Flask
+        const realSelect = document.getElementById('realCountrySelect');
+        realSelect.value = countryName;
+        
+        // Cerrar el modal overlay
+        toggleModal(false);
+    }
+
+    function filterCountries() {
+        const searchVal = document.getElementById('modalSearch').value.toLowerCase();
+        const cards = document.querySelectorAll('.country-card-pro');
+        
+        cards.forEach(card => {
+            const countryName = card.getAttribute('data-name');
+            if(countryName.includes(searchVal)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
