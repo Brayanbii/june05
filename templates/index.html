@@ -24,9 +24,9 @@
 
     <div class="container my-5">
         
-        {% if mensaje_alerta %}
-        <div class="alert alert-{{ tipo_alerta }} alert-dismissible fade show shadow-sm" role="alert">
-            <strong>Notificación del Sistema:</strong> {{ mensaje_alerta }}
+        {% if mensaje %}
+        <div class="alert alert-{{ tipo_mensaje }} alert-dismissible fade show shadow-sm" role="alert">
+            <strong>Aviso:</strong> {{ mensaje }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endif %}
@@ -39,7 +39,7 @@
                     <form method="POST" action="/registrar">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Documento de Identidad</label>
-                            <input type="text" name="documento" class="form-control" placeholder="Ej: 101423456" required>
+                            <input type="text" name="documento" class="form-control" placeholder="Solo números" required autocomplete="off">
                         </div>
 
                         <div class="mb-3">
@@ -49,7 +49,7 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Correo Electrónico</label>
-                            <input type="email" name="correo" class="form-control" placeholder="Ej: aprendiz@misena.edu.co" required>
+                            <input type="email" name="correo" class="form-control" placeholder="Ej: brayan@misena.edu.co" required>
                         </div>
 
                         <div class="mb-3">
