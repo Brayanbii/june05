@@ -2,19 +2,131 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SENA - Entorno de Simulación Interactiva</title>
+    <title>SENA - Interactive Match Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0a0a0c; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
-        .hud { display: flex; justify-content: space-between; align-items: center; width: 800px; background: #14151a; padding: 15px 30px; border-radius: 12px; border: 1px solid #2a2c36; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); box-sizing: border-box; }
-        .team { display: flex; align-items: center; gap: 15px; max-width: 340px; }
-        .flag { width: 40px; border-radius: 4px; }
-        .score { font-size: 3rem; font-weight: 900; color: #39A900; margin: 0 20px; }
-        .timer { font-size: 1.5rem; font-weight: bold; color: #00ff66; }
-        canvas { background: #2b7a3e; border: 6px solid #fff; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.6); }
-        .controls { margin-top: 15px; color: #888c99; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
-        #gameOverScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 12, 0.9); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100; }
-        #gameOverScreen h1 { font-size: 4rem; color: #39A900; text-transform: uppercase; }
-        .btn-finish { background: linear-gradient(135deg, #39A900, #267300); border: none; padding: 15px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 30px; cursor: pointer; text-transform: uppercase; color: #fff; }
+        body {
+            background-color: #030408;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at center, #0c1020 0%, #030408 100%);
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 800px;
+            background: rgba(13, 15, 26, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            box-sizing: border-box;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 320px;
+        }
+
+        .flag {
+            width: 46px;
+            height: 32px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .score-center {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .score {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: #00ff87;
+            text-shadow: 0 0 15px rgba(0,255,135,0.5);
+        }
+
+        .timer {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            background: #181d30;
+            padding: 6px 18px;
+            border-radius: 30px;
+            color: #ff4d4d;
+            border: 1px solid rgba(255,77,77,0.2);
+            box-shadow: 0 0 10px rgba(255,77,77,0.2);
+        }
+
+        canvas {
+            border-radius: 16px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .controls {
+            margin-top: 20px;
+            color: #505875;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        #gameOverScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 4, 8, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+        }
+
+        #gameOverScreen h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            background: linear-gradient(180deg, #fff, #39A900);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+
+        .btn-finish {
+            background: linear-gradient(135deg, #00ff87, #00b359);
+            border: none;
+            padding: 18px 45px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 900;
+            border-radius: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            color: #000;
+            box-shadow: 0 10px 25px rgba(0,255,135,0.3);
+            transition: 0.2s;
+        }
+
+        .btn-finish:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0,255,135,0.5);
+        }
     </style>
 </head>
 <body>
@@ -22,26 +134,33 @@
     <div class="hud">
         <div class="team">
             <img src="https://flagcdn.com/w80/{{ estudiante.iso }}.png" class="flag" alt="Local">
-            <h2>{{ estudiante.nombre }} <br><span style="font-size: 0.7rem; color: #888c99;">({{ estudiante.programa }})</span></h2>
+            <div>
+                <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">{{ estudiante.nombre }}</h3>
+                <span style="font-size: 0.8rem; color: #39A900; font-weight: bold;">{{ estudiante.programa }}</span>
+            </div>
         </div>
-        <div style="display: flex; align-items: center;">
+        <div class="score-center">
             <div class="score" id="scoreL">0</div>
             <div class="timer" id="timerDisplay">60</div>
-            <div class="score" id="scoreV">0</div>
+            <div class="score" id="scoreV" style="color: #ff4d4d; text-shadow: 0 0 15px rgba(255,77,77,0.5);">0</div>
         </div>
-        <div class="team" style="flex-direction: row-reverse;">
+        <div class="team" style="flex-direction: row-reverse; text-align: right;">
             <img src="https://flagcdn.com/w80/{{ rival.iso }}.png" class="flag" alt="Rival">
-            <h2 style="text-align: right;">Oponente de Formación <br><span style="font-size: 0.7rem; color: #888c99;">({{ rival.nombre }})</span></h2>
+            <div>
+                <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">Rival Académico</h3>
+                <span style="font-size: 0.8rem; color: #ffaa00; font-weight: bold;">{{ rival.nombre }}</span>
+            </div>
         </div>
     </div>
 
     <canvas id="gameCanvas" width="800" height="450"></canvas>
     
-    <div class="controls">🕹️ Mover: Flechas / WASD | ⚽ Acción: Espacio</div>
+    <div class="controls">🕹️ MANDOS: W,A,S,D / ARROWS | ⚡ POTENCIA: ESPACIO (KICK)</div>
 
     <div id="gameOverScreen">
-        <h1>Simulación Finalizada</h1>
-        <button class="btn-finish" onclick="volverAlMenu()">Guardar y Salir al Panel</button>
+        <h1>CICLO COMPLETADO</h1>
+        <p style="color: #6c7693; font-size: 1.2rem; margin-bottom: 40px;">Métricas consolidadas en base de datos.</p>
+        <button class="btn-finish" onclick="volverAlMenu()">Persistir Datos e Ir al Panel</button>
     </div>
 
     <script>
@@ -55,70 +174,162 @@
         let scoreL = 0, scoreV = 0, timeLeft = 60, isGameOver = false;
         const keys = {}; const friction = 0.96;
 
-        const ball = { x: 400, y: 225, radius: 8, vx: 0, vy: 0, speedLimit: 12 };
-        const p1 = { x: 200, y: 225, radius: 15, vx: 0, vy: 0, speed: 0.6, maxSpeed: 4, color: colorL1, outline: colorL2 };
-        const p2 = { x: 600, y: 225, radius: 15, vx: 0, vy: 0, speed: 0.45, maxSpeed: 3.5, color: colorV1, outline: colorV2 };
+        // Variables de Efectos Visuales (Pro Juicing)
+        let screenShake = 0;
+        let particles = [];
+        let ballHistory = [];
 
-        const goalH = 120, goalW = 20; const goalY = (canvas.height / 2) - (goalH / 2);
+        const ball = { x: 400, y: 225, radius: 9, vx: 0, vy: 0 };
+        const p1 = { x: 200, y: 225, radius: 16, vx: 0, vy: 0, speed: 0.65, maxSpeed: 4.5, color: colorL1, outline: colorL2 };
+        const p2 = { x: 600, y: 225, radius: 16, vx: 0, vy: 0, speed: 0.48, maxSpeed: 3.8, color: colorV1, outline: colorV2 };
+
+        const goalH = 130, goalW = 15; const goalY = (canvas.height / 2) - (goalH / 2);
 
         window.addEventListener("keydown", e => keys[e.key] = true);
         window.addEventListener("keyup", e => keys[e.key] = false);
 
+        function createExplosion(x, y, color) {
+            for(let i=0; i<25; i++) {
+                particles.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    radius: Math.random() * 3 + 2,
+                    alpha: 1,
+                    color: color
+                });
+            }
+        }
+
         function drawPitch() {
-            ctx.fillStyle = "#2b7a3e"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#266d37"; for(let i=0; i<canvas.width; i+=80) ctx.fillRect(i, 0, 40, canvas.height);
-            ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.lineWidth = 3;
+            // Fondo sintético premium estilo Cyberpunk
+            let bgGrad = ctx.createRadialGradient(400, 225, 50, 400, 225, 400);
+            bgGrad.addColorStop(0, "#153a21");
+            bgGrad.addColorStop(1, "#0a1c10");
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Líneas de campo de neón sutil
+            ctx.strokeStyle = "rgba(255,255,255,0.15)";
+            ctx.lineWidth = 2;
             ctx.beginPath(); ctx.moveTo(400, 0); ctx.lineTo(400, 450); ctx.stroke();
-            ctx.beginPath(); ctx.arc(400, 225, 60, 0, Math.PI*2); ctx.stroke();
-            ctx.strokeRect(0, goalY - 40, 100, goalH + 80); ctx.strokeRect(700, goalY - 40, 100, goalH + 80);
-            ctx.fillStyle = "rgba(255,255,255,0.4)"; ctx.fillRect(0, goalY, goalW, goalH); ctx.fillRect(800-goalW, goalY, goalW, goalH);
+            ctx.beginPath(); ctx.arc(400, 225, 70, 0, Math.PI*2); ctx.stroke();
+            
+            // Áreas
+            ctx.strokeRect(0, goalY - 30, 90, goalH + 60);
+            ctx.strokeRect(canvas.width - 90, goalY - 30, 90, goalH + 60);
+
+            // Arcos Brillantes
+            ctx.fillStyle = "rgba(0, 255, 135, 0.2)";
+            ctx.fillRect(0, goalY, goalW, goalH);
+            ctx.fillStyle = "rgba(255, 77, 77, 0.2)";
+            ctx.fillRect(canvas.width - goalW, goalY, goalW, goalH);
         }
 
         function drawEntity(entity, isBall=false) {
+            ctx.save();
+            // Sombras dinámicas
+            ctx.shadowBlur = isBall ? 12 : 8;
+            ctx.shadowColor = isBall ? "#fff" : entity.color;
             ctx.beginPath(); ctx.arc(entity.x, entity.y, entity.radius, 0, Math.PI * 2);
             ctx.fillStyle = isBall ? "#ffffff" : entity.color; ctx.fill();
-            if (!isBall) { ctx.strokeStyle = entity.outline; ctx.lineWidth = 4; ctx.stroke(); }
-            else { ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(entity.x, entity.y, 3, 0, Math.PI*2); ctx.fill(); }
+            ctx.restore();
+
+            if (!isBall) {
+                ctx.strokeStyle = entity.outline; ctx.lineWidth = 4; ctx.stroke();
+                // Detalle interno estético para jugadores
+                ctx.fillStyle = "rgba(255,255,255,0.2)";
+                ctx.beginPath(); ctx.arc(entity.x, entity.y, entity.radius - 6, 0, Math.PI*2); ctx.fill();
+            }
         }
 
         function handleCollision(obj1, obj2, isKicking) {
             let dx = obj1.x - obj2.x; let dy = obj1.y - obj2.y; let distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < obj1.radius + obj2.radius) {
-                let angle = Math.atan2(dy, dx); let power = isKicking ? 14 : 4;
+                let angle = Math.atan2(dy, dx); 
+                let power = isKicking ? 15 : 4.5;
                 obj2.vx -= Math.cos(angle) * power; obj2.vy -= Math.sin(angle) * power;
+                if (isKicking) screenShake = 6; // Pequeña sacudida al golpear fuerte
             }
         }
 
         function update() {
             if (isGameOver) return;
+
+            // Movimiento local fluido (Teclado híbrido)
             if ((keys["ArrowUp"] || keys["w"]) && p1.vy > -p1.maxSpeed) p1.vy -= p1.speed;
             if ((keys["ArrowDown"] || keys["s"]) && p1.vy < p1.maxSpeed) p1.vy += p1.speed;
             if ((keys["ArrowLeft"] || keys["a"]) && p1.vx > -p1.maxSpeed) p1.vx -= p1.speed;
             if ((keys["ArrowRight"] || keys["d"]) && p1.vx < p1.maxSpeed) p1.vx += p1.speed;
 
+            // IA optimizada predictiva
             let dxAI = ball.x - p2.x; let dyAI = ball.y - p2.y; let angleAI = Math.atan2(dyAI, dxAI);
-            if (p2.vx < p2.maxSpeed && p2.vx > -p2.maxSpeed) p2.vx += Math.cos(angleAI) * p2.speed;
-            if (p2.vy < p2.maxSpeed && p2.vy > -p2.maxSpeed) p2.vy += Math.sin(angleAI) * p2.speed;
+            p2.vx += Math.cos(angleAI) * p2.speed; p2.vy += Math.sin(angleAI) * p2.speed;
 
             p1.vx *= friction; p1.vy *= friction; p2.vx *= friction; p2.vy *= friction; ball.vx *= friction; ball.vy *= friction;
             p1.x += p1.vx; p1.y += p1.vy; p2.x += p2.vx; p2.y += p2.vy; ball.x += ball.vx; ball.y += ball.vy;
 
+            // Guardar historial para efecto estela (balón)
+            ballHistory.push({x: ball.x, y: ball.y});
+            if (ballHistory.length > 6) ballHistory.shift();
+
+            // Bordes físicos
             [p1, p2, ball].forEach(obj => {
-                if (obj.x - obj.radius < 0) { obj.x = obj.radius; obj.vx *= -1; }
-                if (obj.x + obj.radius > canvas.width) { obj.x = canvas.width - obj.radius; obj.vx *= -1; }
-                if (obj.y - obj.radius < 0) { obj.y = obj.radius; obj.vy *= -1; }
-                if (obj.y + obj.radius > canvas.height) { obj.y = canvas.height - obj.radius; obj.vy *= -1; }
+                if (obj.x - obj.radius < 0) { obj.x = obj.radius; obj.vx *= -0.8; }
+                if (obj.x + obj.radius > canvas.width) { obj.x = canvas.width - obj.radius; obj.vx *= -0.8; }
+                if (obj.y - obj.radius < 0) { obj.y = obj.radius; obj.vy *= -0.8; }
+                if (obj.y + obj.radius > canvas.height) { obj.y = canvas.height - obj.radius; obj.vy *= -0.8; }
             });
 
             handleCollision(p1, ball, keys[" "]); handleCollision(p2, ball, false);
 
-            if (ball.x - ball.radius <= goalW && ball.y > goalY && ball.y < goalY + goalH) { scoreV++; document.getElementById("scoreV").innerText = scoreV; resetCancha(); }
-            if (ball.x + ball.radius >= canvas.width - goalW && ball.y > goalY && ball.y < goalY + goalH) { scoreL++; document.getElementById("scoreL").innerText = scoreL; resetCancha(); }
+            // Goles
+            if (ball.x - ball.radius <= goalW && ball.y > goalY && ball.y < goalY + goalH) { 
+                scoreV++; document.getElementById("scoreV").innerText = scoreV; 
+                createExplosion(ball.x, ball.y, "#ff4d4d"); screenShake = 20; resetCancha(); 
+            }
+            if (ball.x + ball.radius >= canvas.width - goalW && ball.y > goalY && ball.y < goalY + goalH) { 
+                scoreL++; document.getElementById("scoreL").innerText = scoreL; 
+                createExplosion(ball.x, ball.y, "#00ff87"); screenShake = 20; resetCancha(); 
+            }
         }
 
-        function resetCancha() { ball.x = 400; ball.y = 225; ball.vx = 0; ball.vy = 0; p1.x = 200; p1.y = 225; p1.vx = 0; p1.vy = 0; p2.x = 600; p2.y = 225; p2.vx = 0; p2.vy = 0; }
+        function resetCancha() { ball.x = 400; ball.y = 225; ball.vx = 0; ball.vy = 0; p1.x = 200; p1.y = 225; p2.x = 600; p2.y = 225; }
 
-        function loop() { update(); drawPitch(); drawEntity(p1); drawEntity(p2); drawEntity(ball, true); if (!isGameOver) requestAnimationFrame(loop); }
+        function loop() {
+            ctx.save();
+            // Aplicar Screen Shake en goles o balonazos
+            if (screenShake > 0) {
+                let dx = (Math.random() - 0.5) * screenShake;
+                let dy = (Math.random() - 0.5) * screenShake;
+                ctx.translate(dx, dy);
+                screenShake *= 0.9;
+                if (screenShake < 0.5) screenShake = 0;
+            }
+
+            update();
+            drawPitch();
+
+            // Renderizar Estela de movimiento del balón (Trail)
+            ballHistory.forEach((pos, i) => {
+                ctx.beginPath(); ctx.arc(pos.x, pos.y, ball.radius * (i/ballHistory.length), 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${0.15 * (i/ballHistory.length)})`; ctx.fill();
+            });
+
+            // Dibujar Partículas de Goles
+            particles.forEach((p, idx) => {
+                p.x += p.vx; p.y += p.vy; p.alpha -= 0.02;
+                if (p.alpha <= 0) particles.splice(idx, 1);
+                ctx.save(); ctx.globalAlpha = p.alpha;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+                ctx.fillStyle = p.color; ctx.fill(); ctx.restore();
+            });
+
+            drawEntity(p1); drawEntity(p2); drawEntity(ball, true);
+            ctx.restore();
+
+            if (!isGameOver) requestAnimationFrame(loop);
+        }
 
         const timer = setInterval(() => {
             timeLeft--; document.getElementById("timerDisplay").innerText = timeLeft;
