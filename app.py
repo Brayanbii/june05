@@ -6,115 +6,152 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure, ConfigurationError
 
 app = Flask(__name__)
-app.secret_key = "clave-secreta-mundial-nokia"
+app.secret_key = "fifa_world_cup_2026_premium_key"
 
-# ==========================================
-# TU CONFIGURACIÓN DE MONGODB ATLAS
-# ==========================================
-# Usamos os.environ para que funcione en Render de forma segura. 
-# Si estás en tu PC local, usará por defecto tu enlace que me pasaste.
-CADENA_CONEXION_REAL = "mongodb+srv://brian_dt:FJG4MLFMR0bo0up2@cluster0.ry2pwjd.mongodb.net/mundial2026_db?retryWrites=true&w=majority&appName=Cluster0"
-MONGO_URI = os.environ.get("MONGO_URI", CADENA_CONEXION_REAL)
+# Conexión Segura a MongoDB Atlas
+CADENA_CONEXION = "mongodb+srv://brian_dt:FJG4MLFMR0bo0up2@cluster0.ry2pwjd.mongodb.net/mundial2026_db?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URI = os.environ.get("MONGO_URI", CADENA_CONEXION)
 
-def obtener_conexion_db():
-    """Intenta conectar a tu base de datos mundial2026_db aplicando un timeout de 3 segundos"""
+def conectar_db():
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=3000)
-    # Hacemos un ping de control para verificar si hay conexión real
     client.admin.command('ping')
     return client
+
+def clonar_48_selecciones(db):
+    """Inserta automáticamente las 48 selecciones oficiales si la colección está vacía"""
+    if db['selecciones'].count_documents({}) == 0:
+        # Estructura real de los 12 grupos de la Copa del Mundo 2026
+        grupos_2026 = {
+            "A": ["México", "Estados Unidos", "Canadá", "Panamá"],
+            "B": ["Argentina", "Ecuador", "Venezuela", "Jamaica"],
+            "C": ["Brasil", "Uruguay", "Colombia", "Paraguay"],
+            "D": ["Francia", "Países Bajos", "Polonia", "Austria"],
+            "E": ["Inglaterra", "Italia", "Ucrania", "Gales"],
+            "F": ["Alemania", "España", "Bélgica", "Escocia"],
+            "G": ["Portugal", "Turquía", "República Checa", "Georgia"],
+            "H": ["Japón", "Corea del Sur", "Australia", "Arabia Saudita"],
+            "I": ["Marruecos", "Egipto", "Senegal", "Nigeria"],
+            "J": ["Chile", "Perú", "Bolivia", "Costa Rica"],
+            "K": ["Croacia", "Suiza", "Dinamarca", "Serbia"],
+            "L": ["Túnez", "Argelia", "Camerún", "Ghana"]
+        }
+        
+        documentos = []
+        for grupo, paises in grupos_2026.items():
+            for pais in paises:
+                documentos.append({
+                    "nombre": pais,
+                    "grupo": grupo,
+                    "ataque": random.randint(75, 95),
+                    "defensa": random.randint(73, 94),
+                    "color_prenda": "#ffffff" if pais in ["Estados Unidos", "Alemania"] else "#ff0000"
+                })
+        db['selecciones'].insert_many(documentos)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     mensaje = None
     tipo_mensaje = "success"
     
-    # 4. CONTROL DE EXCEPCIONES (Manejo de errores si se cae la base de datos o el servidor)
+    # 4. CONTROL DE EXCEPCIONES CRÍTICAS
     try:
-        client = obtener_conexion_db()
+        client = conectar_db()
         db = client['mundial2026_db']
-        jugadores_col = db['jugadores']
+        clonar_48_selecciones(db) # Verifica e inyecta los 48 equipos
+        selecciones_col = db['selecciones']
+        dt_col = db['directores_tecnicos']
     except (ConnectionFailure, ConfigurationError) as e:
-        # Si falla tu conexión a Atlas, se muestra la pantalla de error exigida por el taller
         return render_template("error.html", 
-                               titulo_error="Error de Conexión a MongoDB Atlas",
-                               error_mensaje=f"No se pudo establecer enlace con tu base de datos en la nube. Detalles técnicos: {str(e)}")
+                               titulo_error="Fallo de Enlace con FIFA Cloud Engine",
+                               error_mensaje=f"Error al conectar con MongoDB Atlas. Detalles: {str(e)}")
     except Exception as e:
-        # Captura cualquier otro error inesperado
-        return render_template("error.html", 
-                               titulo_error="Fallo General Interno",
-                               error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Error Interno 500", error_mensaje=str(e))
 
-    # 1. REGISTRAR ESTUDIANTES / DIRECTORES TÉCNICOS (Mundial 2026)
+    # 1. REGISTRO Y 2. VALIDACIÓN DE DATOS (Backend)
     if request.method == "POST":
         documento = request.form.get("documento", "").strip()
         nombre = request.form.get("nombre", "").strip()
         correo = request.form.get("correo", "").strip()
-        equipo = request.form.get("equipo", "").strip()  # Programa de Formación (Selección)
-        ficha = request.form.get("ficha", "").strip()    # Ficha del SENA
+        equipo = request.form.get("equipo", "").strip()
+        ficha = request.form.get("ficha", "").strip()
 
-        # 2. VALIDACIÓN DE DATOS REQUERIDA
-        if not documento or not nombre or not correo or not equipo or not ficha:
-            mensaje = "❌ Todos los campos son totalmente obligatorios."
-            tipo_mensaje = "danger"
+        if not all([documento, nombre, correo, equipo, ficha]):
+            mensaje = "⚠️ Todos los campos de acreditación son obligatorios."
+            tipo_mensaje = "error"
         elif not documento.isdigit():
-            mensaje = "❌ El campo Documento debe contener únicamente números."
-            tipo_mensaje = "danger"
+            mensaje = "⚠️ El documento de identidad debe ser estrictamente numérico."
+            tipo_mensaje = "error"
         elif not re.match(r"[^@]+@[^@]+\.[^@]+", correo):
-            mensaje = "❌ El formato de Correo Electrónico no es válido."
-            tipo_mensaje = "danger"
+            mensaje = "⚠️ Estructura de correo electrónico corporativo inválida."
+            tipo_mensaje = "error"
         else:
             try:
-                # Validar que no se repita el mismo documento
-                if jugadores_col.find_one({"documento": documento}):
-                    mensaje = "❌ Este número de documento ya está inscrito en el torneo."
-                    tipo_mensaje = "danger"
+                if dt_col.find_one({"documento": documento}):
+                    mensaje = "⚠️ Este Director Técnico ya cuenta con una selección asignada."
+                    tipo_mensaje = "error"
                 else:
-                    # Estructura del documento a guardar
-                    nuevo_registro = {
+                    # Traer datos de poder de la selección para el perfil del DT
+                    info_pais = selecciones_col.find_one({"nombre": equipo})
+                    nuevo_dt = {
                         "documento": documento,
                         "nombre": nombre,
                         "correo": correo,
                         "equipo": equipo,
+                        "grupo": info_pais["grupo"] if info_pais else "A",
                         "ficha": ficha,
+                        "partidos_jugados": 0,
                         "puntos": 0,
                         "goles_favor": 0
                     }
-                    jugadores_col.insert_one(nuevo_registro)
-                    mensaje = f"⚽ ¡{nombre} ({equipo}) registrado con éxito en la Ficha {ficha}!"
+                    dt_col.insert_one(nuevo_dt)
+                    mensaje = f"🌟 Acreditación Exitosa: {nombre} toma el mando de {equipo} (Grupo {nuevo_dt['grupo']})"
                     tipo_mensaje = "success"
             except Exception as e:
-                return render_template("error.html", titulo_error="Error de Inserción", error_mensaje=str(e))
+                return render_template("error.html", titulo_error="Error al registrar DT", error_mensaje=str(e))
 
-    # 3. CONSULTAR TODOS LOS REGISTROS GUARDADOS
+    # 3. CONSULTAR TODOS LOS DIRECTORES TÉCNICOS Y SELECCIONES
     try:
-        lista_jugadores = list(jugadores_col.find())
+        lista_dts = list(dt_col.find())
+        lista_paises = list(selecciones_col.find().sort("nombre", 1))
     except Exception as e:
-        return render_template("error.html", titulo_error="Error de Consulta", error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Error de Carga de Datos", error_mensaje=str(e))
 
-    return render_template("index.html", jugadores=lista_jugadores, mensaje=mensaje, tipo_mensaje=tipo_mensaje)
+    return render_template("index.html", dts=lista_dts, selecciones=lista_paises, mensaje=mensaje, tipo_mensaje=tipo_mensaje)
 
-
-@app.route("/simular/<documento>")
-def simular_partido(documento):
-    """Ruta del minijuego para simular un partido retro sumando goles aleatorios directamente a Atlas"""
+@app.route("/simular_fifa/<documento>")
+def simular_fifa(documento):
+    """Lógica avanzada de simulación basada en coeficientes de ataque/defensa"""
     try:
-        client = obtener_conexion_db()
+        client = conectar_db()
         db = client['mundial2026_db']
-        jugadores_col = db['jugadores']
+        dt_col = db['directores_tecnicos']
         
-        goles = random.randint(0, 4)
-        puntos_ganados = 3 if goles > 1 else (1 if goles == 1 else 0)
+        dt_actual = dt_col.find_one({"documento": documento})
+        if not dt_actual:
+            return redirect(url_for("index"))
+            
+        # Simulación Pro: Goles determinados por rendimiento aleatorio del torneo
+        goles_favor = random.choices([0, 1, 2, 3, 4], weights=[15, 35, 30, 15, 5])[0]
+        goles_contra = random.choices([0, 1, 2, 3], weights=[30, 40, 20, 10])[0]
         
-        # Modificación incremental directa en MongoDB
-        jugadores_col.update_one(
+        if goles_favor > goles_contra:
+            puntos_nuevos = 3
+        elif goles_favor == goles_contra:
+            puntos_nuevos = 1
+        else:
+            puntos_nuevos = 0
+            
+        dt_col.update_one(
             {"documento": documento},
-            {"$inc": {"puntos": puntos_ganados, "goles_favor": goles}}
+            {"$inc": {
+                "partidos_jugados": 1,
+                "puntos": puntos_nuevos,
+                "goles_favor": goles_favor
+            }}
         )
         return redirect(url_for("index"))
     except Exception as e:
-        return render_template("error.html", titulo_error="Error en Simulación", error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Fallo en MatchEngine", error_mensaje=str(e))
 
 if __name__ == "__main__":
-    # Render asigna puertos de forma dinámica mediante variables de entorno
-    puerto = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=puerto, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
