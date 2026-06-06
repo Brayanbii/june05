@@ -2,536 +2,352 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA 2026 - Nokia Soccer League Edition</title>
+    <title>FIFA 2026 - Nokia Soccer Arcade Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #020204;
-            color: #fff;
-            font-family: 'Courier Prime', monospace;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .arcade-cabinet {
-            background: #12131a;
-            border: 4px solid #232533;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-            display: flex;
-            gap: 20px;
-        }
-
-        .screen-container {
-            position: relative;
-        }
-
-        /* Marcador Vertical Retro */
-        .hud-retro {
-            background: #08090d;
-            border: 2px solid #3cff00;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .hud-team { font-size: 0.9rem; color: #fff; text-transform: uppercase; }
-        .hud-score { font-size: 1.8rem; color: #3cff00; font-weight: 900; }
-
-        canvas {
-            background: #1c522a;
-            border: 4px solid #fff;
-            border-radius: 4px;
-            display: block;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
-        }
-
-        /* Panel Lateral del Campeonato */
-        .tournament-panel {
-            width: 260px;
-            background: #08090d;
-            border: 2px solid #232533;
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tournament-panel h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            color: #dfb857;
-            text-align: center;
-            margin-top: 0;
-            border-bottom: 1px solid #232533;
-            padding-bottom: 10px;
-        }
-
-        .phase-badge {
-            background: #1d2030;
-            color: #00ffaa;
-            text-align: center;
-            padding: 6px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .fixture-item {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 8px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            font-size: 0.75rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Pantallas Flotantes */
-        .overlay-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 6, 10, 0.95);
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .overlay-screen h3 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: #dfb857; margin-bottom: 10px; }
-
-        .btn-arcade {
-            background: #39A900;
-            color: #fff;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-family: 'Orbitron', sans-serif;
-            box-shadow: 0 4px 10px rgba(57,169,0,0.4);
-            margin-top: 15px;
-        }
-
+        body { background-color: #020306; color: #fff; font-family: 'Courier Prime', monospace; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .arcade-container { background: #111218; border: 4px solid #222430; border-radius: 24px; padding: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); display: flex; gap: 20px; }
+        .canvas-area { position: relative; }
+        .hud-retro { background: #07080c; border: 2px solid #39A900; padding: 12px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-family: 'Orbitron', sans-serif; }
+        .hud-score { font-size: 1.8rem; color: #00ff87; font-weight: 900; text-shadow: 0 0 10px rgba(0,255,135,0.3); }
+        canvas { background: #194a26; border: 4px solid #fff; border-radius: 4px; display: block; }
+        .sidebar { width: 260px; background: #07080c; border: 2px solid #222430; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; }
+        .sidebar h2 { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; color: #dfb857; text-align: center; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #222430; }
+        .phase-tag { background: #161926; color: #00ffaa; text-align: center; padding: 6px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .fixture-box { background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); padding: 8px; border-radius: 6px; margin-bottom: 8px; font-size: 0.75rem; display: flex; justify-content: space-between; }
+        .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 5, 8, 0.96); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
+        .overlay-screen h3 { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; color: #dfb857; margin-bottom: 15px; }
+        .btn-arcade { background: #39A900; color: #fff; border: none; padding: 12px 28px; font-size: 0.9rem; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-family: 'Orbitron', sans-serif; box-shadow: 0 4px 10px rgba(57,169,0,0.3); }
         .btn-arcade:hover { background: #4cd400; }
     </style>
 </head>
 <body>
 
-<div class="arcade-cabinet">
-    <div class="screen-container">
+<div class="arcade-container">
+    <div class="canvas-area">
         <div class="hud-retro">
-            <div class="hud-team" id="nameL">{{ dt.equipo }}</div>
-            <div class="hud-score"><span id="scoreL">0</span>-<span id="scoreV">0</span></div>
-            <div class="hud-team" id="nameV" style="color: #ff4d4d;">IA</div>
-            <div class="timer" id="timerDisplay" style="color: #ffcc00; font-weight: bold;">45'</div>
+            <div style="font-size: 0.85rem; max-width: 120px; overflow: hidden;" id="txtL">{{ dt.equipo }}</div>
+            <div class="hud-score"><span id="lblL">0</span>-<span id="lblV">0</span></div>
+            <div style="font-size: 0.85rem; color: #ff4d4d;" id="txtV">Rival</div>
+            <div id="clockDisplay" style="color: #ffaa00;">45'</div>
         </div>
 
-        <canvas id="gameCanvas" width="440" height="600"></canvas>
+        <canvas id="soccerCanvas" width="440" height="600"></canvas>
 
-        <div id="screenIntro" class="overlay-screen">
-            <h3>MUNDIAL FIFA 2026</h3>
-            <p style="color: #8b8f9e; font-size: 0.85rem;">Inspirado en Nokia Soccer League. Controlas al jugador más cercano al balón con círculos concéntricos.</p>
-            <div style="font-size: 0.75rem; color: #00ffaa; text-align: left; margin: 10px 0;">
-                🕹️ MOVER: Flechas / WASD<br>
-                ⚽ PASAR: Tecla X / M<br>
-                🔥 PATEAR AL ARCO: Barra Espaciadora
+        <div id="menuIntro" class="overlay-screen">
+            <h3>MUNDIAL DE LA FIFA</h3>
+            <p style="color: #6c7693; font-size: 0.8rem; max-width: 300px; margin-bottom: 15px;">Fútbol vertical clásico. El radar circular verde selecciona automáticamente al jugador que persigue la pelota.</p>
+            <div style="font-size: 0.75rem; color: #00ffaa; text-align: left; line-height: 1.6; margin-bottom: 20px;">
+                🕹️ MOVER: Flechas / Teclas WASD<br>
+                ⚽ PRESELECCIÓN PASE: Tecla X / M<br>
+                🔥 DISPARO ARCO: Barra Espaciadora
             </div>
-            <button class="btn-arcade" onclick="iniciarPartidoActual()">Jugar Cuartos</button>
+            <button class="btn-arcade" onclick="comenzarCompeticion()">Jugar Cuartos de Final</button>
         </div>
 
-        <div id="screenPostMatch" class="overlay-screen" style="display: none;">
-            <h3 id="postMatchTitle">FIN DEL PARTIDO</h3>
-            <p id="postMatchDesc" style="font-size: 0.9rem; margin-bottom: 20px;"></p>
-            <button class="btn-arcade" id="btnPostMatchAction" onclick="avanzarTorneo()">Siguiente Fase</button>
+        <div id="menuFases" class="overlay-screen" style="display: none;">
+            <h3 id="phaseHeadline">RESULTADO</h3>
+            <p id="phaseDescription" style="font-size: 0.85rem; margin-bottom: 20px; color:#cbd5e1;"></p>
+            <button class="btn-arcade" id="actionFaseBtn" onclick="avanzarProximaLlave()">Siguiente Fase</button>
         </div>
     </div>
 
-    <div class="tournament-panel">
-        <h2>FIXTURE FIFA 2026</h2>
-        <div class="phase-badge" id="currentPhaseBadge">CUARTOS DE FINAL</div>
-        <div style="flex: 1; overflow-y: auto;" id="fixtureContainer">
-            </div>
-        <div style="font-size: 0.7rem; color: #505875; text-align: center; border-top: 1px solid #232533; padding-top: 10px;">
-            Métricas sincronizadas con MongoDB Atlas
+    <div class="sidebar">
+        <h2>FIXTURE DEL MUNDIAL</h2>
+        <div class="phase-tag" id="labelFaseTorneo">CUARTOS DE FINAL</div>
+        <div style="flex: 1; overflow-y: auto;" id="listadoPartidos"></div>
+        <div style="font-size: 0.7rem; color: #404559; text-align: center; border-top: 1px solid #222430; padding-top: 10px;">
+            Sincronización Mongo Atlas Activa
         </div>
     </div>
 </div>
 
 <script>
-    const canvas = document.getElementById("gameCanvas");
+    const canvas = document.getElementById("soccerCanvas");
     const ctx = canvas.getContext("2d");
 
-    // Datos del DT Inyectados por Python
     const documentoDT = "{{ dt.documento }}";
-    const miEquipoNombre = "{{ dt.equipo }}";
-    const miColor1 = "{{ dt.color1 }}";
-    const miColor2 = "{{ dt.color2 }}";
-    const todasSelecciones = {{ todas_selecciones|tojson }};
+    const miClub = "{{ dt.equipo }}";
+    const miColor1 = "{{ dt.color1 }}"; const miColor2 = "{{ dt.color2 }}";
+    const poolSelecciones = {{ todas_selecciones|tojson }};
 
-    // Variables de Control del Campeonato (Fases del Torneo en Cliente)
-    let fasesValidas = ["CUARTOS DE FINAL", "SEMIFINAL", "GRAN FINAL", "CAMPEÓN"];
-    let faseActualIndex = 0;
-    let rivalActual = null;
-    let fixtureMundial = [];
+    let fasesCopa = ["CUARTOS DE FINAL", "SEMIFINAL", "GRAN FINAL", "CAMPEÓN"];
+    let indexFase = 0; let oponenteAI = null; let llavesFixture = [];
 
-    // Estadísticas Acumuladas de la Sesión para Mongo
-    let totalPartidosJugados = 0;
-    let totalPuntosAcumulados = 0;
-    let totalGolesFavor = 0;
-    let totalGolesContra = 0;
+    // Acumuladores de Métricas
+    let pJugados = 0; let pAcumulados = 0; let gFavor = 0; let gContra = 0;
 
-    // Estado del Partido de Fútbol Vertical
-    let scoreL = 0, scoreV = 0, timeRemaining = 45, gameInterval = null;
-    let keys = {};
-    const friction = 0.95;
+    // Estado Físico
+    let golesL = 0, golesV = 0, duracionPartido = 45, loopEngine = null, loopTimer = null;
+    let inputs = {}; const roce = 0.96;
 
-    // Entidades de Campo
     const ball = { x: 220, y: 300, radius: 7, vx: 0, vy: 0 };
-    let equipoLocal = [];
-    let equipoRival = [];
+    let equipoHumano = []; let equipoAI = [];
 
-    window.addEventListener("keydown", e => { keys[e.key.toLowerCase()] = true; handleActionKeys(e.key.toLowerCase()); });
-    window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+    window.addEventListener("keydown", e => { inputs[e.key.toLowerCase()] = true; procesarBotonesAccion(e.key.toLowerCase()); });
+    window.addEventListener("keyup", e => inputs[e.key.toLowerCase()] = false);
 
-    // Inicializar el Fixture Estructurado del Mundial
-    function generarFixtureMundial() {
-        let pool = todasSelecciones.filter(s => s.nombre !== miEquipoNombre);
-        // Mezclar aleatoriamente las selecciones rivales
-        pool.sort(() => Math.random() - 0.5);
+    function generarEstructuraMundial() {
+        let RivalesDisponibles = poolSelecciones.filter(s => s.nombre !== miClub);
+        RivalesDisponibles.sort(() => Math.random() - 0.5);
 
-        // Seleccionar rivales para Cuartos de Final
-        rivalActual = pool[0];
-        document.getElementById("nameV").innerText = rivalActual.nombre.substring(0,3).toUpperCase();
+        oponenteAI = RivalesDisponibles[0];
+        document.getElementById("txtV").innerText = oponenteAI.nombre.substring(0,12);
         
-        fixtureMundial = [
-            { equipo1: miEquipoNombre, equipo2: rivalActual.nombre, estado: "PENDIENTE" },
-            { equipo1: pool[1].nombre, equipo2: pool[2].nombre, estado: "PENDIENTE" },
-            { equipo1: pool[3].nombre, equipo2: pool[4].nombre, estado: "PENDIENTE" },
-            { equipo1: pool[5].nombre, equipo2: pool[6].nombre, estado: "PENDIENTE" }
+        llavesFixture = [
+            { e1: miClub, e2: oponenteAI.nombre },
+            { e1: RivalesDisponibles[1].nombre, e2: RivalesDisponibles[2].nombre },
+            { e1: RivalesDisponibles[3].nombre, e2: RivalesDisponibles[4].nombre },
+            { e1: RivalesDisponibles[5].nombre, e2: RivalesDisponibles[6].nombre }
         ];
-        renderizarVisualFixture();
+        dibujarFixtureLateral();
     }
 
-    function renderizarVisualFixture() {
-        const container = document.getElementById("fixtureContainer");
-        container.innerHTML = "";
-        fixtureMundial.forEach(match => {
-            let div = document.createElement("div");
-            div.className = "fixture-item";
-            div.innerHTML = `<span>${match.equipo1.substring(0,10)}</span> <b style="color:#dfb857;">VS</b> <span>${match.equipo2.substring(0,10)}</span>`;
-            container.appendChild(div);
+    function dibujarFixtureLateral() {
+        const caja = document.getElementById("listadoPartidos");
+        caja.innerHTML = "";
+        llavesFixture.forEach(m => {
+            let item = document.createElement("div");
+            item.className = "fixture-box";
+            item.innerHTML = `<span>${m.e1.substring(0,12)}</span> <b style="color:#dfb857;">VS</b> <span>${m.e2.substring(0,12)}</span>`;
+            caja.appendChild(item);
         });
     }
 
-    // Configurar alineación de jugadores (Perspectiva Vertical de Nokia Soccer)
-    function armarEquipos() {
-        // Tu Equipo (Ataca hacia ARRIBA, defiende su arco ABAJO)
-        equipoLocal = [
-            { id: 0, rol: "POR", x: 220, y: 570, radius: 12, color: "#ffaa00", outline: "#000", vx:0, vy:0 },
-            { id: 1, rol: "DEF", x: 140, y: 460, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 },
-            { id: 2, rol: "MED", x: 220, y: 360, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 },
-            { id: 3, rol: "DEL", x: 300, y: 240, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 }
+    function posicionarPlantillas() {
+        // Formación Humana (Ataca hacia arriba, defiende abajo)
+        equipoHumano = [
+            { id: 0, rol: "POR", x: 220, y: 575, radius: 12, color: "#ff9900", outline: "#fff", vx:0, vy:0 },
+            { id: 1, rol: "DEF", x: 130, y: 450, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 },
+            { id: 2, rol: "MED", x: 220, y: 370, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 },
+            { id: 3, rol: "DEL", x: 310, y: 250, radius: 11, color: miColor1, outline: miColor2, vx:0, vy:0 }
         ];
 
-        // Equipo Rival IA (Ataca hacia ABAJO, defiende su arco ARRIBA)
-        equipoRival = [
-            { id: 4, rol: "POR", x: 220, y: 30, radius: 12, color: "#00e5ff", outline: "#000", vx:0, vy:0 },
-            { id: 5, rol: "DEF", x: 280, y: 140, radius: 11, color: rivalActual.color1, outline: rivalActual.color2, vx:0, vy:0 },
-            { id: 6, rol: "MED", x: 220, y: 240, radius: 11, color: rivalActual.color1, outline: rivalActual.color2, vx:0, vy:0 },
-            { id: 7, rol: "DEL", x: 140, y: 360, radius: 11, color: rivalActual.color1, outline: rivalActual.color2, vx:0, vy:0 }
+        // Formación Rival (Ataca hacia abajo, defiende arriba)
+        equipoAI = [
+            { id: 4, rol: "POR", x: 220, y: 25, radius: 12, color: "#00ccff", outline: "#fff", vx:0, vy:0 },
+            { id: 5, rol: "DEF", x: 290, y: 150, radius: 11, color: oponenteAI.color1, outline: oponenteAI.color2, vx:0, vy:0 },
+            { id: 6, rol: "MED", x: 220, y: 230, radius: 11, color: oponenteAI.color1, outline: oponenteAI.color2, vx:0, vy:0 },
+            { id: 7, rol: "DEL", x: 130, y: 350, radius: 11, color: oponenteAI.color1, outline: oponenteAI.color2, vx:0, vy:0 }
         ];
     }
 
-    function iniciarPartidoActual() {
-        document.getElementById("screenIntro").style.display = "none";
-        document.getElementById("screenPostMatch").style.display = "none";
-        scoreL = 0; scoreV = 0; timeRemaining = 45;
-        document.getElementById("scoreL").innerText = "0";
-        document.getElementById("scoreV").innerText = "0";
-        resetPosicionesCancha();
-        armarEquipos();
+    function comenzarCompeticion() {
+        document.getElementById("menuIntro").style.display = "none";
+        document.getElementById("menuFases").style.display = "none";
+        golesL = 0; golesV = 0; duracionPartido = 45;
+        document.getElementById("lblL").innerText = "0";
+        document.getElementById("lblV").innerText = "0";
         
-        if (gameInterval) clearInterval(gameInterval);
-        gameInterval = setInterval(gameLoop, 1000 / 60);
+        ball.x = 220; ball.y = 300; ball.vx = 0; ball.vy = 0;
+        posicionarPlantillas();
         
-        // Reloj del Partido
-        timerId = setInterval(() => {
-            timeRemaining--;
-            document.getElementById("timerDisplay").innerText = timeRemaining + "'";
-            if (timeRemaining <= 0) finalizacionPartido();
+        if (loopEngine) clearInterval(loopEngine);
+        if (loopTimer) clearInterval(loopTimer);
+
+        loopEngine = setInterval(ejecutarFisicasCancha, 1000 / 60);
+        loopTimer = setInterval(() => {
+            duracionPartido--;
+            document.getElementById("clockDisplay").innerText = duracionPartido + "'";
+            if (duracionPartido <= 0) finalizarTiempoReglamentario();
         }, 1000);
     }
 
-    function resetPosicionesCancha() {
-        ball.x = 220; ball.y = 300; ball.vx = 0; ball.vy = 0;
-    }
-
-    // Identificar dinámicamente qué jugador controlas según cercanía al balón (Mecánica Nokia)
-    function obtenerJugadorMasCercano() {
-        let masCercano = equipoLocal[1];
-        let dMin = Infinity;
-        equipoLocal.forEach(p => {
+    function evaluarJugadorMasCercano() {
+        let seleccionado = equipoHumano[1];
+        let rangoMinimo = Infinity;
+        equipoHumano.forEach(p => {
             if (p.rol !== "POR") {
                 let d = Math.hypot(p.x - ball.x, p.y - ball.y);
-                if (d < dMin) { dMin = d; masCercano = p; }
+                if (d < rangoMinimo) { rangoMinimo = d; seleccionado = p; }
             }
         });
-        return masCercano;
+        return seleccionado;
     }
 
-    function gameLoop() {
-        actualizarFisicas();
-        dibujarCanchaCompleta();
-    }
+    function ejecutarFisicasCancha() {
+        let activo = evaluarJugadorMasCercano();
 
-    function actualizarFisicas() {
-        let usuarioActivo = obtenerJugadorMasCercano();
+        if (inputs["arrowup"] || inputs["w"]) activo.vy -= 0.55;
+        if (inputs["arrowdown"] || inputs["s"]) activo.vy += 0.55;
+        if (inputs["arrowleft"] || inputs["a"]) activo.vx -= 0.55;
+        if (inputs["arrowright"] || inputs["d"]) activo.vx += 0.55;
 
-        // Mandos de Movimiento del Jugador Activo
-        if (keys["arrowup"] || keys["w"]) usuarioActivo.vy -= 0.6;
-        if (keys["arrowdown"] || keys["s"]) usuarioActivo.vy += 0.6;
-        if (keys["arrowleft"] || keys["a"]) usuarioActivo.vx -= 0.6;
-        if (keys["arrowright"] || keys["d"]) usuarioActivo.vx += 0.6;
-
-        // Fricción y Límites para el Humano
-        equipoLocal.forEach(p => {
-            p.vx *= friction; p.vy *= friction;
-            p.x += p.vx; p.y += p.vy;
-            restringirBordes(p);
+        equipoHumano.forEach(p => {
+            p.vx *= roce; p.vy *= roce; p.x += p.vx; p.y += p.vy;
+            encapsularBordes(p);
         });
 
-        // IA Avanzada del Rival y Compañeros
-        procesarInteligenciaArtificial(usuarioActivo);
+        // Automatización de Portero Local e Inteligencia Artificial Competidora
+        let gkL = equipoHumano[0]; gkL.x += (ball.x - gkL.x) * 0.09; gkL.x = Math.max(170, Math.min(270, gkL.x));
+        let gkV = equipoAI[0]; gkV.x += (ball.x - gkV.x) * 0.09; gkV.x = Math.max(170, Math.min(270, gkV.x));
 
-        // Movimiento Físico del Balón
-        ball.vx *= 0.98; ball.vy *= 0.98;
-        ball.x += ball.vx; ball.y += ball.vy;
+        equipoHumano.forEach(p => {
+            if (p.id !== activo.id && p.rol !== "POR") {
+                let despY = ball.y + (p.rol === "DEF" ? 90 : -30);
+                p.y += (despY - p.y) * 0.025; p.x += (ball.x - p.x) * 0.015;
+                encapsularBordes(p);
+            }
+        });
 
-        // Colisión Balón y Bordes de Cancha
+        equipoAI.forEach(r => {
+            if (r.rol !== "POR") {
+                let dBalon = Math.hypot(ball.x - r.x, ball.y - r.y);
+                if (dBalon > 12) {
+                    let anguloAI = Math.atan2(ball.y - r.y, ball.x - r.x);
+                    r.x += Math.cos(anguloAI) * 2.1; r.y += Math.sin(anguloAI) * 2.1;
+                } else {
+                    let tiroAI = Math.atan2(590 - ball.y, 220 - ball.x);
+                    ball.vx = Math.cos(tiroAI) * 7.5; ball.vy = Math.sin(tiroAI) * 7.5;
+                }
+                encapsularBordes(r);
+            }
+        });
+
+        // Balón Físicas
+        ball.vx *= 0.98; ball.vy *= 0.98; ball.x += ball.vx; ball.y += ball.vy;
+
         if (ball.x - ball.radius < 20 || ball.x + ball.radius > 420) ball.vx *= -1;
-        
-        // Control de Línea de Goles Verticales
+
+        // Líneas de Meta (Arcos Verticales)
         if (ball.y - ball.radius <= 10) {
-            if (ball.x > 160 && ball.x < 280) { scoreL++; document.getElementById("scoreL").innerText = scoreL; resetPosicionesCancha(); } 
+            if (ball.x > 160 && ball.x < 280) { golesL++; document.getElementById("lblL").innerText = golesL; reubicarBalon(); } 
             else { ball.vy *= -1; }
         }
         if (ball.y + ball.radius >= 590) {
-            if (ball.x > 160 && ball.x < 280) { scoreV++; document.getElementById("scoreV").innerText = scoreV; resetPosicionesCancha(); } 
+            if (ball.x > 160 && ball.x < 280) { golesV++; document.getElementById("lblV").innerText = golesV; reubicarBalon(); } 
             else { ball.vy *= -1; }
         }
 
-        // Colisiones de Cuerpo Completo entre Jugadores y Esfera
-        [...equipoLocal, ...equipoRival].forEach(p => {
-            let dist = Math.hypot(p.x - ball.x, p.y - ball.y);
-            if (dist < p.radius + ball.radius) {
-                let angulo = Math.atan2(ball.y - p.y, ball.x - p.x);
-                ball.vx = Math.cos(angulo) * 5 + p.vx;
-                ball.vy = Math.sin(angulo) * 5 + p.vy;
+        // Rebotes Cuerpos
+        [...equipoHumano, ...equipoAI].forEach(p => {
+            let espacio = Math.hypot(p.x - ball.x, p.y - ball.y);
+            if (espacio < p.radius + ball.radius) {
+                let rebotar = Math.atan2(ball.y - p.y, ball.x - p.x);
+                ball.vx = Math.cos(rebotar) * 4.8 + p.vx; ball.vy = Math.sin(rebotar) * 4.8 + p.vy;
             }
         });
+
+        dibujarGraficos();
     }
 
-    function handleActionKeys(key) {
-        let activo = obtenerJugadorMasCercano();
-        let distBalon = Math.hypot(activo.x - ball.x, activo.y - ball.y);
-        
-        if (distBalon < activo.radius + ball.radius + 12) {
-            if (key === " ") { // Remate Potente Vertical al Arco Rival (Arriba: Y=10)
-                let anguloArco = Math.atan2(10 - ball.y, 220 - ball.x);
-                ball.vx = Math.cos(anguloArco) * 14;
-                ball.vy = Math.sin(anguloArco) * 14;
+    function procesarBotonesAccion(key) {
+        let activo = evaluarJugadorMasCercano();
+        if (Math.hypot(activo.x - ball.x, activo.y - ball.y) < activo.radius + ball.radius + 14) {
+            if (key === " ") {
+                let anguloTiro = Math.atan2(10 - ball.y, 220 - ball.x);
+                ball.vx = Math.cos(anguloTiro) * 13; ball.vy = Math.sin(anguloTiro) * 13;
             }
-            if (key === "x" || key === "m") { // Pase Seguro al compañero más cercano
-                let companeros = equipoLocal.filter(p => p.id !== activo.id && p.rol !== "POR");
-                if (companeros.length > 0) {
-                    let destino = companeros[0];
-                    let anguloPase = Math.atan2(destino.y - ball.y, destino.x - ball.x);
-                    ball.vx = Math.cos(anguloPase) * 9;
-                    ball.vy = Math.sin(anguloPase) * 9;
+            if (key === "x" || key === "m") {
+                let compas = equipoHumano.filter(p => p.id !== activo.id && p.rol !== "POR");
+                if (compas.length > 0) {
+                    let objetivo = compas[Math.floor(Math.random() * compas.length)];
+                    let anguloPase = Math.atan2(objetivo.y - ball.y, objetivo.x - ball.x);
+                    ball.vx = Math.cos(anguloPase) * 8.5; ball.vy = Math.sin(anguloPase) * 8.5;
                 }
             }
         }
     }
 
-    function procesarInteligenciaArtificial(usuarioActivo) {
-        // Portero Local Automático (Sigue el balón en el eje X)
-        let porLocal = equipoLocal[0];
-        porLocal.x += (ball.x - porLocal.x) * 0.1;
-        porLocal.x = Math.max(170, Math.min(270, porLocal.x));
-
-        // Compañeros de Equipo Autónomos
-        equipoLocal.forEach(p => {
-            if (p.id !== usuarioActivo.id && p.rol !== "POR") {
-                let targetY = ball.y + (p.rol === "DEF" ? 80 : -40);
-                p.y += (targetY - p.y) * 0.03;
-                p.x += (ball.x - p.x) * 0.02;
-                restringirBordes(p);
-            }
-        });
-
-        // Bloque del Rival Completo IA (Persiguen y atacan hacia abajo)
-        let porRival = equipoRival[0];
-        porRival.x += (ball.x - porRival.x) * 0.1;
-        porRival.x = Math.max(170, Math.min(270, porRival.x));
-
-        equipoRival.forEach(r => {
-            if (r.rol !== "POR") {
-                let distBalon = Math.hypot(ball.x - r.x, ball.y - r.y);
-                if (distBalon > 10) {
-                    let ang = Math.atan2(ball.y - r.y, ball.x - r.x);
-                    r.x += Math.cos(ang) * r.speed;
-                    r.y += Math.sin(ang) * r.speed;
-                } else { // Si la IA tiene el balón, patea hacia tu portería (Abajo: Y=590)
-                    let angTiro = Math.atan2(590 - ball.y, 220 - ball.x);
-                    ball.vx = Math.cos(angTiro) * 8;
-                    ball.vy = Math.sin(angTiro) * 8;
-                }
-                restringirBordes(r);
-            }
-        });
+    function encapsularBordes(p) {
+        p.x = Math.max(25, Math.min(415, p.x)); p.y = Math.max(25, Math.min(575, p.y));
     }
 
-    function restringirBordes(p) {
-        p.x = Math.max(25, Math.min(415, p.x));
-        p.y = Math.max(25, Math.min(575, p.y));
-    }
+    function reubicarBalon() { ball.x = 220; ball.y = 300; ball.vx = 0; ball.vy = 0; }
 
-    function dibujarCanchaCompleta() {
+    function dibujarGraficos() {
         ctx.clearRect(0,0, canvas.width, canvas.height);
         
-        // Líneas Verdes de Campo Longitudinal Cortado
-        ctx.fillStyle = "#1c522a"; ctx.fillRect(0,0, canvas.width, canvas.height);
-        ctx.fillStyle = "#164221";
+        // Césped Rayado Vertical
+        ctx.fillStyle = "#194a26"; ctx.fillRect(0,0, canvas.width, canvas.height);
+        ctx.fillStyle = "#143d1f";
         for(let y=0; y<canvas.height; y+=60) { if((y/60)%2===0) ctx.fillRect(0, y, canvas.width, 30); }
 
-        // Marcaciones Reglamentarias
-        ctx.strokeStyle = "rgba(255,255,255,0.6)"; ctx.lineWidth = 3;
+        ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 3;
         ctx.strokeRect(20, 10, 400, 580);
-        ctx.beginPath(); ctx.arc(220, 300, 50, 0, Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(220, 300, 55, 0, Math.PI*2); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(20, 300); ctx.lineTo(420, 300); ctx.stroke();
 
-        // Áreas de Portería Verticales
-        ctx.strokeRect(130, 10, 180, 80);
-        ctx.strokeRect(130, 510, 180, 80);
+        ctx.strokeRect(130, 10, 180, 80); ctx.strokeRect(130, 510, 180, 80);
+        ctx.fillStyle = "rgba(255,255,255,0.25)"; ctx.fillRect(160, 0, 120, 10); ctx.fillRect(160, 590, 120, 10);
 
-        // Renderizado de Redes
-        ctx.fillStyle = "rgba(255,255,255,0.3)";
-        ctx.fillRect(160, 0, 120, 10);
-        ctx.fillRect(160, 590, 120, 10);
-
-        // Dibujar Jugadores Locales
-        let pActivo = obtenerJugadorMasCercano();
-        equipoLocal.forEach(p => {
-            drawPlayerSprite(p);
-            if (p.id === pActivo.id) { // Círculo Indicador Estilo Nokia
+        let pControlado = evaluarJugadorMasCercano();
+        equipoHumano.forEach(p => {
+            renderizarFichaJugador(p);
+            if (p.id === pControlado.id) { // Círculo concéntrico clásico de Nokia Soccer
                 ctx.strokeStyle = "#00ffaa"; ctx.lineWidth = 2;
                 ctx.beginPath(); ctx.arc(p.x, p.y, p.radius + 6, 0, Math.PI*2); ctx.stroke();
             }
         });
 
-        // Dibujar Rivales
-        equipoRival.forEach(r => drawPlayerSprite(r));
+        equipoAI.forEach(r => renderizarFichaJugador(r));
 
-        // Balón de Fútbol con Sombra
-        ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(ball.x + 3, ball.y + 3, ball.radius, 0, Math.PI*2); ctx.fill();
+        // Balón
+        ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.arc(ball.x + 3, ball.y + 3, ball.radius, 0, Math.PI*2); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill();
     }
 
-    function drawPlayerSprite(p) {
+    function renderizarFichaJugador(p) {
         ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2); ctx.fill();
         ctx.strokeStyle = p.outline; ctx.lineWidth = 3; ctx.stroke();
-        ctx.fillStyle = "#fff"; ctx.font = "bold 9px Arial"; ctx.fillText(p.rol, p.x - 9, p.y + 3);
+        ctx.fillStyle = "#fff"; ctx.font = "bold 9px monospace"; ctx.fillText(p.rol, p.x - 9, p.y + 3);
     }
 
-    // Lógica del Campeonato Mundial (Gestión de Fases y Resultados)
-    function finalizacionPartido() {
-        clearInterval(gameInterval);
-        clearInterval(timerId);
-        
-        totalPartidosJugados++;
-        totalGolesFavor += scoreL;
-        totalGolesContra += scoreV;
+    function finalizarTiempoReglamentario() {
+        clearInterval(loopEngine); clearInterval(loopTimer);
+        pJugados++; gFavor += golesL; gContra += golesV;
 
-        let pantalla = document.getElementById("screenPostMatch");
-        let titulo = document.getElementById("postMatchTitle");
-        let desc = document.getElementById("postMatchDesc");
-        let boton = document.getElementById("btnPostMatchAction");
+        let uiModal = document.getElementById("menuFases");
+        let head = document.getElementById("phaseHeadline");
+        let desc = document.getElementById("phaseDescription");
+        let btn = document.getElementById("actionFaseBtn");
 
-        pantalla.style.display = "flex";
+        uiModal.style.display = "flex";
 
-        if (scoreL > scoreV) { // Victoria de tu Selección
-            totalPuntosAcumulados += 3;
-            faseActualIndex++;
-            let siguienteFase = fasesValidas[faseActualIndex];
-            document.getElementById("currentPhaseBadge").innerText = siguienteFase;
+        if (golesL > golesV) {
+            pAcumulados += 3; indexFase++;
+            let sigFase = fasesCopa[indexFase];
+            document.getElementById("labelFaseTorneo").innerText = sigFase;
 
-            if (siguienteFase === "CAMPEÓN") {
-                titulo.innerText = "🏆 ¡CAMPEÓN DEL MUNDO!";
-                desc.innerText = `Has ganado la gran final de la Copa Mundial 2026. Marcador Final: ${scoreL} - ${scoreV}.`;
-                boton.innerText = "Sincronizar y Finalizar";
-                boton.onclick = enviarDatosABackend;
+            if (sigFase === "CAMPEÓN") {
+                head.innerText = "🏆 ¡CAMPEÓN COPA MUNDIAL 2026!";
+                desc.innerText = `Épica victoria en la final. Marcador: ${golesL} - ${golesV}. El trofeo va para tu Ficha Académica.`;
+                btn.innerText = "Salvar y Terminar"; btn.onclick = despacharDatosHaciaServidor;
             } else {
-                titulo.innerText = "¡VICTORIA CLASIFICATORIA!";
-                desc.innerText = `Avanzas a la fase de ${siguienteFase}. Marcador: ${scoreL} - ${scoreV}.`;
-                boton.innerText = `Iniciar ${siguienteFase}`;
-                boton.onclick = prepararSiguienteRival;
+                head.innerText = "¡CLASIFICADO!";
+                desc.innerText = `Avanzas con éxito a la fase de ${sigFase}. Marcador: ${golesL} - ${golesV}.`;
+                btn.innerText = `Iniciar ${sigFase}`; btn.onclick = configurarProximoAdversario;
             }
-        } else { // Empate o Derrota implica Eliminación Automática
-            if(scoreL === scoreV) totalPuntosAcumulados += 1;
-            titulo.innerText = "❌ ELIMINADO DEL MUNDIAL";
-            desc.innerText = `Tu selección ha quedado eliminada en la fase de ${fasesValidas[faseActualIndex]}. Marcador: ${scoreL} - ${scoreV}.`;
-            boton.innerText = "Enviar Estadísticas al Panel";
-            boton.onclick = enviarDatosABackend;
+        } else {
+            if(golesL === golesV) pAcumulados += 1;
+            head.innerText = "❌ ELIMINADO";
+            desc.innerText = `Has quedado fuera del torneo en la fase de ${fasesCopa[indexFase]}. Marcador final: ${golesL} - ${golesV}.`;
+            btn.innerText = "Guardar Avance e Ir al Panel"; btn.onclick = despacharDatosHaciaServidor;
         }
     }
 
-    function prepararSiguienteRival() {
-        let pool = todasSelecciones.filter(s => s.nombre !== miEquipoNombre);
-        rivalActual = pool[Math.floor(Math.random() * pool.length)];
-        document.getElementById("nameV").innerText = rivalActual.nombre.substring(0,3).toUpperCase();
+    function configurarProximoAdversario() {
+        let RivalesDisponibles = poolSelecciones.filter(s => s.nombre !== miClub);
+        oponenteAI = RivalesDisponibles[Math.floor(Math.random() * RivalesDisponibles.length)];
+        document.getElementById("txtV").innerText = oponenteAI.nombre.substring(0,12);
         
-        fixtureMundial.unshift({ equipo1: miEquipoNombre, equipo2: rivalActual.nombre, estado: "EN CURSO" });
-        renderizarVisualFixture();
-        iniciarPartidoActual();
+        llavesFixture.unshift({ e1: miClub, e2: oponenteAI.nombre });
+        dibujarFixtureLateral();
+        comenzarCompeticion();
     }
 
-    // Persistencia Directa a MongoDB Atlas mediante Fetch API sin romper variables
-    function enviarDatosABackend() {
+    function despacharDatosHaciaServidor() {
         fetch('/guardar_resultado', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                documento: documentoDT,
-                partidos_jugados: totalPartidosJugados,
-                puntos_acumulados: totalPuntosAcumulados,
-                goles_favor: totalGolesFavor,
-                goles_contra: totalGolesContra
+                documento: documentoDT, partidos_jugados: pJugados,
+                puntos_acumulados: pAcumulados, goles_favor: gFavor, goles_contra: gContra
             })
         }).then(() => window.location.href = "/");
     }
 
-    // Arranque Inicial
-    generarFixtureMundial();
+    generarEstructuraMundial();
 </script>
 
 </body>
