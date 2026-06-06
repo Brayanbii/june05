@@ -27,6 +27,7 @@ except Exception as e:
     db_error_msg = str(e)
     print(f">>> [SENA ENGINE] Error de conexión: {e}")
 
+# Lista plana de strings para evitar conflictos de mapeo
 PROGRAMAS_SENA = [
     "Análisis y Desarrollo de Software (ADSO)",
     "Gestión de Redes de Datos",
@@ -42,7 +43,7 @@ def index():
         return render_template(
             'error.html', 
             titulo_error="Fallo de Conexión con Mongo Atlas", 
-            error_mensaje=f"Detalles técnicos del fallo:\n\n{db_error_msg}\n\nCONSEJO: Verifica el 'Network Access' en MongoDB Atlas para permitir conexiones desde cualquier IP (0.0.0.0/0)."
+            error_mensaje=db_error_msg
         )
 
     if request.method == 'POST':
@@ -68,22 +69,22 @@ def index():
                 "correo": correo,
                 "programa": programa,
                 "ficha": ficha,
-                "horas_practica": 120,      # Simulación pro para la barra de progreso
-                "competencias_ok": 4,      # Simulación pro de competencias
-                "score_rendimiento": 95    # XP de eficiencia inicial
+                "horas_practica": 120,      
+                "competencias_ok": 4,      
+                "score_rendimiento": 95    
             }
 
             collection.insert_one(nuevo_estudiante)
             return redirect(url_for('success'))
 
         except Exception as e:
-            return render_template('error.html', titulo_error="Excepción en Proceso de Registro", error_mensaje=str(e))
+            return render_template('error.html', titulo_error="Excepción en Registro", error_mensaje=str(e))
 
     try:
         lista_estudiantes = list(collection.find())
         return render_template('index.html', estudiantes=lista_estudiantes, programas=PROGRAMAS_SENA)
     except PyMongoError as e:
-        return render_template('error.html', titulo_error="Error de Consulta de Datos", error_mensaje=str(e))
+        return render_template('error.html', titulo_error="Error de Consulta", error_mensaje=str(e))
 
 @app.route('/success')
 def success():
