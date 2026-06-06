@@ -2,40 +2,312 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SENA - Centro de Control de Aprendices</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-base: #0a0a0d; --bg-panel: #13141a; --sena-green: #39A900; --text-main: #f3f4f6; --text-muted: #8b8f9e; --border: rgba(255,255,255,0.08); }
-        body { background-color: var(--bg-base); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-        header { text-align: center; margin-bottom: 50px; }
-        h1 { font-size: 3rem; font-weight: 900; text-transform: uppercase; margin: 0; background: linear-gradient(180deg, #fff, var(--sena-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
-        @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-        .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
-        h2 { color: var(--sena-green); font-size: 1.2rem; text-transform: uppercase; margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 15px; letter-spacing: 1px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
-        input, select { width: 100%; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; }
-        input:focus, select:focus { border-color: var(--sena-green); outline: none; box-shadow: 0 0 8px rgba(57,169,0,0.3); }
-        .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--sena-green), #2a7a00); color: #fff; font-weight: 800; font-size: 1rem; text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(57,169,0,0.4); }
-        .alert { padding: 15px; border-radius: 10px; margin-bottom: 25px; font-weight: bold; text-align: center; border: 1px solid; }
-        .alert-success { background: rgba(0,255,135,0.1); color: #00ff87; border-color: #00ff87; }
-        .alert-danger { background: rgba(255,77,77,0.1); color: #ff4d4d; border-color: #ff4d4d; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 15px; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); vertical-align: middle; }
-        .flag-small { width: 30px; border-radius: 3px; vertical-align: middle; margin-right: 10px; }
-        .btn-play { background: rgba(57,169,0,0.1); color: #39A900; border: 1px solid rgba(57,169,0,0.3); padding: 8px 15px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
-        .btn-play:hover { background: var(--sena-green); color: #fff; }
+        :root {
+            --bg-base: #06070d;
+            --bg-panel: #0d0f1a;
+            --bg-card: #141829;
+            --sena-green: #39A900;
+            --sena-glow: rgba(57, 169, 0, 0.4);
+            --text-main: #f1f3f9;
+            --text-muted: #6c7693;
+            --border: rgba(255, 255, 255, 0.05);
+            --accent: #00ff87;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(57, 169, 0, 0.07) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0, 255, 135, 0.04) 0px, transparent 50%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 2px;
+            background: linear-gradient(180deg, #fff 30%, var(--sena-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 10px rgba(57, 169, 0, 0.2));
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        @media(max-width: 1024px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--sena-green), var(--accent));
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            margin-top: 0;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus, select:focus {
+            border-color: var(--sena-green);
+            outline: none;
+            box-shadow: 0 0 15px var(--sena-glow);
+            background: rgba(20, 24, 41, 0.8);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--sena-green), #247300);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--sena-glow);
+            filter: brightness(1.1);
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+            border: 1px solid;
+            animation: fadeIn 0.4s ease;
+        }
+        .alert-success { background: rgba(0, 255, 135, 0.1); color: var(--accent); border-color: rgba(0, 255, 135, 0.2); }
+        .alert-danger { background: rgba(255, 77, 77, 0.1); color: #ff4d4d; border-color: rgba(255, 77, 77, 0.2); }
+
+        /* TABLA INTERFICIAL / LEADERBOARD */
+        .table-container {
+            max-height: 680px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px 20px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr {
+            transition: all 0.2s ease;
+        }
+
+        td {
+            background: var(--bg-card);
+            padding: 18px 20px;
+            vertical-align: middle;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td:first-child { border-left: 1px solid var(--border); border-top-left-radius: 14px; border-bottom-left-radius: 14px; }
+        td:last-child { border-right: 1px solid var(--border); border-top-right-radius: 14px; border-bottom-right-radius: 14px; }
+
+        tr:hover td {
+            background: rgba(29, 35, 59, 0.8);
+            border-color: rgba(255,255,255,0.1);
+            transform: scale(1.005);
+        }
+
+        .profile-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar-sub {
+            width: 42px;
+            height: 42px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            color: var(--sena-green);
+        }
+
+        .flag-icon {
+            width: 28px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 4px;
+            vertical-align: middle;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .badge-ficha {
+            background: rgba(57, 169, 0, 0.15);
+            color: #56ff1a;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .score-badge {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-play {
+            background: rgba(0, 255, 135, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-play:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.4);
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>Plataforma de Gestión Académica</h1>
-        <p style="color: var(--text-muted);">Servicio Nacional de Aprendizaje - ADSO</p>
+        <h1>SENA Arcade System</h1>
+        <p>Control de Aprendices & Evaluación Lúdica</p>
     </header>
 
     {% if mensaje %}
@@ -43,75 +315,98 @@
     {% endif %}
 
     <div class="grid">
+        <!-- FORMULARIO DE REGISTRO (PUNTO 1 Y 2) -->
         <div class="panel">
-            <h2>Registro de Estudiante</h2>
+            <h2>Acreditación</h2>
             <form method="POST" action="/">
                 <div class="form-group">
                     <label>Documento de Identidad</label>
-                    <input type="text" name="documento" required placeholder="Ej: 1023456789">
+                    <input type="text" name="documento" required placeholder="CC / TI (Solo dígitos)" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" name="nombre" required placeholder="Nombre y Apellidos">
+                    <input type="text" name="nombre" required placeholder="Ej: Carlos Mendoza">
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" name="correo" required placeholder="Ej: aprendiz@misena.edu.co">
+                    <input type="email" name="correo" required placeholder="usuario@misena.edu.co">
                 </div>
                 <div class="form-group">
                     <label>Programa de Formación</label>
                     <select name="programa" required>
-                        <option value="">-- Seleccionar Programa --</option>
+                        <option value="">-- Seleccionar Eje --</option>
                         {% for prog in programas %}
                             <option value="{{ prog.nombre }}">{{ prog.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Ficha de Caracterización</label>
-                    <input type="text" name="ficha" required placeholder="Ej: 3065826">
+                    <label>Ficha Académica</label>
+                    <input type="text" name="ficha" required placeholder="Número de Ficha">
                 </div>
-                <button type="submit" class="btn-submit">Registrar Aprendiz</button>
+                <button type="submit" class="btn-submit">Registrar e Iniciar</button>
             </form>
         </div>
 
-        <div class="panel" style="overflow-x: auto;">
-            <h2>Estudiantes Registrados (MongoDB Atlas)</h2>
-            {% if estudiantes %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Estudiante</th>
-                            <th>Programa Académico / Ficha</th>
-                            <th>Métricas de Actividad</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for est in estudiantes %}
+        <!-- TABLA CONSULTA GENERAL (PUNTO 3) -->
+        <div class="panel">
+            <h2>Leaderboard Estudiantil</h2>
+            <div class="table-container">
+                {% if estudiantes %}
+                    <table>
+                        <thead>
                             <tr>
-                                <td>
-                                    <strong>{{ est.nombre }}</strong><br>
-                                    <span style="font-size:0.75rem; color:var(--text-muted);">CC: {{ est.documento }}</span><br>
-                                    <span style="font-size:0.75rem; color:var(--text-muted);">Email: {{ est.correo }}</span>
-                                </td>
-                                <td>
-                                    <img src="https://flagcdn.com/w40/{{ est.iso }}.png" class="flag-small" alt="icon">
-                                    <span style="font-size: 0.9rem;">{{ est.programa }}</span><br>
-                                    <span style="font-size:0.75rem; color:var(--sena-green); font-weight: bold;">Ficha: {{ est.ficha }}</span>
-                                </td>
-                                <td>
-                                    <strong>🏆 {{ est.puntos }} Puntos</strong><br>
-                                    <span style="font-size:0.75rem; color:var(--text-muted);">Simulaciones: {{ est.partidos_jugados }}</span>
-                                </td>
-                                <td><a href="/jugar/{{ est.documento }}" class="btn-play">🎮 Entrar</a></td>
+                                <th>Aprendiz</th>
+                                <th>Programa / Ficha</th>
+                                <th>Score Global</th>
+                                <th>Acción</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p style="color: var(--text-muted); text-align: center; padding: 20px;">No hay aprendices registrados en la base de datos de Atlas.</p>
-            {% endif %}
+                        </thead>
+                        <tbody>
+                            {% for est in estudiantes %}
+                                <tr>
+                                    <td>
+                                        <div class="profile-wrapper">
+                                            <div class="avatar-sub">{{ est.nombre[:1].upper() }}</div>
+                                            <div>
+                                                <strong style="color: #fff; font-size: 1rem;">{{ est.nombre }}</strong><br>
+                                                <span style="font-size:0.8rem; color: var(--text-muted);">ID: {{ est.documento }}</span><br>
+                                                <span style="font-size:0.75rem; color: var(--text-muted);">{{ est.correo }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                                            <div>
+                                                <img src="https://flagcdn.com/w40/{{ est.iso }}.png" class="flag-icon" alt="badge">
+                                                <span style="font-size: 0.85rem; margin-left: 5px; color:#cbd5e1;">{{ est.programa }}</span>
+                                            </div>
+                                            <div>
+                                                <span class="badge-ficha">Ficha {{ est.ficha }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="score-badge">
+                                            <span style="font-size: 1.1rem; color: var(--accent); font-weight:900;">{{ est.puntos }} XP</span><br>
+                                            <span style="font-size: 0.7rem; color: var(--text-muted);">PJs: {{ est.partidos_jugados }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="/jugar/{{ est.documento }}" class="btn-play">
+                                            <span>Simular</span> ⚡
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        No hay registros mapeados en la nube distribuida de Atlas.
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
