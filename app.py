@@ -11,16 +11,17 @@ app.secret_key = "fifa_world_cup_2026_ultra_premium_key"
 # ==========================================
 # CONEXIÓN INTEGRADA A TU MONGODB ATLAS
 # ==========================================
-CADENA_CONEXION = "mongodb+srv://brian_dt:FJG4MLFMR0bo0up2@cluster0.ry2pwjd.mongodb.net/mundial2026_db?retryWrites=true&w=majority&appName=Cluster0"
-MONGO_URI = os.environ.get("MONGO_URI", CADENA_CONEXION)
+CADENA_CONEXION_REAL = "mongodb+srv://brian_dt:FJG4MLFMR0bo0up2@cluster0.ry2pwjd.mongodb.net/mundial2026_db?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URI = os.environ.get("MONGO_URI", CADENA_CONEXION_REAL)
 
 def conectar_db():
+    """Establece conexión con MongoDB Atlas aplicando un tiempo de espera de 3 segundos"""
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=3000)
     client.admin.command('ping')
     return client
 
 def inicializar_torneo_48(db):
-    """Inyecta las 48 selecciones con sus grupos oficiales si la colección está vacía"""
+    """Inyecta las 48 selecciones oficiales del Mundial 2026 si la colección está vacía"""
     if db['selecciones'].count_documents({}) == 0:
         grupos = {
             "A": [("México", "#006847"), ("Estados Unidos", "#002868"), ("Canadá", "#FF0000"), ("Panamá", "#DA121A")],
@@ -53,6 +54,7 @@ def index():
     mensaje = None
     tipo_mensaje = "success"
     
+    # 4. CONTROL DE EXCEPCIONES EN CASO DE ERROR INESPERADO
     try:
         client = conectar_db()
         db = client['mundial2026_db']
@@ -61,41 +63,38 @@ def index():
         dt_col = db['directores_tecnicos']
     except (ConnectionFailure, ConfigurationError) as e:
         return render_template("error.html", 
-                               titulo_error="Fallo Crítico de Conexión Base de Datos",
-                               error_mensaje=f"No se pudo establecer el enlace con tu clúster de MongoDB Atlas. Detalles: {str(e)}")
+                               titulo_error="Fallo de Conexión Base de Datos",
+                               error_mensaje=f"Fallo al enlazar con tu servidor en la nube de MongoDB Atlas. Detalles: {str(e)}")
     except Exception as e:
-        return render_template("error.html", titulo_error="Error Interno del Servidor", error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Error Inesperado Interno", error_mensaje=str(e))
 
+    # 1. REGISTRAR ESTUDIANTES / DIRECTORES TÉCNICOS
     if request.method == "POST":
         documento = request.form.get("documento", "").strip()
         nombre = request.form.get("nombre", "").strip()
         correo = request.form.get("correo", "").strip()
-        equipo = request.form.get("equipo", "").strip()
-        ficha = request.form.get("ficha", "").strip()
+        equipo = request.form.get("equipo", "").strip()  # Programa de Formación (Selección)
+        ficha = request.form.get("ficha", "").strip()    # Ficha Académica
 
+        # 2. VALIDAR LOS DATOS REGISTRADOS
         if not all([documento, nombre, correo, equipo, ficha]):
-            mensaje = "❌ Todos los campos de acreditación son obligatorios."
+            mensaje = "❌ Todos los campos solicitados son totalmente obligatorios."
             tipo_mensaje = "danger"
         elif not documento.isdigit():
-            mensaje = "❌ El campo Documento de Identidad debe tener únicamente números."
+            mensaje = "❌ El Documento de Identidad debe estructurarse solo con números."
             tipo_mensaje = "danger"
         elif not re.match(r"[^@]+@[^@]+\.[^@]+", correo):
-            mensaje = "❌ El correo electrónico ingresado no tiene un formato válido."
+            mensaje = "❌ La dirección de correo electrónico no tiene un formato válido."
             tipo_mensaje = "danger"
         else:
             try:
                 if dt_col.find_one({"documento": documento}):
-                    mensaje = "❌ Este documento ya se encuentra registrado con una selección."
+                    mensaje = "❌ Este documento ya se encuentra registrado dirigiendo a un país."
                     tipo_mensaje = "danger"
                 else:
                     info_seleccion = selecciones_col.find_one({"nombre": equipo})
-                    
-                    # Uso Seguro de .get() para evitar fallos con datos antiguos
-                    grupo_detectado = "A"
-                    color_detectado = "#ffffff"
-                    if info_seleccion:
-                        grupo_detectado = info_seleccion.get("grupo", "A")
-                        color_detectado = info_seleccion.get("color_kit", info_seleccion.get("color_prenda", "#ffffff"))
+                    grupo_detectado = info_seleccion.get("grupo", "A") if info_seleccion else "A"
+                    color_detectado = info_seleccion.get("color_kit", "#ffffff") if info_seleccion else "#ffffff"
 
                     nuevo_dt = {
                         "documento": documento,
@@ -111,22 +110,24 @@ def index():
                         "goles_contra": 0
                     }
                     dt_col.insert_one(nuevo_dt)
-                    mensaje = f"🏆 ¡Manager {nombre} acreditado exitosamente para dirigir a {equipo}!"
+                    mensaje = f"🏆 ¡Estudiante {nombre} inscrito con éxito liderando a {equipo}!"
                     tipo_mensaje = "success"
             except Exception as e:
-                return render_template("error.html", titulo_error="Error al Insertar Registro", error_mensaje=str(e))
+                return render_template("error.html", titulo_error="Fallo de Escritura de Datos", error_mensaje=str(e))
 
+    # 3. CONSULTAR TODOS LOS ESTUDIANTES REGISTRADOS
     try:
         lista_dts = list(dt_col.find().sort("puntos", -1))
         lista_paises = list(selecciones_col.find().sort("nombre", 1))
     except Exception as e:
-        return render_template("error.html", titulo_error="Error de Consulta de Datos", error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Fallo al Consultar Colecciones", error_mensaje=str(e))
 
     return render_template("index.html", dts=lista_dts, selecciones=lista_paises, mensaje=mensaje, tipo_mensaje=tipo_mensaje)
 
 
 @app.route("/partido/<documento>")
 def preparar_partido(documento):
+    """Genera e inyecta la lógica de juego real interactivo minuto a minuto en la base de datos"""
     try:
         client = conectar_db()
         db = client['mundial2026_db']
@@ -141,24 +142,23 @@ def preparar_partido(documento):
         goles_visitante = 0
         eventos = []
         
-        comentarios_posibles = [
-            "¡Remate potente desde fuera del área!",
-            "¡Cabezazo letal tras un tiro de esquina impecable!",
-            "¡Error defensivo garrafal aprovechado por el delantero!",
-            "¡Penalti cobrado con frialdad absoluta a las redes!",
-            "¡Jugada colectiva de fantasía que termina en anotación!"
+        comentarios = [
+            "¡Potente remate directo al ángulo!",
+            "¡Zambullida de cabeza impecable tras un cobro de esquina!",
+            "¡Error de despeje en la línea defensiva aprovechado al máximo!",
+            "¡Definición magistral en un uno contra uno frente al guardameta!"
         ]
 
-        for minuto in range(1, 91, random.randint(5, 15)):
-            accion = random.choices(["gol_local", "gol_visitante", "falta", "nada"], weights=[12, 10, 20, 58])[0]
-            if accion == "gol_local":
+        for minuto in range(1, 91, random.randint(6, 16)):
+            accion = random.choices(["gol_l", "gol_v", "falta", "nada"], weights=[14, 11, 20, 55])[0]
+            if accion == "gol_l":
                 goles_local += 1
-                eventos.append(f"⏱️ Min {minuto}': ¡GOL DE {dt['equipo'].upper()}! {random.choice(comentarios_posibles)}")
-            elif accion == "gol_visitante":
+                eventos.append(f"⏱️ Min {minuto}': ¡GOL DE {dt['equipo'].upper()}! {random.choice(comentarios)}")
+            elif accion == "gol_v":
                 goles_visitante += 1
-                eventos.append(f"⏱️ Min {minuto}': ¡GOL DE {rival['nombre'].upper()}! {random.choice(comentarios_posibles)}")
+                eventos.append(f"⏱️ Min {minuto}': ¡GOL DE {rival['nombre'].upper()}! {random.choice(comentarios)}")
             elif accion == "falta":
-                eventos.append(f"⏱️ Min {minuto}': Tarjeta amarilla por juego peligroso en la mitad del campo.")
+                eventos.append(f"⏱️ Min {minuto}': Falta fuerte. El colegiado muestra cartulina amarilla.")
 
         if goles_local > goles_visitante:
             puntos_ganados = 3
@@ -194,7 +194,7 @@ def preparar_partido(documento):
 
         return render_template("match.html", partido=datos_partido)
     except Exception as e:
-        return render_template("error.html", titulo_error="Fallo Crítico en MatchEngine v2026", error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Fallo Crítico MatchEngine v2026", error_mensaje=str(e))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
