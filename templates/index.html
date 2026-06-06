@@ -3,303 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SENA - Centro de Control de Aprendices</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>SENA - Arcade Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-base: #06070d;
-            --bg-panel: #0d0f1a;
-            --bg-card: #141829;
-            --sena-green: #39A900;
-            --sena-glow: rgba(57, 169, 0, 0.4);
-            --text-main: #f1f3f9;
-            --text-muted: #6c7693;
-            --border: rgba(255, 255, 255, 0.05);
-            --accent: #00ff87;
-        }
-
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(57, 169, 0, 0.07) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(0, 255, 135, 0.04) 0px, transparent 50%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 50px 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-            position: relative;
-        }
-
-        header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin: 0;
-            letter-spacing: 2px;
-            background: linear-gradient(180deg, #fff 30%, var(--sena-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 10px rgba(57, 169, 0, 0.2));
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 400px 1fr;
-            gap: 40px;
-            align-items: start;
-        }
-
-        @media(max-width: 1024px) {
-            .grid { grid-template-columns: 1fr; }
-        }
-
-        .panel {
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 35px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .panel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
-            background: linear-gradient(90deg, var(--sena-green), var(--accent));
-        }
-
-        h2 {
-            font-family: 'Orbitron', sans-serif;
-            color: #fff;
-            font-size: 1.3rem;
-            text-transform: uppercase;
-            margin-top: 0;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h2::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        .form-group {
-            margin-bottom: 22px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        input:focus, select:focus {
-            border-color: var(--sena-green);
-            outline: none;
-            box-shadow: 0 0 15px var(--sena-glow);
-            background: rgba(20, 24, 41, 0.8);
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--sena-green), #247300);
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            text-transform: uppercase;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3);
-            letter-spacing: 1px;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px var(--sena-glow);
-            filter: brightness(1.1);
-        }
-
-        .alert {
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            font-weight: 600;
-            text-align: center;
-            border: 1px solid;
-            animation: fadeIn 0.4s ease;
-        }
+        :root { --bg-base: #06070d; --bg-panel: #0d0f1a; --bg-card: #141829; --sena-green: #39A900; --sena-glow: rgba(57, 169, 0, 0.3); --text-main: #f1f3f9; --text-muted: #6c7693; --border: rgba(255, 255, 255, 0.05); --accent: #00ff87; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; background-image: radial-gradient(at 0% 0%, rgba(57, 169, 0, 0.06) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(0, 255, 135, 0.03) 0px, transparent 50%); min-height: 100vh; }
+        .container { max-width: 1250px; margin: 0 auto; padding: 40px 20px; }
+        header { text-align: center; margin-bottom: 50px; }
+        header h1 { font-family: 'Orbitron', sans-serif; font-size: 2.8rem; font-weight: 900; text-transform: uppercase; margin: 0; letter-spacing: 2px; background: linear-gradient(180deg, #fff, var(--sena-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .grid { display: grid; grid-template-columns: 420px 1fr; gap: 35px; align-items: start; }
+        @media(max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
+        .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); position: relative; overflow: hidden; }
+        .panel::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--sena-green), var(--accent)); }
+        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.15rem; text-transform: uppercase; margin-top: 0; margin-bottom: 25px; letter-spacing: 1px; color: #fff; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+        input, select { width: 100%; padding: 15px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: #fff; font-size: 0.95rem; box-sizing: border-box; transition: 0.2s; }
+        input:focus, select:focus { border-color: var(--sena-green); outline: none; box-shadow: 0 0 12px var(--sena-glow); }
+        .btn-submit { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--sena-green), #247300); color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; border: none; border-radius: 12px; cursor: pointer; margin-top: 10px; transition: 0.2s; box-shadow: 0 4px 12px rgba(57, 169, 0, 0.3); }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--sena-glow); }
+        .alert { padding: 15px; border-radius: 12px; margin-bottom: 25px; font-weight: bold; text-align: center; border: 1px solid; }
         .alert-success { background: rgba(0, 255, 135, 0.1); color: var(--accent); border-color: rgba(0, 255, 135, 0.2); }
         .alert-danger { background: rgba(255, 77, 77, 0.1); color: #ff4d4d; border-color: rgba(255, 77, 77, 0.2); }
-
-        /* TABLA INTERFICIAL / LEADERBOARD */
-        .table-container {
-            max-height: 680px;
-            overflow-y: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
-
-        th {
-            text-align: left;
-            padding: 15px 20px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-
-        tr {
-            transition: all 0.2s ease;
-        }
-
-        td {
-            background: var(--bg-card);
-            padding: 18px 20px;
-            vertical-align: middle;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        td:first-child { border-left: 1px solid var(--border); border-top-left-radius: 14px; border-bottom-left-radius: 14px; }
-        td:last-child { border-right: 1px solid var(--border); border-top-right-radius: 14px; border-bottom-right-radius: 14px; }
-
-        tr:hover td {
-            background: rgba(29, 35, 59, 0.8);
-            border-color: rgba(255,255,255,0.1);
-            transform: scale(1.005);
-        }
-
-        .profile-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .avatar-sub {
-            width: 42px;
-            height: 42px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            color: var(--sena-green);
-        }
-
-        .flag-icon {
-            width: 28px;
-            height: 20px;
-            object-fit: cover;
-            border-radius: 4px;
-            vertical-align: middle;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-        .badge-ficha {
-            background: rgba(57, 169, 0, 0.15);
-            color: #56ff1a;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .score-badge {
-            font-family: 'Orbitron', sans-serif;
-            color: #fff;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-play {
-            background: rgba(0, 255, 135, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(0, 255, 135, 0.3);
-            padding: 10px 20px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-play:hover {
-            background: var(--accent);
-            color: #000;
-            box-shadow: 0 0 15px rgba(0, 255, 135, 0.4);
-            transform: translateY(-1px);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        th { text-align: left; padding: 12px 18px; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
+        td { background: var(--bg-card); padding: 16px 18px; vertical-align: middle; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        td:first-child { border-left: 1px solid var(--border); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        td:last-child { border-right: 1px solid var(--border); border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+        .flag-small { width: 28px; height: 18px; object-fit: cover; border-radius: 4px; vertical-align: middle; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+        .btn-play { background: rgba(0, 255, 135, 0.1); color: var(--accent); border: 1px solid rgba(0, 255, 135, 0.2); padding: 10px 18px; border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; transition: 0.2s; }
+        .btn-play:hover { background: var(--accent); color: #000; box-shadow: 0 0 12px rgba(0, 255, 135, 0.4); }
     </style>
 </head>
 <body>
@@ -307,7 +40,7 @@
 <div class="container">
     <header>
         <h1>SENA Arcade System</h1>
-        <p>Control de Aprendices & Evaluación Lúdica</p>
+        <p style="color: var(--text-muted); letter-spacing: 2px;">Mundial 2026 - Gestión de Aprendices</p>
     </header>
 
     {% if mensaje %}
@@ -315,26 +48,25 @@
     {% endif %}
 
     <div class="grid">
-        <!-- FORMULARIO DE REGISTRO (PUNTO 1 Y 2) -->
         <div class="panel">
-            <h2>Acreditación</h2>
+            <h2>Acreditación Oficial</h2>
             <form method="POST" action="/">
                 <div class="form-group">
                     <label>Documento de Identidad</label>
-                    <input type="text" name="documento" required placeholder="CC / TI (Solo dígitos)" autocomplete="off">
+                    <input type="text" name="documento" required placeholder="Solo números" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" name="nombre" required placeholder="Ej: Carlos Mendoza">
+                    <input type="text" name="nombre" required placeholder="Ej: Brayan Bareño">
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" name="correo" required placeholder="usuario@misena.edu.co">
+                    <input type="email" name="correo" required placeholder="tu_correo@misena.edu.co">
                 </div>
                 <div class="form-group">
-                    <label>Programa de Formación</label>
+                    <label>Programa de Formación (Eje)</label>
                     <select name="programa" required>
-                        <option value="">-- Seleccionar Eje --</option>
+                        <option value="">-- Selecciona tu Programa/País --</option>
                         {% for prog in programas %}
                             <option value="{{ prog.nombre }}">{{ prog.nombre }}</option>
                         {% endfor %}
@@ -342,71 +74,44 @@
                 </div>
                 <div class="form-group">
                     <label>Ficha Académica</label>
-                    <input type="text" name="ficha" required placeholder="Número de Ficha">
+                    <input type="text" name="ficha" required placeholder="Ej: 3065826">
                 </div>
-                <button type="submit" class="btn-submit">Registrar e Iniciar</button>
+                <button type="submit" class="btn-submit">Registrar e Iniciar Torneo</button>
             </form>
         </div>
 
-        <!-- TABLA CONSULTA GENERAL (PUNTO 3) -->
-        <div class="panel">
-            <h2>Leaderboard Estudiantil</h2>
-            <div class="table-container">
-                {% if estudiantes %}
-                    <table>
-                        <thead>
+        <div class="panel" style="overflow-x: auto;">
+            <h2>Clasificación General (Mongo Atlas)</h2>
+            {% if dts %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aprendiz (DT)</th>
+                            <th>Eje Tecnológico</th>
+                            <th>Desempeño</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dt in dts %}
                             <tr>
-                                <th>Aprendiz</th>
-                                <th>Programa / Ficha</th>
-                                <th>Score Global</th>
-                                <th>Acción</th>
+                                <td><strong>{{ dt.nombre }}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">Ficha: {{ dt.ficha }}</span></td>
+                                <td>
+                                    <img src="https://flagcdn.com/w40/{{ dt.iso }}.png" class="flag-small" alt="bandera">
+                                    <span style="font-size: 0.9rem;">{{ dt.equipo }}</span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--accent); font-weight: bold;">🏆 {{ dt.puntos }} PTS</span><br>
+                                    <span style="font-size:0.75rem; color:var(--text-muted);">PJs: {{ dt.partidos_jugados }} | GF: {{ dt.goles_favor }}</span>
+                                </td>
+                                <td><a href="/jugar/{{ dt.documento }}" class="btn-play">🎮 Jugar</a></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for est in estudiantes %}
-                                <tr>
-                                    <td>
-                                        <div class="profile-wrapper">
-                                            <div class="avatar-sub">{{ est.nombre[:1].upper() }}</div>
-                                            <div>
-                                                <strong style="color: #fff; font-size: 1rem;">{{ est.nombre }}</strong><br>
-                                                <span style="font-size:0.8rem; color: var(--text-muted);">ID: {{ est.documento }}</span><br>
-                                                <span style="font-size:0.75rem; color: var(--text-muted);">{{ est.correo }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; flex-direction: column; gap: 6px;">
-                                            <div>
-                                                <img src="https://flagcdn.com/w40/{{ est.iso }}.png" class="flag-icon" alt="badge">
-                                                <span style="font-size: 0.85rem; margin-left: 5px; color:#cbd5e1;">{{ est.programa }}</span>
-                                            </div>
-                                            <div>
-                                                <span class="badge-ficha">Ficha {{ est.ficha }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="score-badge">
-                                            <span style="font-size: 1.1rem; color: var(--accent); font-weight:900;">{{ est.puntos }} XP</span><br>
-                                            <span style="font-size: 0.7rem; color: var(--text-muted);">PJs: {{ est.partidos_jugados }}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a href="/jugar/{{ est.documento }}" class="btn-play">
-                                            <span>Simular</span> ⚡
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <div style="text-align: center; padding: 40px; color: var(--text-muted);">
-                        No hay registros mapeados en la nube distribuida de Atlas.
-                    </div>
-                {% endif %}
-            </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="color: var(--text-muted); text-align: center; padding: 20px;">No hay competidores registrados en la base distribuida.</p>
+            {% endif %}
         </div>
     </div>
 </div>
