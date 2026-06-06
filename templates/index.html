@@ -2,40 +2,40 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>FIFA World Cup 2026 - Central Station</title>
+    <title>SENA - Plataforma de Gestión de Estudiantes</title>
     <style>
-        :root { --bg-base: #0a0a0d; --bg-panel: #13141a; --gold: #dfb857; --text-main: #f3f4f6; --text-muted: #8b8f9e; --border: rgba(255,255,255,0.08); }
-        body { background-color: var(--bg-base); color: var(--text-main); font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
+        :root { --bg-base: #0a0a0d; --bg-panel: #13141a; --sena-green: #39A900; --text-main: #f3f4f6; --text-muted: #8b8f9e; --border: rgba(255,255,255,0.08); }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
         .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
         header { text-align: center; margin-bottom: 50px; }
-        h1 { font-size: 3rem; font-weight: 900; text-transform: uppercase; margin: 0; background: linear-gradient(180deg, #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 2.8rem; font-weight: 900; text-transform: uppercase; margin: 0; background: linear-gradient(180deg, #fff, var(--sena-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
         @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
         .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
-        h2 { color: var(--gold); font-size: 1.2rem; text-transform: uppercase; margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        h2 { color: var(--sena-green); font-size: 1.2rem; text-transform: uppercase; margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 15px; letter-spacing: 1px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
-        input, select { width: 100%; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; }
-        input:focus, select:focus { border-color: var(--gold); outline: none; }
-        .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--gold), #b8923a); color: #000; font-weight: 800; font-size: 1rem; text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-submit:hover { transform: translateY(-2px); }
+        input, select { width: 100%; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; transition: 0.2s; }
+        input:focus, select:focus { border-color: var(--sena-green); outline: none; box-shadow: 0 0 8px rgba(57,169,0,0.4); }
+        .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--sena-green), #2a7a00); color: #fff; font-weight: 800; font-size: 1rem; text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: 0.3s; letter-spacing: 1px; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(57,169,0,0.4); }
         .alert { padding: 15px; border-radius: 10px; margin-bottom: 25px; font-weight: bold; text-align: center; border: 1px solid; }
         .alert-success { background: rgba(0,255,135,0.1); color: #00ff87; border-color: #00ff87; }
         .alert-danger { background: rgba(255,77,77,0.1); color: #ff4d4d; border-color: #ff4d4d; }
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 15px; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
         td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); vertical-align: middle; }
-        .flag-small { width: 30px; border-radius: 3px; vertical-align: middle; margin-right: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
-        .btn-play { background: rgba(0,255,135,0.1); color: #00ff87; border: 1px solid rgba(0,255,135,0.3); padding: 8px 15px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
-        .btn-play:hover { background: #00ff87; color: #000; }
+        .flag-small { width: 24px; border-radius: 3px; vertical-align: middle; margin-right: 8px; }
+        .btn-play { background: rgba(57,169,0,0.1); color: #39A900; border: 1px solid rgba(57,169,0,0.3); padding: 8px 15px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; transition: 0.2s; }
+        .btn-play:hover { background: var(--sena-green); color: #fff; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>FIFA World Cup 2026</h1>
-        <p style="color: var(--text-muted);">Acredítate y salta a la cancha a jugar</p>
+        <h1>SENA - Centro de Analistas y Desarrolladores</h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">Registro Único de Aprendices con Entorno Lúdico Integrado</p>
     </header>
 
     {% if mensaje %}
@@ -44,68 +44,76 @@
 
     <div class="grid">
         <div class="panel">
-            <h2>Acreditación Oficial</h2>
+            <h2>Acreditación de Estudiante</h2>
             <form method="POST" action="/">
                 <div class="form-group">
                     <label>Documento de Identidad</label>
-                    <input type="text" name="documento" required placeholder="Solo números">
+                    <input type="text" name="documento" required placeholder="Ej: 1023456789 (Solo números)">
                 </div>
                 <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" name="nombre" required>
+                    <input type="text" name="nombre" required placeholder="Ej: Juan Pérez">
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" name="correo" required>
+                    <input type="email" name="correo" required placeholder="Ej: jperez@misena.edu.co">
                 </div>
                 <div class="form-group">
-                    <label>Selección</label>
-                    <select name="equipo" required>
-                        <option value="">-- Elige tu País --</option>
-                        {% for pais in selecciones %}
-                            <option value="{{ pais.nombre }}">{{ pais.nombre }}</option>
+                    <label>Programa de Formación</label>
+                    <select name="programa" required>
+                        <option value="">-- Seleccione el Programa --</option>
+                        {% for prog in programas %}
+                            <option value="{{ prog.nombre }}">{{ prog.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Ficha Académica</label>
-                    <input type="text" name="ficha" required>
+                    <input type="text" name="ficha" required placeholder="Ej: 3065826">
                 </div>
-                <button type="submit" class="btn-submit">Registrar y Jugar</button>
+                <button type="submit" class="btn-submit">Registrar Aprendiz</button>
             </form>
         </div>
 
         <div class="panel" style="overflow-x: auto;">
-            <h2>Clasificación General (Atlas)</h2>
-            {% if dts %}
+            <h2>Estudiantes Registrados (MongoDB Atlas)</h2>
+            {% if estudiantes %}
                 <table>
                     <thead>
                         <tr>
-                            <th>Jugador (DT)</th>
-                            <th>Nación</th>
-                            <th>Estadísticas</th>
+                            <th>Estudiante</th>
+                            <th>Programa de Formación</th>
+                            <th>Contacto / Ficha</th>
+                            <th>Rendimiento Lúdico</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for dt in dts %}
+                        {% for est in estudiantes %}
                             <tr>
-                                <td><strong>{{ dt.nombre }}</strong><br><span style="font-size:0.75rem; color:#8b8f9e;">Ficha: {{ dt.ficha }}</span></td>
                                 <td>
-                                    <img src="https://flagcdn.com/w40/{{ dt.iso }}.png" class="flag-small" alt="bandera">
-                                    {{ dt.equipo }}
+                                    <strong>{{ est.nombre }}</strong><br>
+                                    <span style="font-size:0.75rem; color:#8b8f9e;">CC: {{ est.documento }}</span>
                                 </td>
                                 <td>
-                                    <strong>🏆 {{ dt.puntos }} PTS</strong><br>
-                                    <span style="font-size:0.75rem; color:var(--text-muted);">PJs: {{ dt.partidos_jugados }} | GF: {{ dt.goles_favor }}</span>
+                                    <img src="https://flagcdn.com/w40/{{ est.iso }}.png" class="flag-small" alt="icon">
+                                    <span style="font-size: 0.9rem;">{{ est.programa }}</span>
                                 </td>
-                                <td><a href="/jugar/{{ dt.documento }}" class="btn-play">🎮 Jugar</a></td>
+                                <td>
+                                    <span style="font-size: 0.85rem; color: var(--text-main);">{{ est.correo }}</span><br>
+                                    <span style="font-size:0.75rem; color:var(--text-muted);">Ficha: {{ est.ficha }}</span>
+                                </td>
+                                <td>
+                                    <strong>🏆 {{ est.puntos }} PTS</strong><br>
+                                    <span style="font-size:0.75rem; color:var(--text-muted);">PJs: {{ est.partidos_jugados }} | GF: {{ est.goles_favor }}</span>
+                                </td>
+                                <td><a href="/jugar/{{ est.documento }}" class="btn-play">🎮 Entrar</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             {% else %}
-                <p style="color: var(--text-muted); text-align: center;">No hay jugadores registrados.</p>
+                <p style="color: var(--text-muted); text-align: center; padding: 20px;">Ningún estudiante registrado en la base de datos distribuida Atlas.</p>
             {% endif %}
         </div>
     </div>
