@@ -3,10 +3,9 @@ import re
 import random
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure, ConfigurationError
 
 app = Flask(__name__)
-app.secret_key = "fifa_world_cup_2026_master_key"
+app.secret_key = "fifa_world_cup_2026_arcade"
 
 # ==========================================
 # CONEXIÓN A MONGODB ATLAS
@@ -19,47 +18,34 @@ def conectar_db():
     client.admin.command('ping')
     return client
 
-# Base de datos de equipos reales con su Poder (ELO) para cálculos matemáticos
+# Equipos con sus colores oficiales para renderizar los uniformes en el juego 2D
 EQUIPOS_REALES = [
-    {"nombre": "Argentina", "iso": "ar", "poder": 95}, {"nombre": "Francia", "iso": "fr", "poder": 94},
-    {"nombre": "Brasil", "iso": "br", "poder": 93}, {"nombre": "Inglaterra", "iso": "gb-eng", "poder": 92},
-    {"nombre": "España", "iso": "es", "poder": 90}, {"nombre": "Portugal", "iso": "pt", "poder": 89},
-    {"nombre": "Alemania", "iso": "de", "poder": 88}, {"nombre": "Italia", "iso": "it", "poder": 87},
-    {"nombre": "Países Bajos", "iso": "nl", "poder": 86}, {"nombre": "Croacia", "iso": "hr", "poder": 85},
-    {"nombre": "Colombia", "iso": "co", "poder": 84}, {"nombre": "Uruguay", "iso": "uy", "poder": 84},
-    {"nombre": "Marruecos", "iso": "ma", "poder": 83}, {"nombre": "Bélgica", "iso": "be", "poder": 82},
-    {"nombre": "Estados Unidos", "iso": "us", "poder": 80}, {"nombre": "México", "iso": "mx", "poder": 79},
-    {"nombre": "Japón", "iso": "jp", "poder": 79}, {"nombre": "Senegal", "iso": "sn", "poder": 78},
-    {"nombre": "Suiza", "iso": "ch", "poder": 78}, {"nombre": "Dinamarca", "iso": "dk", "poder": 77},
-    {"nombre": "Ecuador", "iso": "ec", "poder": 77}, {"nombre": "Corea del Sur", "iso": "kr", "poder": 76},
-    {"nombre": "Canadá", "iso": "ca", "poder": 75}, {"nombre": "Serbia", "iso": "rs", "poder": 75},
-    {"nombre": "Polonia", "iso": "pl", "poder": 74}, {"nombre": "Chile", "iso": "cl", "poder": 74},
-    {"nombre": "Nigeria", "iso": "ng", "poder": 73}, {"nombre": "Gales", "iso": "gb-wls", "poder": 72},
-    {"nombre": "Perú", "iso": "pe", "poder": 72}, {"nombre": "Egipto", "iso": "eg", "poder": 71},
-    {"nombre": "Argelia", "iso": "dz", "poder": 70}, {"nombre": "Costa Rica", "iso": "cr", "poder": 68}
+    {"nombre": "Argentina", "iso": "ar", "color1": "#74ACDF", "color2": "#FFFFFF"},
+    {"nombre": "Francia", "iso": "fr", "color1": "#002395", "color2": "#FFFFFF"},
+    {"nombre": "Brasil", "iso": "br", "color1": "#FFDF00", "color2": "#009c3b"},
+    {"nombre": "Colombia", "iso": "co", "color1": "#FCD116", "color2": "#003893"},
+    {"nombre": "España", "iso": "es", "color1": "#C60B1E", "color2": "#FFC400"},
+    {"nombre": "Inglaterra", "iso": "gb-eng", "color1": "#FFFFFF", "color2": "#CF081F"},
+    {"nombre": "México", "iso": "mx", "color1": "#006847", "color2": "#FFFFFF"},
+    {"nombre": "Estados Unidos", "iso": "us", "color1": "#FFFFFF", "color2": "#002868"}
 ]
-
-def inicializar_torneo(db):
-    """Inyecta los equipos a la BD la primera vez"""
-    if db['selecciones'].count_documents({}) == 0:
-        db['selecciones'].insert_many(EQUIPOS_REALES)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     mensaje = None
     tipo_mensaje = "success"
     
-    # 4. CONTROL DE EXCEPCIONES
     try:
         client = conectar_db()
         db = client['mundial2026_db']
-        inicializar_torneo(db)
+        if db['selecciones'].count_documents({}) == 0:
+            db['selecciones'].insert_many(EQUIPOS_REALES)
         selecciones_col = db['selecciones']
         dt_col = db['directores_tecnicos']
     except Exception as e:
         return render_template("error.html", titulo_error="Error de Conexión a BD", error_mensaje=str(e))
 
-    # 1. y 2. REGISTRO Y VALIDACIÓN (REQUISITO DE LA TAREA)
+    # PROCESAR FORMULARIO (REQUISITO SENA)
     if request.method == "POST":
         documento = request.form.get("documento", "").strip()
         nombre = request.form.get("nombre", "").strip()
@@ -68,86 +54,65 @@ def index():
         ficha = request.form.get("ficha", "").strip()
 
         if not all([documento, nombre, correo, equipo, ficha]):
-            mensaje = "⚠️ Todos los campos son obligatorios."
-            tipo_mensaje = "danger"
+            mensaje, tipo_mensaje = "⚠️ Todos los campos son obligatorios.", "danger"
         elif not documento.isdigit():
-            mensaje = "⚠️ El documento debe contener solo números."
-            tipo_mensaje = "danger"
-        elif not re.match(r"[^@]+@[^@]+\.[^@]+", correo):
-            mensaje = "⚠️ Formato de correo inválido."
-            tipo_mensaje = "danger"
+            mensaje, tipo_mensaje = "⚠️ El documento debe ser numérico.", "danger"
         else:
             if dt_col.find_one({"documento": documento}):
-                mensaje = "⚠️ Este documento ya está registrado como Mánager."
-                tipo_mensaje = "danger"
+                # Si ya existe, lo mandamos directo a jugar
+                return redirect(url_for("jugar", documento=documento))
             else:
                 info_seleccion = selecciones_col.find_one({"nombre": equipo})
                 nuevo_dt = {
                     "documento": documento, "nombre": nombre, "correo": correo, 
-                    "equipo": equipo, "iso": info_seleccion["iso"] if info_seleccion else "co", 
-                    "ficha": ficha, "poder": info_seleccion["poder"] if info_seleccion else 70
+                    "equipo": equipo, "iso": info_seleccion["iso"] if info_seleccion else "co",
+                    "color1": info_seleccion["color1"] if info_seleccion else "#fff",
+                    "color2": info_seleccion["color2"] if info_seleccion else "#000",
+                    "ficha": ficha, "partidos_jugados": 0, "puntos": 0, "goles_favor": 0, "goles_contra": 0
                 }
                 dt_col.insert_one(nuevo_dt)
-                mensaje = f"✅ ¡Mánager {nombre} registrado exitosamente con {equipo}!"
-                tipo_mensaje = "success"
+                return redirect(url_for("jugar", documento=documento))
 
-    # 3. CONSULTA GENERAL
     try:
-        lista_dts = list(dt_col.find().sort("_id", -1))
+        lista_dts = list(dt_col.find().sort("puntos", -1))
         lista_paises = list(selecciones_col.find().sort("nombre", 1))
     except Exception as e:
-        return render_template("error.html", titulo_error="Error de Consulta", error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Error", error_mensaje=str(e))
 
     return render_template("index.html", dts=lista_dts, selecciones=lista_paises, mensaje=mensaje, tipo_mensaje=tipo_mensaje)
 
-# ==========================================
-# MOTOR IA DE SIMULACIÓN DEL TORNEO
-# ==========================================
-def simular_partido(equipo1, equipo2):
-    ventaja = (equipo1["poder"] - equipo2["poder"]) / 12.0
-    goles1 = max(0, int(random.gauss(1.5 + ventaja, 1.2)))
-    goles2 = max(0, int(random.gauss(1.5 - ventaja, 1.2)))
-    
-    if goles1 == goles2:
-        if random.choice([True, False]): goles1 += 1
-        else: goles2 += 1
+@app.route("/jugar/<documento>")
+def jugar(documento):
+    """Carga la arena de juego interactiva HTML5"""
+    try:
+        client = conectar_db()
+        db = client['mundial2026_db']
+        dt = db['directores_tecnicos'].find_one({"documento": documento})
+        if not dt: return redirect(url_for("index"))
+        
+        # Elegir un rival aleatorio que no sea el mismo
+        rival = db['selecciones'].aggregate([{"$match": {"nombre": {"$ne": dt["equipo"]}}}, {"$sample": {"size": 1}}]).next()
+        
+        return render_template("game.html", dt=dt, rival=rival)
+    except Exception as e:
+        return render_template("error.html", titulo_error="Fallo al cargar el juego", error_mensaje=str(e))
 
-    return {"equipo1": equipo1, "equipo2": equipo2, "goles1": goles1, "goles2": goles2, "ganador": equipo1 if goles1 > goles2 else equipo2}
-
-@app.route("/api/simular_torneo")
-def api_simular_torneo():
-    equipos = EQUIPOS_REALES.copy()
-    random.shuffle(equipos)
-    
-    fases = {"octavos": [], "cuartos": [], "semifinal": [], "final": [], "campeon": None}
-    
-    # Octavos
-    avanzan_cuartos = []
-    for i in range(0, 16, 2):
-        p = simular_partido(equipos[i], equipos[i+1])
-        fases["octavos"].append(p)
-        avanzan_cuartos.append(p["ganador"])
+@app.route("/guardar_resultado", methods=["POST"])
+def guardar_resultado():
+    """Recibe los goles desde el juego en JavaScript y actualiza la BD"""
+    data = request.json
+    try:
+        client = conectar_db()
+        db = client['mundial2026_db']
+        puntos = 3 if data['goles_l'] > data['goles_v'] else (1 if data['goles_l'] == data['goles_v'] else 0)
         
-    # Cuartos
-    avanzan_semi = []
-    for i in range(0, 8, 2):
-        p = simular_partido(avanzan_cuartos[i], avanzan_cuartos[i+1])
-        fases["cuartos"].append(p)
-        avanzan_semi.append(p["ganador"])
-        
-    # Semis
-    avanzan_final = []
-    for i in range(0, 4, 2):
-        p = simular_partido(avanzan_semi[i], avanzan_semi[i+1])
-        fases["semifinal"].append(p)
-        avanzan_final.append(p["ganador"])
-        
-    # Final
-    final = simular_partido(avanzan_final[0], avanzan_final[1])
-    fases["final"].append(final)
-    fases["campeon"] = final["ganador"]
-    
-    return jsonify(fases)
+        db['directores_tecnicos'].update_one(
+            {"documento": data['documento']},
+            {"$inc": {"partidos_jugados": 1, "puntos": puntos, "goles_favor": data['goles_l'], "goles_contra": data['goles_v']}}
+        )
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
