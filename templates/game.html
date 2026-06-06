@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>FIFA 2026 - Live Match</title>
+    <style>
+        body {
+            background-color: #0a0a0c;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        /* Marcador Superior */
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 800px;
+            background: #14151a;
+            padding: 15px 30px;
+            border-radius: 12px;
+            border: 1px solid #2a2c36;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+        }
+        .team { display: flex; align-items: center; gap: 15px; }
+        .flag { width: 40px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .score { font-size: 3rem; font-weight: 900; color: #dfb857; margin: 0 20px; }
+        .timer { font-size: 1.5rem; font-weight: bold; color: #00ff66; }
+        
+        /* La Cancha */
+        canvas {
+            background: #2b7a3e; /* Verde césped */
+            border: 6px solid #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+        }
+
+        .controls { margin-top: 15px; color: #888c99; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Pantalla de Fin de Juego */
+        #gameOverScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 12, 0.9); display: none;
+            flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+        }
+        #gameOverScreen h1 { font-size: 4rem; color: #dfb857; text-transform: uppercase; }
+        .btn-finish {
+            background: linear-gradient(135deg, #dfb857, #b8923a);
+            border: none; padding: 15px 40px; font-size: 1.2rem; font-weight: bold;
+            border-radius: 30px; cursor: pointer; text-transform: uppercase; color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hud">
+        <div class="team">
+            <img src="https://flagcdn.com/w80/{{ dt.iso }}.png" class="flag" alt="Local">
+            <h2>{{ dt.equipo }} <br><span style="font-size: 0.7rem; color: #888c99;">(TÚ)</span></h2>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <div class="score" id="scoreL">0</div>
+            <div class="timer" id="timerDisplay">60</div>
+            <div class="score" id="scoreV">0</div>
+        </div>
+        <div class="team" style="flex-direction: row-reverse;">
+            <img src="https://flagcdn.com/w80/{{ rival.iso }}.png" class="flag" alt="Rival">
+            <h2 style="text-align: right;">{{ rival.nombre }} <br><span style="font-size: 0.7rem; color: #888c99;">(IA)</span></h2>
+        </div>
+    </div>
+
+    <canvas id="gameCanvas" width="800" height="450"></canvas>
+    
+    <div class="controls">🕹️ Mover: Flechas / WASD | ⚽ Patear: Espacio</div>
+
+    <div id="gameOverScreen">
+        <h1>Partido Terminado</h1>
+        <button class="btn-finish" onclick="volverAlMenu()">Guardar y Salir</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Datos inyectados desde Python
+        const doc_id = "{{ dt.documento }}";
+        const colorL1 = "{{ dt.color1 }}"; const colorL2 = "{{ dt.color2 }}";
+        const colorV1 = "{{ rival.color1 }}"; const colorV2 = "{{ rival.color2 }}";
+
+        // Estado del Juego
+        let scoreL = 0, scoreV = 0, timeLeft = 60, isGameOver = false;
+
+        // Físicas y Entidades
+        const keys = {};
+        const friction = 0.96;
+
+        // Balón
+        const ball = { x: 400, y: 225, radius: 8, vx: 0, vy: 0, speedLimit: 12 };
+        
+        // Jugador (TÚ)
+        const p1 = { x: 200, y: 225, radius: 15, vx: 0, vy: 0, speed: 0.6, maxSpeed: 4, color: colorL1, outline: colorL2 };
+        
+        // Enemigo (IA)
+        const p2 = { x: 600, y: 225, radius: 15, vx: 0, vy: 0, speed: 0.45, maxSpeed: 3.5, color: colorV1, outline: colorV2 };
+
+        // Porterías
+        const goalH = 120, goalW = 20;
+        const goalY = (canvas.height / 2) - (goalH / 2);
+
+        window.addEventListener("keydown", e => keys[e.key] = true);
+        window.addEventListener("keyup", e => keys[e.key] = false);
+
+        function drawPitch() {
+            // Césped
+            ctx.fillStyle = "#2b7a3e";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Franjas de pasto
+            ctx.fillStyle = "#266d37";
+            for(let i=0; i<canvas.width; i+=80) ctx.fillRect(i, 0, 40, canvas.height);
+            
+            // Líneas blancas
+            ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.lineWidth = 3;
+            // Centro
+            ctx.beginPath(); ctx.moveTo(400, 0); ctx.lineTo(400, 450); ctx.stroke();
+            ctx.beginPath(); ctx.arc(400, 225, 60, 0, Math.PI*2); ctx.stroke();
+            
+            // Áreas
+            ctx.strokeRect(0, goalY - 40, 100, goalH + 80);
+            ctx.strokeRect(700, goalY - 40, 100, goalH + 80);
+
+            // Arcos (Porterías)
+            ctx.fillStyle = "rgba(255,255,255,0.4)";
+            ctx.fillRect(0, goalY, goalW, goalH); // Arco Izquierdo
+            ctx.fillRect(800-goalW, goalY, goalW, goalH); // Arco Derecho
+        }
+
+        function drawEntity(entity, isBall=false) {
+            ctx.beginPath();
+            ctx.arc(entity.x, entity.y, entity.radius, 0, Math.PI * 2);
+            ctx.fillStyle = isBall ? "#ffffff" : entity.color;
+            ctx.fill();
+            if (!isBall) {
+                ctx.strokeStyle = entity.outline;
+                ctx.lineWidth = 4;
+                ctx.stroke();
+            } else {
+                // Detalles del balón
+                ctx.fillStyle = "#000";
+                ctx.beginPath(); ctx.arc(entity.x, entity.y, 3, 0, Math.PI*2); ctx.fill();
+            }
+        }
+
+        function handleCollision(obj1, obj2, isKicking) {
+            let dx = obj1.x - obj2.x;
+            let dy = obj1.y - obj2.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < obj1.radius + obj2.radius) {
+                let angle = Math.atan2(dy, dx);
+                let power = isKicking ? 14 : 4; // Si presiona espacio, patea fuerte
+                
+                obj2.vx -= Math.cos(angle) * power;
+                obj2.vy -= Math.sin(angle) * power;
+            }
+        }
+
+        function update() {
+            if (isGameOver) return;
+
+            // 1. Controles del Jugador
+            if ((keys["ArrowUp"] || keys["w"]) && p1.vy > -p1.maxSpeed) p1.vy -= p1.speed;
+            if ((keys["ArrowDown"] || keys["s"]) && p1.vy < p1.maxSpeed) p1.vy += p1.speed;
+            if ((keys["ArrowLeft"] || keys["a"]) && p1.vx > -p1.maxSpeed) p1.vx -= p1.speed;
+            if ((keys["ArrowRight"] || keys["d"]) && p1.vx < p1.maxSpeed) p1.vx += p1.speed;
+
+            // 2. Inteligencia Artificial (Persigue el balón)
+            let dxAI = ball.x - p2.x;
+            let dyAI = ball.y - p2.y;
+            let angleAI = Math.atan2(dyAI, dxAI);
+            if (p2.vx < p2.maxSpeed && p2.vx > -p2.maxSpeed) p2.vx += Math.cos(angleAI) * p2.speed;
+            if (p2.vy < p2.maxSpeed && p2.vy > -p2.maxSpeed) p2.vy += Math.sin(angleAI) * p2.speed;
+
+            // Aplicar Fricción
+            p1.vx *= friction; p1.vy *= friction;
+            p2.vx *= friction; p2.vy *= friction;
+            ball.vx *= friction; ball.vy *= friction;
+
+            // Actualizar Posiciones
+            p1.x += p1.vx; p1.y += p1.vy;
+            p2.x += p2.vx; p2.y += p2.vy;
+            ball.x += ball.vx; ball.y += ball.vy;
+
+            // Colisiones con paredes
+            [p1, p2, ball].forEach(obj => {
+                if (obj.x - obj.radius < 0) { obj.x = obj.radius; obj.vx *= -1; }
+                if (obj.x + obj.radius > canvas.width) { obj.x = canvas.width - obj.radius; obj.vx *= -1; }
+                if (obj.y - obj.radius < 0) { obj.y = obj.radius; obj.vy *= -1; }
+                if (obj.y + obj.radius > canvas.height) { obj.y = canvas.height - obj.radius; obj.vy *= -1; }
+            });
+
+            // Colisiones Jugador-Balón
+            handleCollision(p1, ball, keys[" "]); // Patea si presiona Espacio
+            handleCollision(p2, ball, false);
+
+            // Sistema de Goles
+            if (ball.x - ball.radius <= goalW && ball.y > goalY && ball.y < goalY + goalH) {
+                scoreV++; document.getElementById("scoreV").innerText = scoreV; resetCancha();
+            }
+            if (ball.x + ball.radius >= canvas.width - goalW && ball.y > goalY && ball.y < goalY + goalH) {
+                scoreL++; document.getElementById("scoreL").innerText = scoreL; resetCancha();
+            }
+        }
+
+        function resetCancha() {
+            ball.x = 400; ball.y = 225; ball.vx = 0; ball.vy = 0;
+            p1.x = 200; p1.y = 225; p1.vx = 0; p1.vy = 0;
+            p2.x = 600; p2.y = 225; p2.vx = 0; p2.vy = 0;
+        }
+
+        function loop() {
+            update();
+            drawPitch();
+            drawEntity(p1);
+            drawEntity(p2);
+            drawEntity(ball, true);
+            if (!isGameOver) requestAnimationFrame(loop);
+        }
+
+        // Reloj del partido
+        const timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById("timerDisplay").innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                isGameOver = true;
+                document.getElementById("gameOverScreen").style.display = "flex";
+            }
+        }, 1000);
+
+        function volverAlMenu() {
+            fetch('/guardar_resultado', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ documento: doc_id, goles_l: scoreL, goles_v: scoreV })
+            }).then(() => window.location.href = "/");
+        }
+
+        loop(); // Iniciar Juego
+    </script>
+</body>
+</html>
