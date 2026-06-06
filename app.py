@@ -5,10 +5,10 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from pymongo import MongoClient
 
 app = Flask(__name__)
-app.secret_key = "fifa_world_cup_2026_arcade"
+app.secret_key = "sena_adso_arcade_cup"
 
 # ==========================================
-# CONEXIÓN A MONGODB ATLAS
+# CONEXIÓN A MONGODB ATLAS (REQUISITO CONTROL EXCEPCIONES)
 # ==========================================
 CADENA_CONEXION = "mongodb+srv://brian_dt:FJG4MLFMR0bo0up2@cluster0.ry2pwjd.mongodb.net/mundial2026_db?retryWrites=true&w=majority&appName=Cluster0"
 MONGO_URI = os.environ.get("MONGO_URI", CADENA_CONEXION)
@@ -18,16 +18,14 @@ def conectar_db():
     client.admin.command('ping')
     return client
 
-# Equipos con sus colores oficiales para renderizar los uniformes en el juego 2D
-EQUIPOS_REALES = [
-    {"nombre": "Argentina", "iso": "ar", "color1": "#74ACDF", "color2": "#FFFFFF"},
-    {"nombre": "Francia", "iso": "fr", "color1": "#002395", "color2": "#FFFFFF"},
-    {"nombre": "Brasil", "iso": "br", "color1": "#FFDF00", "color2": "#009c3b"},
-    {"nombre": "Colombia", "iso": "co", "color1": "#FCD116", "color2": "#003893"},
-    {"nombre": "España", "iso": "es", "color1": "#C60B1E", "color2": "#FFC400"},
-    {"nombre": "Inglaterra", "iso": "gb-eng", "color1": "#FFFFFF", "color2": "#CF081F"},
-    {"nombre": "México", "iso": "mx", "color1": "#006847", "color2": "#FFFFFF"},
-    {"nombre": "Estados Unidos", "iso": "us", "color1": "#FFFFFF", "color2": "#002868"}
+# Programas de formación académica con configuraciones visuales heredadas para el simulador 2D
+PROGRAMAS_REALES = [
+    {"nombre": "Análisis y Desarrollo de Software (ADSO)", "iso": "co", "color1": "#39A900", "color2": "#FFFFFF"}, # Colores Institucionales SENA
+    {"nombre": "Diseño e Integración Multimedia", "iso": "es", "color1": "#C60B1E", "color2": "#FFC400"},
+    {"nombre": "Gestión Administrativa", "iso": "fr", "color1": "#002395", "color2": "#FFFFFF"},
+    {"nombre": "Automatización Industrial", "iso": "br", "color1": "#FFDF00", "color2": "#009c3b"},
+    {"nombre": "Ciberseguridad y Redes", "iso": "us", "color1": "#002868", "color2": "#FFFFFF"},
+    {"nombre": "Animación 3D y Videojuegos", "iso": "ar", "color1": "#74ACDF", "color2": "#FFFFFF"}
 ]
 
 @app.route("/", methods=["GET", "POST"])
@@ -38,75 +36,96 @@ def index():
     try:
         client = conectar_db()
         db = client['mundial2026_db']
-        if db['selecciones'].count_documents({}) == 0:
-            db['selecciones'].insert_many(EQUIPOS_REALES)
-        selecciones_col = db['selecciones']
-        dt_col = db['directores_tecnicos']
+        
+        # Inicializar colección de programas si se encuentra vacía
+        if db['programas'].count_documents({}) == 0:
+            db['programas'].insert_many(PROGRAMAS_REALES)
+            
+        programas_col = db['programas']
+        estudiantes_col = db['estudiantes']
     except Exception as e:
-        return render_template("error.html", titulo_error="Error de Conexión a BD", error_mensaje=str(e))
+        # Requisito SENA: Captura segura y renderizado del pantallazo de error de servidor/BD
+        return render_template("error.html", titulo_error="Error Crítico de Conexión a MongoDB Atlas", error_mensaje=str(e))
 
-    # PROCESAR FORMULARIO (REQUISITO SENA)
+    # PROCESAR FORMULARIO CON VALIDACIONES ROBUSTAS (Punto 1 y 2 del taller)
     if request.method == "POST":
         documento = request.form.get("documento", "").strip()
         nombre = request.form.get("nombre", "").strip()
         correo = request.form.get("correo", "").strip()
-        equipo = request.form.get("equipo", "").strip()
+        programa = request.form.get("programa", "").strip()
         ficha = request.form.get("ficha", "").strip()
 
-        if not all([documento, nombre, correo, equipo, ficha]):
-            mensaje, tipo_mensaje = "⚠️ Todos los campos son obligatorios.", "danger"
+        # Expresión regular estándar para validación sintáctica de emails
+        patron_correo = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+
+        if not all([documento, nombre, correo, programa, ficha]):
+            mensaje, tipo_mensaje = "⚠️ Todos los campos son estrictamente obligatorios.", "danger"
         elif not documento.isdigit():
-            mensaje, tipo_mensaje = "⚠️ El documento debe ser numérico.", "danger"
+            mensaje, tipo_mensaje = "⚠️ El documento de identidad debe constar únicamente de caracteres numéricos.", "danger"
+        elif not re.match(patron_correo, correo):
+            mensaje, tipo_mensaje = "⚠️ El correo electrónico ingresado no posee un formato sintáctico válido.", "danger"
         else:
-            if dt_col.find_one({"documento": documento}):
-                # Si ya existe, lo mandamos directo a jugar
-                return redirect(url_for("jugar", documento=documento))
-            else:
-                info_seleccion = selecciones_col.find_one({"nombre": equipo})
-                nuevo_dt = {
-                    "documento": documento, "nombre": nombre, "correo": correo, 
-                    "equipo": equipo, "iso": info_seleccion["iso"] if info_seleccion else "co",
-                    "color1": info_seleccion["color1"] if info_seleccion else "#fff",
-                    "color2": info_seleccion["color2"] if info_seleccion else "#000",
-                    "ficha": ficha, "partidos_jugados": 0, "puntos": 0, "goles_favor": 0, "goles_contra": 0
-                }
-                dt_col.insert_one(nuevo_dt)
-                return redirect(url_for("jugar", documento=documento))
+            try:
+                if estudiantes_col.find_one({"documento": documento}):
+                    # Si el aprendiz ya existe, redirige directamente a su entorno interactivo
+                    return redirect(url_for("jugar", documento=documento))
+                else:
+                    info_programa = programas_col.find_one({"nombre": programa})
+                    nuevo_estudiante = {
+                        "documento": documento, 
+                        "nombre": nombre, 
+                        "correo": correo, 
+                        "programa": programa, 
+                        "iso": info_programa["iso"] if info_programa else "co",
+                        "color1": info_programa["color1"] if info_programa else "#39A900",
+                        "color2": info_programa["color2"] if info_programa else "#ffffff",
+                        "ficha": ficha, 
+                        "partidos_jugados": 0, 
+                        "puntos": 0, 
+                        "goles_favor": 0, 
+                        "goles_contra": 0
+                    }
+                    estudiantes_col.insert_one(nuevo_estudiante)
+                    return redirect(url_for("jugar", documento=documento))
+            except Exception as e:
+                return render_template("error.html", titulo_error="Excepción en Operación de Persistencia", error_mensaje=str(e))
 
+    # CONSULTAR TODOS LOS ESTUDIANTES REGISTRADOS (Punto 3 del taller)
     try:
-        lista_dts = list(dt_col.find().sort("puntos", -1))
-        lista_paises = list(selecciones_col.find().sort("nombre", 1))
+        lista_estudiantes = list(estudiantes_col.find().sort("puntos", -1))
+        lista_programas = list(programas_col.find().sort("nombre", 1))
     except Exception as e:
-        return render_template("error.html", titulo_error="Error", error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Error en Consulta de Documentos", error_mensaje=str(e))
 
-    return render_template("index.html", dts=lista_dts, selecciones=lista_paises, mensaje=mensaje, tipo_mensaje=tipo_mensaje)
+    return render_template("index.html", estudiantes=lista_estudiantes, programas=lista_programas, mensaje=mensaje, tipo_mensaje=tipo_mensaje)
 
 @app.route("/jugar/<documento>")
 def jugar(documento):
-    """Carga la arena de juego interactiva HTML5"""
+    """Carga la arena interactiva utilizando los datos del estudiante matriculado"""
     try:
         client = conectar_db()
         db = client['mundial2026_db']
-        dt = db['directores_tecnicos'].find_one({"documento": documento})
-        if not dt: return redirect(url_for("index"))
+        estudiante = db['estudiantes'].find_one({"documento": documento})
+        if not estudiante: 
+            return redirect(url_for("index"))
         
-        # Elegir un rival aleatorio que no sea el mismo
-        rival = db['selecciones'].aggregate([{"$match": {"nombre": {"$ne": dt["equipo"]}}}, {"$sample": {"size": 1}}]).next()
+        # Seleccionar una facultad rival aleatoria de la base de datos
+        rival = db['programas'].aggregate([{"$match": {"nombre": {"$ne": estudiante["programa"]}}}, {"$sample": {"size": 1}}]).next()
         
-        return render_template("game.html", dt=dt, rival=rival)
+        return render_template("game.html", estudiante=estudiante, rival=rival)
     except Exception as e:
-        return render_template("error.html", titulo_error="Fallo al cargar el juego", error_mensaje=str(e))
+        return render_template("error.html", titulo_error="Fallo al Inicializar Entorno Lúdico", error_mensaje=str(e))
 
 @app.route("/guardar_resultado", methods=["POST"])
 def guardar_resultado():
-    """Recibe los goles desde el juego en JavaScript y actualiza la BD"""
+    """Actualiza las métricas de desempeño del estudiante tras interactuar con la simulación 2D"""
     data = request.json
     try:
         client = conectar_db()
         db = client['mundial2026_db']
         puntos = 3 if data['goles_l'] > data['goles_v'] else (1 if data['goles_l'] == data['goles_v'] else 0)
         
-        db['directores_tecnicos'].update_one(
+        db['estudiantes'].update_one(
             {"documento": data['documento']},
             {"$inc": {"partidos_jugados": 1, "puntos": puntos, "goles_favor": data['goles_l'], "goles_contra": data['goles_v']}}
         )
