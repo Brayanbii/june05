@@ -3,119 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SENA Core Engine - Panel de Control</title>
+    <title>SENA Core Engine v2.0 - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .sena-header { background-color: #39A900; color: white; padding: 25px; border-bottom: 5px solid #003939; }
-        .card-pro { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background-color: white; }
-        .btn-sena { background-color: #39A900; color: white; border: none; font-weight: bold; }
-        .btn-sena:hover { background-color: #003939; color: white; }
-        .table-theme thead { background-color: #003939; color: white; }
-        .badge-score { background-color: #39A900; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+        :root {
+            --bg-dark: #080c14;
+            --card-bg: rgba(15, 23, 42, 0.65);
+            --sena-green: #39A900;
+            --mongo-green: #00ED64;
+            --mongo-dark: #001E2B;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(57, 169, 0, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: radial-gradient(circle at 10% 20%, rgba(57, 169, 0, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 237, 100, 0.04) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .navbar-brand img {
+            height: 45px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+        }
+
+        .main-header {
+            background: rgba(10, 15, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 15px 0;
+        }
+
+        .card-pro {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-pro:hover {
+            border-color: rgba(0, 237, 100, 0.3);
+            box-shadow: 0 12px 35px rgba(0, 237, 100, 0.08);
+        }
+
+        .form-control, .form-select {
+            background-color: rgba(5, 8, 15, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #f8fafc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #05080f;
+            border-color: var(--sena-green);
+            box-shadow: 0 0 12px var(--border-glow);
+            color: #ffffff;
+        }
+
+        .input-group-text {
+            background-color: rgba(5, 8, 15, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-muted);
+            border-radius: 10px;
+        }
+
+        .btn-sena-pro {
+            background: linear-gradient(135deg, var(--sena-green) 0%, #2d8200 100%);
+            color: white;
+            border: none;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-sena-pro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(57, 169, 0, 0.45);
+            color: white;
+        }
+
+        .metric-badge {
+            background: rgba(57, 169, 0, 0.12);
+            border: 1px solid rgba(57, 169, 0, 0.25);
+            color: #5cee00;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .table-pro {
+            color: #e2e8f0;
+            margin-bottom: 0;
+        }
+
+        .table-pro thead th {
+            background-color: rgba(5, 8, 15, 0.6);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            padding: 16px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .table-pro tbody td {
+            padding: 18px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: transparent;
+        }
+
+        .table-pro tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table-pro tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.02) !important;
+        }
+
+        .progress {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            height: 6px;
+        }
+
+        .progress-bar {
+            border-radius: 6px;
+        }
+
+        .xp-pill {
+            background: linear-gradient(135deg, rgba(0, 237, 100, 0.15) 0%, rgba(0, 237, 100, 0.05) 100%);
+            border: 1px solid rgba(0, 237, 100, 0.3);
+            color: var(--mongo-green);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(0, 237, 100, 0.1);
+        }
     </style>
 </head>
 <body>
 
-    <div class="sena-header text-center shadow-sm">
-        <h1 class="fw-bold">SENA CORE ENGINE</h1>
-        <p class="mb-0 fs-5">Plataforma de Rendimiento de Aprendices y Gestión con MongoDB Atlas</p>
-    </div>
+    <header class="main-header sticky-top shadow-lg">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="navbar-brand d-flex align-items-center gap-3">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg" alt="SENA Logo">
+                <span class="fs-4 fw-extrabold text-white tracking-tight border-start border-2 border-secondary ps-3">CORE ENGINE <span class="text-success" style="font-size: 0.65rem; vertical-align: top; font-weight:800;">v2.0</span></span>
+            </div>
+            <div class="d-flex align-items-center gap-2 bg-dark px-3 py-2 rounded-4 border border-secondary border-opacity-25">
+                <small class="text-muted fw-bold me-2">INFRAESTRUCTURA CLOUD:</small>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" alt="MongoDB Logo" style="height: 22px;">
+            </div>
+        </div>
+    </header>
 
     <div class="container my-5">
         
         {% if mensaje %}
-        <div class="alert alert-{{ tipo_mensaje }} alert-dismissible fade show shadow-sm" role="alert">
-            <strong>Aviso:</strong> {{ mensaje }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert alert-{{ tipo_mensaje }} alert-dismissible fade show border-0 shadow-lg card-pro text-white mb-4" role="alert" style="background: rgba(239, 68, 68, 0.15); border-left: 5px solid #ef4444 !important;">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-danger fs-5"></i>
+                <div><strong>Validación del Sistema:</strong> {{ mensaje }}</div>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endif %}
 
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-uppercase text-muted small fw-bold mb-1">Aprendices en Atlas</p>
+                        <h2 class="fw-black mb-0 text-white">{{ estudiantes|length }}</h2>
+                    </div>
+                    <div class="fs-1 text-success opacity-50"><i class="fa-solid fa-users-gear"></i></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-uppercase text-muted small fw-bold mb-1">Estado del Clúster</p>
+                        <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-circle-check me-2 animate-pulse"></i>100% Operativo</h5>
+                    </div>
+                    <div class="fs-1 text-primary opacity-50"><i class="fa-solid fa-server"></i></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-uppercase text-muted small fw-bold mb-1">Motor de Excepciones</p>
+                        <h5 class="fw-bold mb-0 text-info"><i class="fa-solid fa-shield-halved me-2"></i>Try-Except Activo</h5>
+                    </div>
+                    <div class="fs-1 text-info opacity-50"><i class="fa-solid fa-microchip"></i></div>
+                </div>
+            </div>
+        </div>
+
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="card card-pro p-4">
-                    <h3 class="text-dark fw-bold mb-4 border-bottom pb-2" style="color: #003939 !important;">Registrar Aprendiz</h3>
+                <div class="card-pro p-4 position-relative overflow-hidden">
+                    <div class="absolute-top-right opacity-10" style="position: absolute; right: -20px; top: -20px; font-size: 8rem; color: var(--sena-green); pointer-events: none;">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <h4 class="fw-bold mb-4 d-flex align-items-center gap-2" style="color: #ffffff;">
+                        <i class="fa-solid fa-user-plus text-success fs-5"></i> Registrar Aprendiz
+                    </h4>
                     
                     <form method="POST" action="/registrar">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Documento de Identidad</label>
-                            <input type="text" name="documento" class="form-control" placeholder="Solo números" required autocomplete="off">
+                            <label class="form-label text-muted small fw-bold">Documento de Identidad</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-address-card"></i></span>
+                                <input type="text" name="documento" class="form-control" placeholder="Solo dígitos numéricos" required autocomplete="off">
+                            </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Nombre Completo</label>
-                            <input type="text" name="nombre" class="form-control" placeholder="Ej: Brayan Guerrero" required>
+                            <label class="form-label text-muted small fw-bold">Nombre Completo</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" name="nombre" class="form-control" placeholder="Ej: Brayan Guerrero" required>
+                            </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Correo Electrónico</label>
-                            <input type="email" name="correo" class="form-control" placeholder="Ej: brayan@misena.edu.co" required>
+                            <label class="form-label text-muted small fw-bold">Correo Electrónico Personal/Misena</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" name="correo" class="form-control" placeholder="nombre@dominio.com" required>
+                            </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Programa de Formación</label>
-                            <select name="programa" class="form-select" required>
-                                <option value="" disabled selected>Seleccione un programa...</option>
-                                {% for prog in programas %}
-                                <option value="{{ prog }}">{{ prog }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="form-label text-muted small fw-bold">Programa de Formación Académica</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-graduation-cap"></i></span>
+                                <select name="programa" class="form-select" required>
+                                    <option value="" disabled selected>Seleccione la especialidad...</option>
+                                    {% for prog in programas %}
+                                    <option value="{{ prog }}">{{ prog }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Número de Ficha</label>
-                            <input type="text" name="ficha" class="form-control" placeholder="Ej: 2670142" required>
+                            <label class="form-label text-muted small fw-bold">Número de Ficha</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-hashtag"></i></span>
+                                <input type="text" name="ficha" class="form-control" placeholder="Ej: 2670142" required>
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-sena w-100 py-2.5 mt-3 shadow-sm text-uppercase">Acoplar al Motor</button>
+                        <button type="submit" class="btn btn-sena-pro w-100 mt-3 text-uppercase">
+                            <i class="fa-solid fa-bolt me-2"></i>Sincronizar en Base de Datos
+                        </button>
                     </form>
                 </div>
             </div>
 
             <div class="col-lg-8">
-                <div class="card card-pro p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                        <h3 class="text-dark fw-bold mb-0" style="color: #003939 !important;">Base de Datos de Aprendices</h3>
-                        <span class="badge bg-success px-3 py-2 shadow-sm fs-7">DATABASE ONLINE (ATLAS)</span>
+                <div class="card-pro overflow-hidden">
+                    <div class="p-4 d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25" style="background: rgba(255,255,255,0.01);">
+                        <h4 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-database text-info fs-5"></i> Núcleo de Persistencia Real
+                        </h4>
+                        <span class="badge rounded-pill bg-dark border border-success border-opacity-50 text-success px-3 py-2 fw-bold"><i class="fa-solid fa-cloud me-1"></i> MONGO ATLAS LIVE</span>
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle table-theme">
+                        <table class="table table-pro table-borderless align-middle">
                             <thead>
                                 <tr>
-                                    <th>Documento</th>
-                                    <th>Nombre del Aprendiz</th>
-                                    <th>Información Académica</th>
-                                    <th class="text-center">Métricas (Horas / Comp.)</th>
-                                    <th class="text-center">Score Pro</th>
+                                    <th>Identificación</th>
+                                    <th>Datos del Aprendiz</th>
+                                    <th>Programa / Ficha</th>
+                                    <th>Métricas de Rendimiento</th>
+                                    <th class="text-center">Eficiencia</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% if estudiantes %}
                                     {% for est in estudiantes %}
                                     <tr>
-                                        <td class="fw-bold text-secondary">{{ est.documento }}</td>
+                                        <td class="fw-bold font-monospace" style="color: var(--text-muted);">{{ est.documento }}</td>
                                         <td>
-                                            <div class="fw-bold text-dark">{{ est.nombre }}</div>
-                                            <small class="text-muted">{{ est.correo }}</small>
+                                            <div class="fw-bold text-white fs-6">{{ est.nombre }}</div>
+                                            <div class="text-muted small d-flex align-items-center gap-1 mt-0.5">
+                                                <i class="fa-regular fa-envelope" style="font-size: 0.75rem;"></i>{{ est.correo }}
+                                            </div>
                                         </td>
                                         <td>
-                                            <div class="badge bg-secondary mb-1" style="font-size: 0.75rem;">{{ est.programa }}</div>
-                                            <div><small class="text-dark fw-semibold">Ficha: {{ est.ficha }}</small></div>
+                                            <span class="metric-badge mb-1 d-inline-block">{{ est.programa }}</span>
+                                            <div class="small fw-bold text-white-50"><i class="fa-solid fa-tag me-1 text-muted"></i>Ficha {{ est.ficha }}</div>
+                                        </td>
+                                        <td style="width: 22%;">
+                                            <div class="d-flex justify-content-between text-muted small mb-1 fw-semibold">
+                                                <span>Progreso Etapa:</span>
+                                                <span class="text-white">{{ est.horas_practica }} hrs</span>
+                                            </div>
+                                            <div class="progress mb-1">
+                                                <div class="progress-bar bg-success" style="width: 75%;"></div>
+                                            </div>
+                                            <small class="text-success fw-bold" style="font-size: 0.7rem;"><i class="fa-solid fa-circle-check me-1"></i>{{ est.competencias_ok }} Competencias OK</small>
                                         </td>
                                         <td class="text-center">
-                                            <span class="text-success fw-bold">{{ est.horas_practica }} hrs</span> / 
-                                            <span class="text-primary fw-bold">{{ est.competencias_ok }} OK</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge-score shadow-sm">{{ est.score_rendimiento }} XP</span>
+                                            <span class="xp-pill">{{ est.score_rendimiento }} XP</span>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 {% else %}
                                     <tr>
-                                        <td colspan="5" class="text-center text-muted py-5 fs-5">
-                                            No hay aprendices registrados en el sistema. Utiliza el formulario de la izquierda.
+                                        <td colspan="5" class="text-center text-muted py-5">
+                                            <div class="fs-2 mb-2 opacity-25"><i class="fa-solid fa-folder-open"></i></div>
+                                            <p class="mb-0 fs-5">Cero registros detectados en el Cluster de MongoDB Atlas.</p>
+                                            <small class="text-secondary">Ingresa información en el gestor lateral para crear registros.</small>
                                         </td>
                                     </tr>
                                 {% endif %}
