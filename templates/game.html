@@ -199,7 +199,7 @@
         <div id="screenIntro" class="overlay-screen">
             <h3>FIFA WORLD CUP 2026</h3>
             <p style="color: #7e87a0; font-size: 0.85rem; max-width: 320px; line-height: 1.6; margin-bottom: 25px;">
-                Mecánicas finedignas de **Nokia Soccer League**. Conducción imantada a los pies, radar concéntrico dinámico y sprites con animación cíclica.
+                Mecánicas fidedignas de **Nokia Soccer League**. Conducción imantada a los pies, radar concéntrico dinámico y sprites con animación cíclica.
             </p>
             <div style="font-size: 0.8rem; color: #00ffaa; text-align: left; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 25px;">
                 🕹️ **MOVER JUGADOR**: Flechas / Teclas WASD<br>
@@ -396,8 +396,8 @@
             ball.x += ball.vx; ball.y += ball.vy;
 
             [...equipoHumano, ...equipoIA].forEach(p => {
-                let dCaptura = Math.hypot(p.x - ball.x, p.y - ball.y);
-                if (dCaptura < p.radius + ball.radius + 6) {
+                let dCapture = Math.hypot(p.x - ball.x, p.y - ball.y);
+                if (dCapture < p.radius + ball.radius + 6) {
                     ball.poseedor = p;
                 }
             });
