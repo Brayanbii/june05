@@ -17,7 +17,6 @@ try:
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=3000)
     db = client['sena_core_db']
     collection = db['estudiantes']
-    # Verificación física de conexión
     client.admin.command('ping')
     db_connected = True
     db_error_msg = None
@@ -28,7 +27,6 @@ except Exception as e:
     db_error_msg = str(e)
     print(f">>> [SENA ENGINE] Error de conexión: {e}")
 
-# Listado de programas para el select del formulario
 PROGRAMAS_SENA = [
     "Análisis y Desarrollo de Software (ADSO)",
     "Gestión de Redes de Datos",
@@ -37,14 +35,9 @@ PROGRAMAS_SENA = [
     "Sistemas y Programación"
 ]
 
-# ==========================================
-# ENRUTAMIENTO Y LÓGICA CENTRAL
-# ==========================================
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/registrar', methods=['GET', 'POST'])
 def index():
-    # 4. Control de excepciones: Si la base de datos no responde, muestra el error estilizado
     if not db_connected or collection is None:
         return render_template(
             'error.html', 
@@ -52,7 +45,6 @@ def index():
             error_mensaje=f"Detalles técnicos del fallo:\n\n{db_error_msg}\n\nCONSEJO: Verifica el 'Network Access' en MongoDB Atlas para permitir conexiones desde cualquier IP (0.0.0.0/0)."
         )
 
-    # 1. Procesar el registro cuando el usuario envía el formulario (POST)
     if request.method == 'POST':
         try:
             documento = request.form.get('documento', '').strip()
@@ -61,7 +53,6 @@ def index():
             programa = request.form.get('programa', '').strip()
             ficha = request.form.get('ficha', '').strip()
 
-            # 2. Validar los datos del usuario en el Servidor
             if not all([documento, nombre, correo, programa, ficha]):
                 return render_template('index.html', estudiantes=list(collection.find()), programas=PROGRAMAS_SENA, mensaje="Error: Todos los campos son obligatorios.", tipo_mensaje="danger")
 
@@ -71,50 +62,36 @@ def index():
             if "@" not in correo or "." not in correo:
                 return render_template('index.html', estudiantes=list(collection.find()), programas=PROGRAMAS_SENA, mensaje="Error: Estructura de correo inválida.", tipo_mensaje="danger")
 
-            # Estructura del documento para MongoDB con métricas iniciales simuladas
             nuevo_estudiante = {
                 "documento": documento,
                 "nombre": nombre,
                 "correo": correo,
                 "programa": programa,
                 "ficha": ficha,
-                "horas_practica": 40,       # Horas iniciales de formación
-                "competencias_ok": 2,      # Competencias aprobadas por defecto
-                "score_rendimiento": 100   # XP Académico inicial
+                "horas_practica": 120,      # Simulación pro para la barra de progreso
+                "competencias_ok": 4,      # Simulación pro de competencias
+                "score_rendimiento": 95    # XP de eficiencia inicial
             }
 
-            # Guardar en Mongo Atlas
             collection.insert_one(nuevo_estudiante)
             return redirect(url_for('success'))
 
         except Exception as e:
-            return render_template(
-                'error.html', 
-                titulo_error="Excepción en Proceso de Registro", 
-                error_mensaje=str(e)
-            )
+            return render_template('error.html', titulo_error="Excepción en Proceso de Registro", error_mensaje=str(e))
 
-    # 3. Consultar todos los estudiantes registrados (GET)
     try:
         lista_estudiantes = list(collection.find())
         return render_template('index.html', estudiantes=lista_estudiantes, programas=PROGRAMAS_SENA)
     except PyMongoError as e:
-        return render_template(
-            'error.html', 
-            titulo_error="Error de Consulta de Datos", 
-            error_mensaje=str(e)
-        )
-
+        return render_template('error.html', titulo_error="Error de Consulta de Datos", error_mensaje=str(e))
 
 @app.route('/success')
 def success():
     return render_template('success.html')
 
-
 @app.route('/error')
 def error():
     return render_template('error.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
