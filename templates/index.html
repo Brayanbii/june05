@@ -4,159 +4,168 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SENA Core Engine v2.0 - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
         :root {
-            --bg-dark: #080c14;
-            --card-bg: rgba(15, 23, 42, 0.65);
+            --bg-main: #0b0f17;
+            --panel-bg: #111827;
+            --input-bg: #1f2937;
             --sena-green: #39A900;
             --mongo-green: #00ED64;
-            --mongo-dark: #001E2B;
+            --text-bright: #ffffff;
+            --text-labels: #e2e8f0;
             --text-muted: #94a3b8;
-            --border-glow: rgba(57, 169, 0, 0.15);
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: #f8fafc;
+            background-color: var(--bg-main);
+            color: var(--text-bright);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-image: radial-gradient(circle at 10% 20%, rgba(57, 169, 0, 0.05) 0%, transparent 40%),
-                              radial-gradient(circle at 90% 80%, rgba(0, 237, 100, 0.04) 0%, transparent 40%);
-            background-attachment: fixed;
-        }
-
-        .navbar-brand img {
-            height: 45px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+            background-image: radial-gradient(circle at 50% 0%, rgba(57, 169, 0, 0.08) 0%, transparent 50%);
+            min-height: 100vh;
         }
 
         .main-header {
-            background: rgba(10, 15, 26, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 15px 0;
+            background-color: #090d14;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            padding: 18px 0;
         }
 
         .card-pro {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
 
-        .card-pro:hover {
-            border-color: rgba(0, 237, 100, 0.3);
-            box-shadow: 0 12px 35px rgba(0, 237, 100, 0.08);
+        /* --- MEJORA CRÍTICA DE CONTRASTE EN FORMULARIOS --- */
+        .form-label-custom {
+            color: var(--text-labels) !important;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
         }
 
         .form-control, .form-select {
-            background-color: rgba(5, 8, 15, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #f8fafc;
+            background-color: var(--input-bg) !important;
+            border: 2px solid rgba(255, 255, 255, 0.15) !important;
+            color: var(--text-bright) !important;
             border-radius: 10px;
             padding: 12px 16px;
+            font-size: 0.95rem;
+            font-weight: 500;
             transition: all 0.2s ease;
+        }
+
+        /* Estilo explícito para textos de ayuda y marcadores de posición */
+        .form-control::placeholder {
+            color: #cbd5e1 !important;
+            opacity: 1;
+        }
+
+        .form-select option {
+            background-color: var(--panel-bg);
+            color: var(--text-bright);
         }
 
         .form-control:focus, .form-select:focus {
-            background-color: #05080f;
-            border-color: var(--sena-green);
-            box-shadow: 0 0 12px var(--border-glow);
-            color: #ffffff;
+            border-color: var(--mongo-green) !important;
+            box-shadow: 0 0 0 4px rgba(0, 237, 100, 0.2) !important;
+            outline: none;
         }
 
-        .input-group-text {
-            background-color: rgba(5, 8, 15, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+        .input-group-text-custom {
+            background-color: #111827;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-right: none;
             color: var(--text-muted);
-            border-radius: 10px;
+            border-radius: 10px 0 0 10px;
+            padding-left: 15px;
+            padding-right: 15px;
         }
 
-        .btn-sena-pro {
-            background: linear-gradient(135deg, var(--sena-green) 0%, #2d8200 100%);
-            color: white;
+        .form-control-with-icon {
+            border-radius: 0 10px 10px 0 !important;
+        }
+
+        .btn-sena-action {
+            background: linear-gradient(135deg, var(--sena-green) 0%, #297a00 100%);
+            color: #ffffff;
             border: none;
-            font-weight: 700;
+            font-weight: 800;
+            font-size: 0.95rem;
             letter-spacing: 0.5px;
-            padding: 14px;
+            padding: 15px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(57, 169, 0, 0.3);
             transition: all 0.2s ease;
         }
 
-        .btn-sena-pro:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(57, 169, 0, 0.45);
-            color: white;
+        .btn-sena-action:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(57, 169, 0, 0.45);
+            color: #ffffff;
         }
 
-        .metric-badge {
-            background: rgba(57, 169, 0, 0.12);
-            border: 1px solid rgba(57, 169, 0, 0.25);
-            color: #5cee00;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
+        /* --- MEJORA DE CONTRASTE EN TABLAS --- */
         .table-pro {
-            color: #e2e8f0;
+            color: var(--text-bright);
             margin-bottom: 0;
         }
 
         .table-pro thead th {
-            background-color: rgba(5, 8, 15, 0.6);
-            color: var(--text-muted);
-            font-weight: 600;
+            background-color: #0d131f;
+            color: #cbd5e1 !important;
+            font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
             padding: 16px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
         }
 
         .table-pro tbody td {
-            padding: 18px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             background-color: transparent;
         }
 
-        .table-pro tbody tr {
-            transition: background-color 0.2s ease;
-        }
-
         .table-pro tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.02) !important;
+            background-color: rgba(255, 255, 255, 0.03) !important;
         }
 
-        .progress {
-            background-color: rgba(255, 255, 255, 0.08);
+        .badge-program {
+            background-color: rgba(57, 169, 0, 0.15);
+            border: 1px solid rgba(57, 169, 0, 0.4);
+            color: #79f236;
+            font-weight: 600;
+            padding: 5px 10px;
             border-radius: 6px;
-            height: 6px;
+            font-size: 0.75rem;
         }
 
-        .progress-bar {
-            border-radius: 6px;
-        }
-
-        .xp-pill {
-            background: linear-gradient(135deg, rgba(0, 237, 100, 0.15) 0%, rgba(0, 237, 100, 0.05) 100%);
-            border: 1px solid rgba(0, 237, 100, 0.3);
+        .xp-container {
+            background: #001e2b;
+            border: 1px solid var(--mongo-green);
             color: var(--mongo-green);
             padding: 6px 14px;
-            border-radius: 30px;
+            border-radius: 20px;
             font-weight: 700;
             font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 10px rgba(0, 237, 100, 0.1);
+            display: inline-block;
+        }
+
+        .progress-custom {
+            background-color: rgba(255, 255, 255, 0.12);
+            height: 8px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -164,13 +173,16 @@
 
     <header class="main-header sticky-top shadow-lg">
         <div class="container d-flex justify-content-between align-items-center">
-            <div class="navbar-brand d-flex align-items-center gap-3">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg" alt="SENA Logo">
-                <span class="fs-4 fw-extrabold text-white tracking-tight border-start border-2 border-secondary ps-3">CORE ENGINE <span class="text-success" style="font-size: 0.65rem; vertical-align: top; font-weight:800;">v2.0</span></span>
+            <div class="d-flex align-items-center gap-3">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/SENA_logo.svg" alt="SENA Logo" style="height: 48px; filter: drop-shadow(0 0 4px rgba(255,255,255,0.1));">
+                <div class="border-start border-secondary border-2 ps-3">
+                    <span class="fs-4 fw-bold tracking-tight text-white d-block" style="font-family: sans-serif; letter-spacing: 0.5px;">CORE ENGINE v2.0</span>
+                    <small class="text-success fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">SISTEMA DE CONTROL ACADÉMICO</small>
+                </div>
             </div>
-            <div class="d-flex align-items-center gap-2 bg-dark px-3 py-2 rounded-4 border border-secondary border-opacity-25">
-                <small class="text-muted fw-bold me-2">INFRAESTRUCTURA CLOUD:</small>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" alt="MongoDB Logo" style="height: 22px;">
+            <div class="d-flex align-items-center gap-2 bg-black bg-opacity-40 px-3 py-2 rounded-3 border border-secondary border-opacity-50">
+                <small class="text-white-50 fw-bold me-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">INFRAESTRUCTURA CLOUD:</small>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" alt="MongoDB Logo" style="height: 24px;">
             </div>
         </div>
     </header>
@@ -178,10 +190,10 @@
     <div class="container my-5">
         
         {% if mensaje %}
-        <div class="alert alert-{{ tipo_mensaje }} alert-dismissible fade show border-0 shadow-lg card-pro text-white mb-4" role="alert" style="background: rgba(239, 68, 68, 0.15); border-left: 5px solid #ef4444 !important;">
+        <div class="alert alert-{{ tipo_mensaje }} alert-dismissible fade show border-0 shadow card-pro text-white mb-4" role="alert" style="background: rgba(220, 38, 38, 0.2); border-left: 5px solid #dc2626 !important;">
             <div class="d-flex align-items-center gap-2">
-                <i class="fa-solid fa-triangle-exclamation text-danger fs-5"></i>
-                <div><strong>Validación del Sistema:</strong> {{ mensaje }}</div>
+                <i class="fa-solid fa-circle-exclamation text-danger fs-5"></i>
+                <div class="fw-semibold">Atención: {{ mensaje }}</div>
             </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -189,92 +201,89 @@
 
         <div class="row g-4 mb-5">
             <div class="col-md-4">
-                <div class="card-pro p-4 d-flex align-items-center justify-content-between">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid var(--sena-green);">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1">Aprendices en Atlas</p>
-                        <h2 class="fw-black mb-0 text-white">{{ estudiantes|length }}</h2>
+                        <p class="text-uppercase text-muted small fw-bold mb-1" style="letter-spacing: 0.5px;">Aprendices Registrados</p>
+                        <h2 class="fw-bold mb-0 text-white font-monospace">{{ estudiantes|length }}</h2>
                     </div>
-                    <div class="fs-1 text-success opacity-50"><i class="fa-solid fa-users-gear"></i></div>
+                    <div class="fs-2 text-success opacity-75"><i class="fa-solid fa-users"></i></div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card-pro p-4 d-flex align-items-center justify-content-between">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid var(--mongo-green);">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1">Estado del Clúster</p>
-                        <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-circle-check me-2 animate-pulse"></i>100% Operativo</h5>
+                        <p class="text-uppercase text-muted small fw-bold mb-1" style="letter-spacing: 0.5px;">Persistencia Cloud</p>
+                        <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-circle-check me-2"></i>Cluster0 Online</h5>
                     </div>
-                    <div class="fs-1 text-primary opacity-50"><i class="fa-solid fa-server"></i></div>
+                    <div class="fs-2 text-success opacity-75"><i class="fa-solid fa-cloud-bolt"></i></div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card-pro p-4 d-flex align-items-center justify-content-between">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid #00d2ff;">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1">Motor de Excepciones</p>
+                        <p class="text-uppercase text-muted small fw-bold mb-1" style="letter-spacing: 0.5px;">Seguridad del Sistema</p>
                         <h5 class="fw-bold mb-0 text-info"><i class="fa-solid fa-shield-halved me-2"></i>Try-Except Activo</h5>
                     </div>
-                    <div class="fs-1 text-info opacity-50"><i class="fa-solid fa-microchip"></i></div>
+                    <div class="fs-2 text-info opacity-75"><i class="fa-solid fa-microchip"></i></div>
                 </div>
             </div>
         </div>
 
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="card-pro p-4 position-relative overflow-hidden">
-                    <div class="absolute-top-right opacity-10" style="position: absolute; right: -20px; top: -20px; font-size: 8rem; color: var(--sena-green); pointer-events: none;">
-                        <i class="fa-solid fa-id-card"></i>
-                    </div>
-                    <h4 class="fw-bold mb-4 d-flex align-items-center gap-2" style="color: #ffffff;">
-                        <i class="fa-solid fa-user-plus text-success fs-5"></i> Registrar Aprendiz
+                <div class="card-pro p-4">
+                    <h4 class="fw-bold mb-4 text-white d-flex align-items-center gap-2 border-bottom border-secondary pb-2">
+                        <i class="fa-solid fa-user-plus text-success"></i> Formulario de Alta
                     </h4>
                     
                     <form method="POST" action="/registrar">
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Documento de Identidad</label>
+                            <label class="form-label-custom">Documento de Identidad</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fa-solid fa-address-card"></i></span>
-                                <input type="text" name="documento" class="form-control" placeholder="Solo dígitos numéricos" required autocomplete="off">
+                                <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-address-card"></i></span>
+                                <input type="text" name="documento" class="form-control form-control-with-icon" placeholder="Ej: 1015393194" required autocomplete="off">
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Nombre Completo</label>
+                            <label class="form-label-custom">Nombre Completo</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                                <input type="text" name="nombre" class="form-control" placeholder="Ej: Brayan Guerrero" required>
+                                <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" name="nombre" class="form-control form-control-with-icon" placeholder="Ej: Brayan Bareño" required>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Correo Electrónico Personal/Misena</label>
+                            <label class="form-label-custom">Correo Electrónico</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
-                                <input type="email" name="correo" class="form-control" placeholder="nombre@dominio.com" required>
+                                <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" name="correo" class="form-control form-control-with-icon" placeholder="Ej: tu_correo@misena.edu.co" required>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Programa de Formación Académica</label>
+                            <label class="form-label-custom">Programa de Formación</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fa-solid fa-graduation-cap"></i></span>
-                                <select name="programa" class="form-select" required>
-                                    <option value="" disabled selected>Seleccione la especialidad...</option>
+                                <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-graduation-cap"></i></span>
+                                <select name="programa" class="form-select form-control-with-icon" required>
+                                    <option value="" disabled selected style="color: #cbd5e1;">Seleccione una especialidad...</option>
                                     {% for prog in programas %}
-                                    <option value="{{ prog }}">{{ prog }}</option>
+                                    <option value="{{ prog.nombre }}">{{ prog.nombre }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Número de Ficha</label>
+                            <label class="form-label-custom">Ficha Académica</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fa-solid fa-hashtag"></i></span>
-                                <input type="text" name="ficha" class="form-control" placeholder="Ej: 2670142" required>
+                                <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-hashtag"></i></span>
+                                <input type="text" name="ficha" class="form-control form-control-with-icon" placeholder="Ej: 3065826" required>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-sena-pro w-100 mt-3 text-uppercase">
-                            <i class="fa-solid fa-bolt me-2"></i>Sincronizar en Base de Datos
+                        <button type="submit" class="btn btn-sena-action w-100 mt-3 text-uppercase">
+                            <i class="fa-solid fa-database me-2"></i>Sincronizar en Base de Datos
                         </button>
                     </form>
                 </div>
@@ -282,21 +291,21 @@
 
             <div class="col-lg-8">
                 <div class="card-pro overflow-hidden">
-                    <div class="p-4 d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25" style="background: rgba(255,255,255,0.01);">
-                        <h4 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                            <i class="fa-solid fa-database text-info fs-5"></i> Núcleo de Persistencia Real
+                    <div class="p-4 d-flex justify-content-between align-items-center border-bottom border-secondary" style="background-color: #0d131f;">
+                        <h4 class="fw-bold mb-0 text-white d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-table-list text-info"></i> Registros de Aprendices
                         </h4>
-                        <span class="badge rounded-pill bg-dark border border-success border-opacity-50 text-success px-3 py-2 fw-bold"><i class="fa-solid fa-cloud me-1"></i> MONGO ATLAS LIVE</span>
+                        <span class="badge rounded-pill bg-black border border-success text-success px-3 py-2 fw-bold font-monospace" style="font-size: 0.75rem;"><i class="fa-solid fa-server me-1"></i> ATLAS DIRECT</span>
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-pro table-borderless align-middle">
+                        <table class="table table-pro align-middle">
                             <thead>
                                 <tr>
                                     <th>Identificación</th>
-                                    <th>Datos del Aprendiz</th>
-                                    <th>Programa / Ficha</th>
-                                    <th>Métricas de Rendimiento</th>
+                                    <th>Aprendiz</th>
+                                    <th>Eje Académico</th>
+                                    <th>Métricas de Avance</th>
                                     <th class="text-center">Eficiencia</th>
                                 </tr>
                             </thead>
@@ -304,38 +313,36 @@
                                 {% if estudiantes %}
                                     {% for est in estudiantes %}
                                     <tr>
-                                        <td class="fw-bold font-monospace" style="color: var(--text-muted);">{{ est.documento }}</td>
+                                        <td class="fw-bold font-monospace text-white-50">{{ est.documento }}</td>
                                         <td>
                                             <div class="fw-bold text-white fs-6">{{ est.nombre }}</div>
-                                            <div class="text-muted small d-flex align-items-center gap-1 mt-0.5">
-                                                <i class="fa-regular fa-envelope" style="font-size: 0.75rem;"></i>{{ est.correo }}
-                                            </div>
+                                            <small class="text-muted d-block mt-0.5"><i class="fa-regular fa-envelope me-1"></i>{{ est.correo }}</small>
                                         </td>
                                         <td>
-                                            <span class="metric-badge mb-1 d-inline-block">{{ est.programa }}</span>
-                                            <div class="small fw-bold text-white-50"><i class="fa-solid fa-tag me-1 text-muted"></i>Ficha {{ est.ficha }}</div>
+                                            <span class="badge-program d-inline-block mb-1 shadow-sm">{{ est.programa }}</span>
+                                            <div class="small fw-semibold text-white"><i class="fa-solid fa-tag me-1 text-muted"></i>Ficha: {{ est.ficha }}</div>
                                         </td>
-                                        <td style="width: 22%;">
-                                            <div class="d-flex justify-content-between text-muted small mb-1 fw-semibold">
+                                        <td style="width: 25%;">
+                                            <div class="d-flex justify-content-between text-muted small mb-1 fw-bold">
                                                 <span>Progreso Etapa:</span>
-                                                <span class="text-white">{{ est.horas_practica }} hrs</span>
+                                                <span class="text-white">{{ est.horas_practica|default(120) }} hrs</span>
                                             </div>
-                                            <div class="progress mb-1">
+                                            <div class="progress progress-custom mb-1">
                                                 <div class="progress-bar bg-success" style="width: 75%;"></div>
                                             </div>
-                                            <small class="text-success fw-bold" style="font-size: 0.7rem;"><i class="fa-solid fa-circle-check me-1"></i>{{ est.competencias_ok }} Competencias OK</small>
+                                            <small class="text-success fw-bold" style="font-size: 0.7rem;"><i class="fa-solid fa-square-check me-1"></i>{{ est.competencias_ok|default(4) }} Competencias OK</small>
                                         </td>
                                         <td class="text-center">
-                                            <span class="xp-pill">{{ est.score_rendimiento }} XP</span>
+                                            <span class="xp-container shadow-sm">{{ est.score_rendimiento|default(100) }} XP</span>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 {% else %}
                                     <tr>
                                         <td colspan="5" class="text-center text-muted py-5">
-                                            <div class="fs-2 mb-2 opacity-25"><i class="fa-solid fa-folder-open"></i></div>
-                                            <p class="mb-0 fs-5">Cero registros detectados en el Cluster de MongoDB Atlas.</p>
-                                            <small class="text-secondary">Ingresa información en el gestor lateral para crear registros.</small>
+                                            <div class="fs-2 mb-2 opacity-50"><i class="fa-solid fa-folder-open text-secondary"></i></div>
+                                            <p class="mb-0 fs-5 text-white-50">Cero registros detectados en MongoDB Atlas.</p>
+                                            <small class="text-muted">Utiliza el formulario de acreditación para insertar datos.</small>
                                         </td>
                                     </tr>
                                 {% endif %}
