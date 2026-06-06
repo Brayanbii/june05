@@ -4,151 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SENA Core Engine v2.0 - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
         :root {
-            --bg-main: #0b0f17;
-            --panel-bg: #111827;
-            --input-bg: #1f2937;
+            --bg-main: #06090f;
+            --panel-bg: #0d1117;
+            --input-bg: #161b22;
             --sena-green: #39A900;
             --mongo-green: #00ED64;
             --text-bright: #ffffff;
-            --text-labels: #e2e8f0;
-            --text-muted: #94a3b8;
+            --text-muted: #8b949e;
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-bright);
+            background-color: var(--bg-main) !important;
+            color: var(--text-bright) !important;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-image: radial-gradient(circle at 50% 0%, rgba(57, 169, 0, 0.08) 0%, transparent 50%);
+            background-image: radial-gradient(circle at 50% 0%, rgba(57, 169, 0, 0.1) 0%, transparent 60%);
             min-height: 100vh;
         }
 
         .main-header {
-            background-color: #090d14;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            background-color: #010409;
+            border-bottom: 2px solid #21262d;
             padding: 18px 0;
         }
 
         .card-pro {
-            background-color: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background-color: var(--panel-bg) !important;
+            border: 2px solid #30363d !important;
             border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
+        /* --- ESCUDO DE CONTRASTE Y VISIBILIDAD EN INPUTS --- */
         .form-label-custom {
-            color: var(--text-labels) !important;
-            font-weight: 700;
+            color: #ffffff !important;
+            font-weight: 800;
             font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
             margin-bottom: 8px;
             display: block;
         }
 
         .form-control, .form-select {
             background-color: var(--input-bg) !important;
-            border: 2px solid rgba(255, 255, 255, 0.15) !important;
-            color: var(--text-bright) !important;
+            border: 2px solid #484f58 !important;
+            color: #ffffff !important;
             border-radius: 10px;
             padding: 12px 16px;
-            font-size: 0.95rem;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
         }
 
+        /* Color de los textos de sugerencia (Placeholders) */
         .form-control::placeholder {
-            color: #cbd5e1 !important;
-            opacity: 0.7;
+            color: #8b949e !important;
+            opacity: 1 !important;
         }
 
+        /* Corrección definitiva para las opciones del desplegable (Select) */
         .form-select option {
-            background-color: var(--panel-bg);
-            color: var(--text-bright);
+            background-color: #161b22 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            padding: 12px;
         }
 
+        /* Foco del teclado y mouse */
         .form-control:focus, .form-select:focus {
-            border-color: var(--mongo-green) !important;
-            box-shadow: 0 0 0 4px rgba(0, 237, 100, 0.2) !important;
+            border-color: var(--sena-green) !important;
+            box-shadow: 0 0 0 4px rgba(57, 169, 0, 0.25) !important;
+            color: #ffffff !important;
             outline: none;
         }
 
+        /* SOLUCIÓN AL AUTOCOMPLETADO BLANCO DE CHROME */
+        .form-control:-webkit-autofill,
+        .form-control:-webkit-autofill:hover, 
+        .form-control:-webkit-autofill:focus,
+        .form-select:-webkit-autofill {
+            -webkit-text-fill-color: #ffffff !important;
+            -webkit-box-shadow: 0 0 0px 1000px #161b22 inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
         .input-group-text-custom {
-            background-color: #111827;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            border-right: none;
-            color: var(--text-muted);
+            background-color: #21262d !important;
+            border: 2px solid #484f58 !important;
+            border-right: none !important;
+            color: #ffffff !important;
             border-radius: 10px 0 0 10px;
-            padding-left: 15px;
-            padding-right: 15px;
+            font-size: 1.1rem;
         }
 
         .form-control-with-icon {
             border-radius: 0 10px 10px 0 !important;
         }
 
+        /* --- BOTÓN DE ACCIÓN --- */
         .btn-sena-action {
-            background: linear-gradient(135deg, var(--sena-green) 0%, #297a00 100%);
-            color: #ffffff;
-            border: none;
+            background: linear-gradient(135deg, var(--sena-green) 0%, #297a00 100%) !important;
+            color: #ffffff !important;
+            border: none !important;
             font-weight: 800;
-            font-size: 0.95rem;
+            font-size: 1rem;
             letter-spacing: 0.5px;
             padding: 15px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(57, 169, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(57, 169, 0, 0.4);
+            text-transform: uppercase;
         }
 
         .btn-sena-action:hover {
-            filter: brightness(1.1);
-            color: #ffffff;
+            filter: brightness(1.15);
         }
 
+        /* --- CONTRASTE EN TABLAS --- */
         .table-pro {
-            color: var(--text-bright);
+            color: #ffffff !important;
             margin-bottom: 0;
         }
 
         .table-pro thead th {
-            background-color: #0d131f;
-            color: #cbd5e1 !important;
-            font-weight: 700;
+            background-color: #161b22 !important;
+            color: #f0f6fc !important;
+            font-weight: 800;
             text-transform: uppercase;
             font-size: 0.8rem;
+            letter-spacing: 0.8px;
             padding: 16px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 2px solid #30363d !important;
         }
 
         .table-pro tbody td {
             padding: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #21262d !important;
+            color: #ffffff !important;
+            background-color: transparent !important;
+        }
+
+        .table-pro tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.03) !important;
         }
 
         .badge-program {
-            background-color: rgba(57, 169, 0, 0.15);
-            border: 1px solid rgba(57, 169, 0, 0.4);
-            color: #79f236;
-            font-weight: 600;
-            padding: 5px 10px;
+            background-color: rgba(57, 169, 0, 0.2);
+            border: 1px solid var(--sena-green);
+            color: #5cee00;
+            font-weight: 700;
+            padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.75rem;
         }
 
         .xp-container {
             background: #001e2b;
-            border: 1px solid var(--mongo-green);
+            border: 2px solid var(--mongo-green);
             color: var(--mongo-green);
             padding: 6px 14px;
             border-radius: 20px;
-            font-weight: 700;
+            font-weight: 800;
+            display: inline-block;
         }
 
         .progress-custom {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: #30363d;
             height: 8px;
             border-radius: 4px;
         }
@@ -162,11 +187,11 @@
                 <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/SENA_logo.svg" alt="SENA Logo" style="height: 48px;">
                 <div class="border-start border-secondary border-2 ps-3">
                     <span class="fs-4 fw-bold tracking-tight text-white d-block">CORE ENGINE v2.0</span>
-                    <small class="text-success fw-bold" style="font-size: 0.75rem;">SISTEMA DE CONTROL ACADÉMICO</small>
+                    <small class="text-success fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">SISTEMA DE CONTROL ACADÉMICO</small>
                 </div>
             </div>
-            <div class="d-flex align-items-center gap-2 bg-black bg-opacity-40 px-3 py-2 rounded-3 border border-secondary">
-                <small class="text-white-50 fw-bold me-1" style="font-size: 0.7rem;">INFRAESTRUCTURA CLOUD:</small>
+            <div class="d-flex align-items-center gap-2 bg-black bg-opacity-50 px-3 py-2 rounded-3 border border-secondary">
+                <small class="text-white fw-bold me-1" style="font-size: 0.7rem; color: #8b949e !important;">CLOUD INFRASTRUCTURE:</small>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" alt="MongoDB Logo" style="height: 24px;">
             </div>
         </div>
@@ -174,41 +199,50 @@
 
     <div class="container my-5">
         
+        {% if mensaje %}
+        <div class="alert alert-{{ tipo_mensaje }} alert-dismissible fade show border-0 shadow card-pro text-white mb-4" role="alert" style="background: rgba(220, 38, 38, 0.25); border-left: 5px solid #dc2626 !important;">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation text-danger fs-5"></i>
+                <div class="fw-bold text-white">Atención: {{ mensaje }}</div>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
         <div class="row g-4 mb-5">
             <div class="col-md-4">
-                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid var(--sena-green);">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 5px solid var(--sena-green);">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1">Aprendices Registrados</p>
+                        <p class="text-uppercase small fw-bold mb-1" style="color: var(--text-muted);">Aprendices Totales</p>
                         <h2 class="fw-bold mb-0 text-white font-monospace">{{ estudiantes|length }}</h2>
                     </div>
-                    <div class="fs-2 text-success opacity-75"><i class="fa-solid fa-users"></i></div>
+                    <div class="fs-2 text-success"><i class="fa-solid fa-users"></i></div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid var(--mongo-green);">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 5px solid var(--mongo-green);">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1">Persistencia Cloud</p>
-                        <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-circle-check me-2"></i>Cluster0 Online</h5>
+                        <p class="text-uppercase small fw-bold mb-1" style="color: var(--text-muted);">Base de Datos Remota</p>
+                        <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-circle-check me-2"></i>Atlas Conectado</h5>
                     </div>
-                    <div class="fs-2 text-success opacity-75"><i class="fa-solid fa-cloud-bolt"></i></div>
+                    <div class="fs-2 text-success"><i class="fa-solid fa-cloud-bolt"></i></div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 4px solid #00d2ff;">
+                <div class="card-pro p-4 d-flex align-items-center justify-content-between" style="border-left: 5px solid #00d2ff;">
                     <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-1">Seguridad del Sistema</p>
-                        <h5 class="fw-bold mb-0 text-info"><i class="fa-solid fa-shield-halved me-2"></i>Try-Except Activo</h5>
+                        <p class="text-uppercase small fw-bold mb-1" style="color: var(--text-muted);">Middleware Seguridad</p>
+                        <h5 class="fw-bold mb-0 text-info"><i class="fa-solid fa-shield-halved me-2"></i>Try-Except Listo</h5>
                     </div>
-                    <div class="fs-2 text-info opacity-75"><i class="fa-solid fa-microchip"></i></div>
+                    <div class="fs-2 text-info"><i class="fa-solid fa-microchip"></i></div>
                 </div>
             </div>
         </div>
 
         <div class="row g-4">
-            <!-- FORMULARIO CORREGIDO CON EJEMPLOS ANÓNIMOS -->
             <div class="col-lg-4">
                 <div class="card-pro p-4">
-                    <h4 class="fw-bold mb-4 text-white d-flex align-items-center gap-2 border-bottom border-secondary pb-2">
+                    <h4 class="fw-bold mb-4 text-white d-flex align-items-center gap-2 border-bottom border-secondary pb-3">
                         <i class="fa-solid fa-user-plus text-success"></i> Formulario de Alta
                     </h4>
                     
@@ -217,7 +251,7 @@
                             <label class="form-label-custom">Documento de Identidad</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-address-card"></i></span>
-                                <input type="text" name="documento" class="form-control form-control-with-icon" placeholder="Ej: 1000123456" required autocomplete="off">
+                                <input type="text" name="documento" class="form-control form-control-with-icon" placeholder="Ej: 1000111222" required autocomplete="off">
                             </div>
                         </div>
 
@@ -225,7 +259,7 @@
                             <label class="form-label-custom">Nombre Completo</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-user"></i></span>
-                                <input type="text" name="nombre" class="form-control form-control-with-icon" placeholder="Ej: Juan Pérez" required>
+                                <input type="text" name="nombre" class="form-control form-control-with-icon" placeholder="Ej: Juan Pérez" required autocomplete="off">
                             </div>
                         </div>
 
@@ -233,7 +267,7 @@
                             <label class="form-label-custom">Correo Electrónico</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-envelope"></i></span>
-                                <input type="email" name="correo" class="form-control form-control-with-icon" placeholder="Ej: aprendiz@misena.edu.co" required>
+                                <input type="email" name="correo" class="form-control form-control-with-icon" placeholder="Ej: aprendiz@misena.edu.co" required autocomplete="off">
                             </div>
                         </div>
 
@@ -242,7 +276,7 @@
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-graduation-cap"></i></span>
                                 <select name="programa" class="form-select form-control-with-icon" required>
-                                    <option value="" disabled selected style="color: #cbd5e1;">Seleccione una especialidad...</option>
+                                    <option value="" disabled selected style="color: #8b949e !important;">Seleccione especialidad...</option>
                                     {% for prog in programas %}
                                     <option value="{{ prog }}">{{ prog }}</option>
                                     {% endfor %}
@@ -254,21 +288,20 @@
                             <label class="form-label-custom">Ficha Académica</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-custom"><i class="fa-solid fa-hashtag"></i></span>
-                                <input type="text" name="ficha" class="form-control form-control-with-icon" placeholder="Ej: 2500123" required>
+                                <input type="text" name="ficha" class="form-control form-control-with-icon" placeholder="Ej: 2500123" required autocomplete="off">
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-sena-action w-100 mt-3 text-uppercase">
+                        <button type="submit" class="btn btn-sena-action w-100 mt-3">
                             <i class="fa-solid fa-database me-2"></i>Sincronizar en Base de Datos
                         </button>
                     </form>
                 </div>
             </div>
 
-            <!-- TABLA GENERAL -->
             <div class="col-lg-8">
                 <div class="card-pro overflow-hidden">
-                    <div class="p-4 d-flex justify-content-between align-items-center border-bottom border-secondary" style="background-color: #0d131f;">
+                    <div class="p-4 d-flex justify-content-between align-items-center border-bottom border-secondary" style="background-color: #161b22;">
                         <h4 class="fw-bold mb-0 text-white d-flex align-items-center gap-2">
                             <i class="fa-solid fa-table-list text-info"></i> Registros de Aprendices
                         </h4>
@@ -290,17 +323,17 @@
                                 {% if estudiantes %}
                                     {% for est in estudiantes %}
                                     <tr>
-                                        <td class="fw-bold font-monospace text-white-50">{{ est.documento }}</td>
+                                        <td class="fw-bold font-monospace text-white-50" style="font-size: 0.95rem;">{{ est.documento }}</td>
                                         <td>
                                             <div class="fw-bold text-white fs-6">{{ est.nombre }}</div>
-                                            <small class="text-muted d-block mt-0.5"><i class="fa-regular fa-envelope me-1"></i>{{ est.correo }}</small>
+                                            <small style="color: #8b949e !important;" class="d-block mt-0.5"><i class="fa-regular fa-envelope me-1"></i>{{ est.correo }}</small>
                                         </td>
                                         <td>
                                             <span class="badge-program d-inline-block mb-1 shadow-sm">{{ est.programa }}</span>
-                                            <div class="small fw-semibold text-white"><i class="fa-solid fa-tag me-1 text-muted"></i>Ficha: {{ est.ficha }}</div>
+                                            <div class="small fw-semibold text-white mt-1"><i class="fa-solid fa-tag me-1" style="color: #8b949e;"></i>Ficha: {{ est.ficha }}</div>
                                         </td>
                                         <td style="width: 25%;">
-                                            <div class="d-flex justify-content-between text-muted small mb-1 fw-bold">
+                                            <div class="d-flex justify-content-between small mb-1 fw-bold" style="color: #8b949e;">
                                                 <span>Progreso Etapa:</span>
                                                 <span class="text-white">{{ est.horas_practica|default(120) }} hrs</span>
                                             </div>
