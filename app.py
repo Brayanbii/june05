@@ -20,7 +20,7 @@ def conectar_db():
     return client
 
 def inicializar_torneo_48(db):
-    """Inyecta las 48 selecciones con sus grupos oficiales y paleta de colores para las prendas"""
+    """Inyecta las 48 selecciones con sus grupos oficiales si la colección está vacía"""
     if db['selecciones'].count_documents({}) == 0:
         grupos = {
             "A": [("México", "#006847"), ("Estados Unidos", "#002868"), ("Canadá", "#FF0000"), ("Panamá", "#DA121A")],
@@ -53,7 +53,6 @@ def index():
     mensaje = None
     tipo_mensaje = "success"
     
-    # 4. CONTROL DE EXCEPCIONES DE CONEXIÓN
     try:
         client = conectar_db()
         db = client['mundial2026_db']
@@ -67,7 +66,6 @@ def index():
     except Exception as e:
         return render_template("error.html", titulo_error="Error Interno del Servidor", error_mensaje=str(e))
 
-    # 1. REGISTRO Y 2. VALIDACIÓN DE DATOS (Backend Requerido por el SENA)
     if request.method == "POST":
         documento = request.form.get("documento", "").strip()
         nombre = request.form.get("nombre", "").strip()
@@ -91,13 +89,21 @@ def index():
                     tipo_mensaje = "danger"
                 else:
                     info_seleccion = selecciones_col.find_one({"nombre": equipo})
+                    
+                    # Uso Seguro de .get() para evitar fallos con datos antiguos
+                    grupo_detectado = "A"
+                    color_detectado = "#ffffff"
+                    if info_seleccion:
+                        grupo_detectado = info_seleccion.get("grupo", "A")
+                        color_detectado = info_seleccion.get("color_kit", info_seleccion.get("color_prenda", "#ffffff"))
+
                     nuevo_dt = {
                         "documento": documento,
                         "nombre": nombre,
                         "correo": correo,
                         "equipo": equipo,
-                        "grupo": info_seleccion["grupo"] if info_seleccion else "A",
-                        "color_kit": info_seleccion["color_kit"] if info_seleccion else "#ffffff",
+                        "grupo": grupo_detectado,
+                        "color_kit": color_detectado,
                         "ficha": ficha,
                         "partidos_jugados": 0,
                         "puntos": 0,
@@ -110,7 +116,6 @@ def index():
             except Exception as e:
                 return render_template("error.html", titulo_error="Error al Insertar Registro", error_mensaje=str(e))
 
-    # 3. CONSULTAR TODOS LOS REGISTROS
     try:
         lista_dts = list(dt_col.find().sort("puntos", -1))
         lista_paises = list(selecciones_col.find().sort("nombre", 1))
@@ -122,7 +127,6 @@ def index():
 
 @app.route("/partido/<documento>")
 def preparar_partido(documento):
-    """Genera la transmisión interactiva del partido minuto a minuto"""
     try:
         client = conectar_db()
         db = client['mundial2026_db']
@@ -131,13 +135,10 @@ def preparar_partido(documento):
         if not dt:
             return redirect(url_for("index"))
             
-        # Elegir un rival aleatorio de las 48 selecciones que no sea el mismo equipo
         rival = db['selecciones'].find_one({"nombre": {"$ne": dt["equipo"]}})
         
-        # MOTOR REAL DE SIMULACIÓN DE EVENTOS MINUTO A MINUTO
         goles_local = 0
         goles_visitante = 0
-        minutos_goles = []
         eventos = []
         
         comentarios_posibles = [
@@ -159,7 +160,6 @@ def preparar_partido(documento):
             elif accion == "falta":
                 eventos.append(f"⏱️ Min {minuto}': Tarjeta amarilla por juego peligroso en la mitad del campo.")
 
-        # Calcular puntos conseguidos
         if goles_local > goles_visitante:
             puntos_ganados = 3
             resultado_texto = "VICTORIA 🟢"
@@ -170,7 +170,6 @@ def preparar_partido(documento):
             puntos_ganados = 0
             resultado_texto = "DERROTA 🔴"
 
-        # Guardar resultados actualizados directamente en MongoDB Atlas
         db['directores_tecnicos'].update_one(
             {"documento": documento},
             {"$inc": {
@@ -183,9 +182,9 @@ def preparar_partido(documento):
 
         datos_partido = {
             "local": dt["equipo"],
-            "color_local": dt["color_kit"],
+            "color_local": dt.get("color_kit", "#ffffff"),
             "visitante": rival["nombre"],
-            "color_visitante": rival["color_kit"],
+            "color_visitante": rival.get("color_kit", "#ffffff"),
             "goles_l": goles_local,
             "goles_v": goles_visitante,
             "eventos": eventos,
