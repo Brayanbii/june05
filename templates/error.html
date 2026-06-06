@@ -2,23 +2,91 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Excepción del Sistema Interceptada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interrupción del Sistema - SENA Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0c0202; color: #ff4d4d; font-family: monospace; padding: 40px; display: flex; justify-content: center; }
-        .error-container { max-width: 650px; width: 100%; border: 2px solid #ff4d4d; padding: 30px; background: #000; box-shadow: 0 0 20px rgba(255,0,0,0.3); }
-        .error-log { background: #1c0404; border-left: 5px solid #ff1111; padding: 15px; margin-top: 15px; color: #ffcccc; overflow-x: auto; }
+        body {
+            background-color: #06070a;
+            color: #fff;
+            font-family: 'Courier Prime', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: radial-gradient(circle at center, #1a0a0a 0%, #06070a 100%);
+        }
+        .error-panel {
+            background: #111218;
+            border: 2px solid #ff4d4d;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(255, 77, 77, 0.15), inset 0 0 20px rgba(255, 77, 77, 0.05);
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ff4d4d;
+            font-size: 2.2rem;
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
+        }
+        p {
+            color: #8b8f9e;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .terminal-log {
+            background: #000;
+            color: #00ffaa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 25px 0;
+            border: 1px solid #333;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+        .btn-retry {
+            background: linear-gradient(135deg, #39A900, #247300);
+            color: #fff;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            display: inline-block;
+            text-transform: uppercase;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(57,169,0,0.3);
+        }
+        .btn-retry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(57,169,0,0.5);
+            filter: brightness(1.1);
+        }
     </style>
 </head>
 <body>
-<div class="error-container">
-    <h2>⚠️ EXCEPCIÓN CONTROLADA DETECTADA (TRY - EXCEPT)</h2>
-    <p>El servidor ha capturado de manera segura un fallo inesperado del sistema para prevenir un colapso en producción.</p>
-    <div class="error-log">
-        <strong>Detalle del error presentado al usuario:</strong><br><br>
-        {{ error_mensaje }}
+
+    <div class="error-panel">
+        <h1>⚠️ {{ titulo_error }}</h1>
+        
+        <p>El sistema de control de excepciones (Try-Except) ha interceptado una falla crítica en la ejecución. El servidor se ha protegido para evitar un colapso total.</p>
+        
+        <div class="terminal-log">
+            <span style="color: #ffaa00;">> DIAGNÓSTICO TÉCNICO:</span><br><br>
+            {{ error_mensaje }}
+        </div>
+        
+        <a href="/" class="btn-retry">Reintentar Conexión</a>
     </div>
-    <br>
-    <a href="/" style="color: white; text-decoration: underline;">🔄 Reintentar Acción de Conexión</a>
-</div>
+
 </body>
 </html>
