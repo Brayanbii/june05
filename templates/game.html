@@ -6,177 +6,23 @@
     <title>FIFA 2026 - Ultimate Nokia Soccer Engine</title>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #030407;
-            color: #fff;
-            font-family: 'Courier Prime', monospace;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            user-select: none;
-        }
-
-        .arcade-cabinet {
-            background: linear-gradient(145deg, #141622, #0b0c13);
-            border: 4px solid #282b3d;
-            border-radius: 28px;
-            padding: 25px;
-            box-shadow: 0 35px 80px rgba(0,0,0,0.9), inset 0 2px 5px rgba(255,255,255,0.05);
-            display: flex;
-            gap: 25px;
-        }
-
-        .screen-container {
-            position: relative;
-        }
-
-        .hud-retro {
-            background: #06070a;
-            border: 2px solid #39A900;
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'Orbitron', sans-serif;
-            box-shadow: inset 0 0 10px rgba(57,169,0,0.2);
-        }
-
-        .hud-team {
-            font-size: 0.95rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            max-width: 130px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .hud-score {
-            font-size: 2rem;
-            color: #00ff87;
-            font-weight: 900;
-            text-shadow: 0 0 12px rgba(0,255,135,0.4);
-        }
-
-        canvas {
-            background: #153d1d;
-            border: 4px solid #ffffff;
-            border-radius: 8px;
-            display: block;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
-        }
-
-        .power-bar-container {
-            width: 100%;
-            height: 6px;
-            background: #161925;
-            border-radius: 3px;
-            margin-top: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .power-bar-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #00ff87, #ffcc00, #ff4d4d);
-        }
-
-        .tournament-panel {
-            width: 280px;
-            background: #06070a;
-            border: 2px solid #282b3d;
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-        }
-
-        .tournament-panel h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            color: #dfb857;
-            text-align: center;
-            margin-top: 0;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #282b3d;
-            letter-spacing: 1px;
-        }
-
-        .phase-badge {
-            background: #141829;
-            color: #00ffaa;
-            text-align: center;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            border: 1px solid rgba(0,255,170,0.1);
-        }
-
-        .fixture-item {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.04);
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .overlay-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(4, 5, 9, 0.97);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 30px;
-            box-sizing: border-box;
-            z-index: 10;
-        }
-
-        .overlay-screen h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            color: #dfb857;
-            margin: 0 0 15px 0;
-            text-transform: uppercase;
-        }
-
-        .btn-arcade {
-            background: linear-gradient(135deg, #39A900, #247300);
-            color: #fff;
-            border: none;
-            padding: 14px 35px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-family: 'Orbitron', sans-serif;
-            box-shadow: 0 5px 15px rgba(57,169,0,0.4);
-            transition: 0.2s ease;
-        }
-
-        .btn-arcade:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-            box-shadow: 0 8px 20px rgba(57,169,0,0.6);
-        }
+        body { background-color: #030407; color: #fff; font-family: 'Courier Prime', monospace; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; user-select: none; }
+        .arcade-cabinet { background: linear-gradient(145deg, #141622, #0b0c13); border: 4px solid #282b3d; border-radius: 28px; padding: 25px; box-shadow: 0 35px 80px rgba(0,0,0,0.9), inset 0 2px 5px rgba(255,255,255,0.05); display: flex; gap: 25px; }
+        .screen-container { position: relative; }
+        .hud-retro { background: #06070a; border: 2px solid #39A900; padding: 12px 20px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-family: 'Orbitron', sans-serif; box-shadow: inset 0 0 10px rgba(57,169,0,0.2); }
+        .hud-team { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .hud-score { font-size: 2rem; color: #00ff87; font-weight: 900; text-shadow: 0 0 12px rgba(0,255,135,0.4); }
+        canvas { background: #153d1d; border: 4px solid #ffffff; border-radius: 8px; display: block; box-shadow: 0 15px 40px rgba(0,0,0,0.7); }
+        .power-bar-container { width: 100%; height: 6px; background: #161925; border-radius: 3px; margin-top: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .power-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00ff87, #ffcc00, #ff4d4d); transition: width 0.05s linear; }
+        .tournament-panel { width: 280px; background: #06070a; border: 2px solid #282b3d; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); }
+        .tournament-panel h2 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: #dfb857; text-align: center; margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid #282b3d; letter-spacing: 1px; }
+        .phase-badge { background: #141829; color: #00ffaa; text-align: center; padding: 8px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; border: 1px solid rgba(0,255,170,0.1); }
+        .fixture-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
+        .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 5, 9, 0.97); border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; box-sizing: border-box; z-index: 10; }
+        .overlay-screen h3 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: #dfb857; margin: 0 0 15px 0; text-transform: uppercase; }
+        .btn-arcade { background: linear-gradient(135deg, #39A900, #247300); color: #fff; border: none; padding: 14px 35px; font-size: 0.95rem; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-family: 'Orbitron', sans-serif; box-shadow: 0 5px 15px rgba(57,169,0,0.4); transition: 0.2s ease; }
+        .btn-arcade:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 8px 20px rgba(57,169,0,0.6); }
     </style>
 </head>
 <body>
@@ -199,7 +45,7 @@
         <div id="screenIntro" class="overlay-screen">
             <h3>FIFA WORLD CUP 2026</h3>
             <p style="color: #7e87a0; font-size: 0.85rem; max-width: 320px; line-height: 1.6; margin-bottom: 25px;">
-                Mecánicas fidedignas de **Nokia Soccer League**. Conducción imantada a los pies, radar concéntrico dinámico y sprites con animación cíclica.
+                Motor blindado activo. Sistema Nokia Soccer League con partículas, dribbling magnético y radar dinámico.
             </p>
             <div style="font-size: 0.8rem; color: #00ffaa; text-align: left; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 25px;">
                 🕹️ **MOVER JUGADOR**: Flechas / Teclas WASD<br>
@@ -232,14 +78,18 @@
 
     const documentoDT = "{{ dt.documento }}";
     const miClub = "{{ dt.equipo }}";
-    const miColor1 = "{{ dt.color1 }}"; const miColor2 = "{{ dt.color2 }}";
-    const poolPaises = {{ todas_selecciones|tojson }};
+    // Fallback de colores por si los datos llegan vacíos
+    const miColor1 = "{{ dt.color1 }}" || "#39A900"; 
+    const miColor2 = "{{ dt.color2 }}" || "#ffffff";
+    
+    // Fallback de seguridad: si no hay base de datos, se asume un arreglo vacío
+    let poolPaises = [];
+    try { poolPaises = {{ todas_selecciones|default([])|tojson|safe }}; } catch(e) {}
 
     let fasesCampeonato = ["CUARTOS DE FINAL", "SEMIFINAL", "GRAN FINAL", "CAMPEÓN"];
     let indexFaseActual = 0; let rivalSeleccionado = null; let fixtureData = [];
 
     let partidosContados = 0; let scorePuntos = 0; let golesAFavor = 0; let golesEnContra = 0;
-
     let marcadorL = 0, marcadorV = 0, cronometro = 45;
     let loopGraficos = null, loopTiempo = null;
     let inputsActivos = {}; 
@@ -248,42 +98,32 @@
     const ball = { x: 220, y: 300, radius: 7, vx: 0, vy: 0, poseedor: null };
     let equipoHumano = []; let equipoIA = [];
 
-    let cargandoTiro = false;
-    let potenciaTiro = 0;
-    const MAX_POTENCIA = 16;
+    let cargandoTiro = false; let potenciaTiro = 0; const MAX_POTENCIA = 16;
 
     window.addEventListener("keydown", e => {
-        let k = e.key.toLowerCase();
-        inputsActivos[k] = true;
-        if (k === " " && !cargandoTiro) {
-            cargandoTiro = true;
-            potenciaTiro = 0;
-        }
+        let k = e.key.toLowerCase(); inputsActivos[k] = true;
+        if (k === " " && !cargandoTiro) { cargandoTiro = true; potenciaTiro = 0; }
     });
 
     window.addEventListener("keyup", e => {
-        let k = e.key.toLowerCase();
-        inputsActivos[k] = false;
-        if (k === " ") {
-            ejecutarDisparoCargado();
-            cargandoTiro = false;
-            document.getElementById("powerBarFill").style.width = "0%";
-        }
+        let k = e.key.toLowerCase(); inputsActivos[k] = false;
+        if (k === " ") { ejecutarDisparoCargado(); cargandoTiro = false; document.getElementById("powerBarFill").style.width = "0%"; }
         if (k === "x" || k === "m") ejecutarPaseDireccionado();
     });
 
     function organizarFixtureMundial() {
-        let rivales = poolPaises.filter(p => p.nombre !== miClub);
+        let rivales = (poolPaises && poolPaises.length > 0) ? poolPaises.filter(p => p.nombre !== miClub) : [];
         rivales.sort(() => Math.random() - 0.5);
 
-        rivalSeleccionado = rivales[0];
+        // Sistema Anti-Crash: Si no hay equipos en la BD, inyecta BOTS
+        rivalSeleccionado = rivales.length > 0 ? rivales[0] : { nombre: "BOT ALPHA", color1: "#ff0044", color2: "#ffffff" };
         document.getElementById("nameV").innerText = rivalSeleccionado.nombre.substring(0,12).toUpperCase();
 
         fixtureData = [
             { local: miClub, visitante: rivalSeleccionado.nombre },
-            { local: rivales[1].nombre, visitante: rivales[2].nombre },
-            { local: rivales[3].nombre, visitante: rivales[4].nombre },
-            { local: rivales[5].nombre, visitante: rivales[6].nombre }
+            { local: rivales.length > 1 ? rivales[1].nombre : "BOT BETA", visitante: rivales.length > 2 ? rivales[2].nombre : "BOT GAMMA" },
+            { local: rivales.length > 3 ? rivales[3].nombre : "BOT DELTA", visitante: rivales.length > 4 ? rivales[4].nombre : "BOT EPSILON" },
+            { local: rivales.length > 5 ? rivales[5].nombre : "BOT ZETA", visitante: rivales.length > 6 ? rivales[6].nombre : "BOT OMEGA" }
         ];
         renderizarFixtureWidget();
     }
@@ -300,6 +140,9 @@
     }
 
     function armarEstructuraJugadores() {
+        let rc1 = rivalSeleccionado ? rivalSeleccionado.color1 : "#ff0044";
+        let rc2 = rivalSeleccionado ? rivalSeleccionado.color2 : "#ffffff";
+
         equipoHumano = [
             { id: 0, rol: "POR", x: 220, y: 570, radius: 12, c1: "#ffaa00", c2: "#ffffff", vx: 0, vy: 0, dirX: 0, dirY: -1, animCycle: 0, isMoving: false },
             { id: 1, rol: "DEF", x: 140, y: 440, radius: 11, c1: miColor1, c2: miColor2, vx: 0, vy: 0, dirX: 0, dirY: -1, animCycle: 0, isMoving: false },
@@ -309,9 +152,9 @@
 
         equipoIA = [
             { id: 4, rol: "POR", x: 220, y: 30, radius: 12, c1: "#00d9ff", c2: "#ffffff", vx: 0, vy: 0, dirX: 0, dirY: 1, animCycle: 0, isMoving: false },
-            { id: 5, rol: "DEF", x: 280, y: 160, radius: 11, c1: rivalSeleccionado.color1, c2: rivalSeleccionado.color2, vx: 0, vy: 0, dirX: 0, dirY: 1, animCycle: 0, isMoving: false },
-            { id: 6, rol: "MED", x: 220, y: 240, radius: 11, c1: rivalSeleccionado.color1, c2: rivalSeleccionado.color2, vx: 0, vy: 0, dirX: 0, dirY: 1, animCycle: 0, isMoving: false },
-            { id: 7, rol: "DEL", x: 140, y: 360, radius: 11, c1: rivalSeleccionado.color1, c2: rivalSeleccionado.color2, vx: 0, vy: 0, dirX: 0, dirY: 1, animCycle: 0, isMoving: false }
+            { id: 5, rol: "DEF", x: 280, y: 160, radius: 11, c1: rc1, c2: rc2, vx: 0, vy: 0, dirX: 0, dirY: 1, animCycle: 0, isMoving: false },
+            { id: 6, rol: "MED", x: 220, y: 240, radius: 11, c1: rc1, c2: rc2, vx: 0, vy: 0, dirX: 0, dirY: 1, animCycle: 0, isMoving: false },
+            { id: 7, rol: "DEL", x: 140, y: 360, radius: 11, c1: rc1, c2: rc2, vx: 0, vy: 0, dirX: 0, dirY: 1, animCycle: 0, isMoving: false }
         ];
     }
 
@@ -337,6 +180,7 @@
     }
 
     function detectarCompaneroActivo() {
+        if (!equipoHumano || equipoHumano.length === 0) return null;
         let masCercano = equipoHumano[2];
         let dMin = Infinity;
         equipoHumano.forEach(p => {
@@ -345,11 +189,12 @@
                 if (d < dMin) { dMin = d; masCercano = p; }
             }
         });
-        return masCercano;
+        return masCercano || equipoHumano[1];
     }
 
     function procesarFisicasFrame() {
         let activo = detectarCompaneroActivo();
+        if (!activo) return;
 
         if (cargandoTiro) {
             potenciaTiro = Math.min(MAX_POTENCIA, potenciaTiro + 0.35);
@@ -386,9 +231,7 @@
             rivalesOponentes.forEach(riv => {
                 if (riv.rol !== "POR") {
                     let distRobo = Math.hypot(riv.x - ball.x, riv.y - ball.y);
-                    if (distRobo < riv.radius + ball.radius + 4) {
-                        ball.poseedor = riv;
-                    }
+                    if (distRobo < riv.radius + ball.radius + 4) { ball.poseedor = riv; }
                 }
             });
         } else {
@@ -397,9 +240,7 @@
 
             [...equipoHumano, ...equipoIA].forEach(p => {
                 let dCapture = Math.hypot(p.x - ball.x, p.y - ball.y);
-                if (dCapture < p.radius + ball.radius + 6) {
-                    ball.poseedor = p;
-                }
+                if (dCapture < p.radius + ball.radius + 6) { ball.poseedor = p; }
             });
         }
 
@@ -478,9 +319,7 @@
         });
     }
 
-    function confinarBordesCampo(p) {
-        p.x = Math.max(25, Math.min(415, p.x)); p.y = Math.max(25, Math.min(575, p.y));
-    }
+    function confinarBordesCampo(p) { p.x = Math.max(25, Math.min(415, p.x)); p.y = Math.max(25, Math.min(575, p.y)); }
 
     function renderizarGraficosCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -500,7 +339,7 @@
         let jugadorControlado = detectarCompaneroActivo();
         equipoHumano.forEach(p => {
             renderizarMuñequitoRetroSprite(p);
-            if (p.id === jugadorControlado.id) {
+            if (jugadorControlado && p.id === jugadorControlado.id) {
                 ctx.strokeStyle = "#00ffaa"; ctx.lineWidth = 2;
                 ctx.beginPath(); ctx.arc(p.x, p.y + 2, p.radius + 8, 0, Math.PI*2); ctx.stroke();
             }
@@ -522,27 +361,13 @@
 
         let oscilacionPierna = p.isMoving ? Math.sin(p.animCycle) * 5 : 0;
         ctx.fillStyle = "#222222";
-        ctx.fillRect(-6, 8 + oscilacionPierna, 4, 4);
-        ctx.fillRect(2, 8 - oscilacionPierna, 4, 4);
+        ctx.fillRect(-6, 8 + oscilacionPierna, 4, 4); ctx.fillRect(2, 8 - oscilacionPierna, 4, 4);
 
-        ctx.fillStyle = p.c1;
-        ctx.fillRect(-8, -4, 16, 12);
-
-        ctx.fillStyle = p.c2;
-        ctx.fillRect(-10, -4, 2, 5);
-        ctx.fillRect(8, -4, 2, 5);
-
-        ctx.fillStyle = "#ffcc99";
-        ctx.beginPath(); ctx.arc(0, -9, 5, 0, Math.PI * 2); ctx.fill();
-
-        ctx.fillStyle = (p.id < 4) ? "#4a2f13" : "#111111";
-        ctx.beginPath(); ctx.arc(0, -11, 5, Math.PI, 0); ctx.fill();
-
-        ctx.fillStyle = "rgba(255,255,255,0.75)";
-        ctx.font = "bold 8px monospace";
-        ctx.textAlign = "center";
-        ctx.fillText(p.rol, 0, -16);
-
+        ctx.fillStyle = p.c1; ctx.fillRect(-8, -4, 16, 12);
+        ctx.fillStyle = p.c2; ctx.fillRect(-10, -4, 2, 5); ctx.fillRect(8, -4, 2, 5);
+        ctx.fillStyle = "#ffcc99"; ctx.beginPath(); ctx.arc(0, -9, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = (p.id < 4) ? "#4a2f13" : "#111111"; ctx.beginPath(); ctx.arc(0, -11, 5, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.75)"; ctx.font = "bold 8px monospace"; ctx.textAlign = "center"; ctx.fillText(p.rol, 0, -16);
         ctx.restore();
     }
 
@@ -580,8 +405,8 @@
     }
 
     function emparejarSiguienteRival() {
-        let pool = poolPaises.filter(p => p.nombre !== miClub);
-        rivalSeleccionado = pool[Math.floor(Math.random() * pool.length)];
+        let pool = (poolPaises && poolPaises.length > 0) ? poolPaises.filter(p => p.nombre !== miClub) : [];
+        rivalSeleccionado = pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)] : { nombre: "BOT SENA", color1: "#0000ff", color2: "#ffffff" };
         document.getElementById("nameV").innerText = rivalSeleccionado.nombre.substring(0,12).toUpperCase();
         
         fixtureData.unshift({ local: miClub, visitante: rivalSeleccionado.nombre });
@@ -593,10 +418,7 @@
         fetch('/guardar_resultado', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                documento: documentoDT, partidos_jugados: partidosContados,
-                puntos_acumulados: scorePuntos, goles_favor: golesAFavor, goles_contra: golesEnContra
-            })
+            body: JSON.stringify({ documento: documentoDT, partidos_jugados: partidosContados, puntos_acumulados: scorePuntos, goles_favor: golesAFavor, goles_contra: golesEnContra })
         }).then(() => window.location.href = "/");
     }
 
