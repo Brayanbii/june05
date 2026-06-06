@@ -3,20 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Exitoso</title>
+    <title>SENA Core Engine - Operación Exitosa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .success-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 450px; text-align: center; }
+        body { background-color: #080c14; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .success-card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(16px); border: 1px solid rgba(0, 237, 100, 0.25); border-radius: 24px; max-width: 500px; padding: 40px; box-shadow: 0 15px 40px rgba(0, 237, 100, 0.08); text-align: center; }
+        .icon-wrap { width: 90px; height: 90px; background: rgba(0, 237, 100, 0.12); border: 2px solid var(--mongo-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; color: #00ED64; font-size: 2.5rem; box-shadow: 0 0 25px rgba(0, 237, 100, 0.2); }
+        .btn-back { background: linear-gradient(135deg, #39A900 0%, #2d8200 100%); color: white; font-weight: 700; padding: 12px 35px; border-radius: 12px; border: none; transition: transform 0.2s; text-decoration: none; display: inline-block; }
+        .btn-back:hover { transform: translateY(-2px); color: white; box-shadow: 0 5px 15px rgba(57, 169, 0, 0.4); }
     </style>
 </head>
 <body>
 
-    <div class="success-card text-center shadow">
-        <h1 style="color: #39A900; font-size: 4rem;">✔</h1>
-        <h2 class="fw-bold mb-3" style="color: #003939;">¡Registro Exitoso!</h2>
-        <p class="text-secondary mb-4">El aprendiz ha sido incorporado y validado de manera exitosa en el clúster de MongoDB Atlas.</p>
-        <a href="/" class="btn btn-success px-5 py-2 fw-bold" style="background-color: #39A900; border: none;">Volver al Tablero Principal</a>
+    <div class="success-card shadow-lg mx-3">
+        <div class="icon-wrap">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+        </div>
+        <h2 class="fw-extrabold mb-3 text-white">Escritura Completada</h2>
+        <p class="text-muted fs-6 mb-4">El documento JSON del aprendiz fue procesado, validado e inyectado con éxito dentro del Cluster remoto de <strong>MongoDB Atlas</strong>.</p>
+        <a href="/" class="btn-back text-uppercase"><i class="fa-solid fa-arrow-left me-2"></i>Regresar al Dashboard</a>
     </div>
 
 </body>
