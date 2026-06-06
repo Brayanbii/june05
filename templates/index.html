@@ -3,196 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA World Cup 2026 - Dashboard Pro</title>
+    <title>FIFA World Cup 2026 - Central Dashboard</title>
     <style>
         :root {
-            --bg-dark: #0b0f19;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --gold: #dfb857;
-            --text-white: #f3f4f6;
-            --neon-green: #00ff87;
-            --error-red: #ff4d4d;
+            --fifa-navy: #080f26;
+            --fifa-gold: #dfb857;
+            --card-dark: #121a36;
+            --text-light: #f3f4f6;
+            --success: #00ff87;
+            --danger: #ff4d4d;
         }
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-white);
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--fifa-navy);
+            color: var(--text-light);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
-            padding: 40px 20px;
+            padding: 30px 15px;
         }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .header h1 {
-            font-size: 2.5rem;
+        .wrapper { max-width: 1200px; margin: 0 auto; }
+        .hero { text-align: center; margin-bottom: 40px; }
+        .hero h1 {
+            font-size: 2.8rem;
+            margin: 0;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin: 0;
-            background: linear-gradient(135deg, #fff 30%, var(--gold));
+            background: linear-gradient(135deg, #fff, var(--fifa-gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-        }
-        @media (max-width: 850px) { .grid { grid-template-columns: 1fr; } }
-        .card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
+        .hero p { color: #8fa0dd; margin-top: 5px; font-size: 1.1rem; }
+        .grid-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        @media(max-width: 900px){ .grid-layout { grid-template-columns: 1fr; } }
+        .panel {
+            background: var(--card-dark);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 16px;
             padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        h2 {
-            font-size: 1.25rem;
-            color: var(--gold);
-            text-transform: uppercase;
-            margin-top: 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-        }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.85rem; color: #9ca3af; margin-bottom: 5px; }
+        h2 { color: var(--fifa-gold); text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 2px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+        .form-control { margin-bottom: 18px; }
+        label { display: block; font-size: 0.85rem; color: #a1b0cb; margin-bottom: 6px; text-transform: uppercase; }
         input, select {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            color: white;
-            box-sizing: border-box;
-            font-size: 0.95rem;
+            width: 100%; padding: 12px; background: #0b1126; border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px; color: white; font-size: 1rem; box-sizing: border-box;
         }
-        input:focus, select:focus { border-color: var(--gold); outline: none; }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, var(--gold), #bfa143);
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: opacity 0.2s;
+        input:focus, select:focus { border-color: var(--fifa-gold); outline: none; }
+        .btn-submit {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, var(--fifa-gold), #b3913b);
+            color: #080f26; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem;
+            cursor: pointer; text-transform: uppercase; transition: transform 0.2s;
         }
-        .btn:hover { opacity: 0.9; }
-        .alert {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: 500;
-            text-align: center;
-        }
-        .alert-success { background: rgba(0, 255, 135, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green); }
-        .alert-error { background: rgba(255, 77, 77, 0.15); color: var(--error-red); border: 1px solid var(--error-red); }
+        .btn-submit:hover { transform: translateY(-2px); opacity: 0.95; }
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; border: 1px solid; }
+        .alert-success { background: rgba(0,255,135,0.1); color: var(--success); border-color: var(--success); }
+        .alert-danger { background: rgba(255,77,77,0.1); color: var(--danger); border-color: var(--danger); }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { font-size: 0.85rem; color: #8fa0dd; text-transform: uppercase; }
+        .badge-team { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; color: black; display: inline-block; }
+        .action-link {
+            background: linear-gradient(135deg, var(--success), #00b359); color: #080f26;
+            padding: 8px 14px; border-radius: 6px; text-decoration: none; font-weight: bold;
+            font-size: 0.85rem; text-transform: uppercase; display: inline-block;
         }
-        th, td { padding: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        th { font-size: 0.85rem; color: #9ca3af; text-transform: uppercase; }
-        .btn-action {
-            background: rgba(255,255,255,0.07);
-            color: var(--neon-green);
-            padding: 6px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            border: 1px solid rgba(0, 255, 135, 0.3);
-        }
-        .btn-action:hover { background: rgba(0, 255, 135, 0.1); }
+        .action-link:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>🏆 FIFA World Cup 2026 🏆</h1>
-        <p style="color: #6b7280; margin-top: 5px;">Módulo Avanzado de Gestión de Torneos Académicos</p>
+<div class="wrapper">
+    <div class="hero">
+        <h1>🏆 FIFA WORLD CUP 2026 🏆</h1>
+        <p>Sistema Avanzado de Gestión de Selecciones & Simulador de Partidos</p>
     </div>
 
     {% if mensaje %}
-        <div class="alert alert-{{ 'success' if tipo_mensaje == 'success' else 'error' }}">
-            {{ mensaje }}
-        </div>
+        <div class="alert alert-{{ tipo_mensaje }}">{{ mensaje }}</div>
     {% endif %}
 
-    <div class="grid">
-        <!-- Panel de Registro Obligatorio -->
-        <div class="card">
-            <h2>Inscripción de DT</h2>
+    <div class="grid-layout">
+        <div class="panel">
+            <h2>Acreditación de DT</h2>
             <form method="POST" action="/">
-                <div class="form-group">
-                    <label>Documento de Identidad (ID)</label>
-                    <input type="text" name="documento" required placeholder="Solo caracteres numéricos">
+                <div class="form-control">
+                    <label>Documento de Identidad (ID SENA)</label>
+                    <input type="text" name="documento" required placeholder="Ej: 10234567">
                 </div>
-                <div class="form-group">
-                    <label>Nombre Completo del Mánager</label>
-                    <input type="text" name="nombre" required placeholder="Nombre del estudiante">
+                <div class="form-control">
+                    <label>Nombre Completo del Estudiante</label>
+                    <input type="text" name="nombre" required placeholder="Nombre del director técnico">
                 </div>
-                <div class="form-group">
-                    <label>Correo Institucional</label>
-                    <input type="email" name="correo" required placeholder="usuario@sena.edu.co">
+                <div class="form-group form-control">
+                    <label>Correo Electrónico Institucional</label>
+                    <input type="email" name="correo" required placeholder="brian@sena.edu.co">
                 </div>
-                <div class="form-group">
-                    <label>Asignar Selección (48 Opciones)</label>
+                <div class="form-control">
+                    <label>Selección Asignada (48 Equipos Mundiales)</label>
                     <select name="equipo" required>
-                        <option value="">-- Seleccionar País --</option>
+                        <option value="">-- Elige un País --</option>
                         {% for pais in selecciones %}
                             <option value="{{ pais.nombre }}">{{ pais.nombre }} (Grupo {{ pais.grupo }})</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Ficha del Programa</label>
-                    <input type="text" name="ficha" required placeholder="Código de ficha SENA">
+                <div class="form-control">
+                    <label>Número de Ficha Académica</label>
+                    <input type="text" name="ficha" required placeholder="Ej: 271123">
                 </div>
-                <button type="submit" class="btn">Confirmar Registro</button>
+                <button type="submit" class="btn-submit">Inscribir en la Copa Mundial</button>
             </form>
         </div>
 
-        <!-- Consulta y Simulación en Tiempo Real -->
-        <div class="card">
-            <h2>Mánagers en Competencia</h2>
+        <div class="panel">
+            <h2>Clasificación General del Torneo</h2>
             <div style="overflow-x: auto;">
                 {% if dts %}
                     <table>
                         <thead>
                             <tr>
                                 <th>Director Técnico</th>
-                                <th>Selección / Ficha</th>
-                                <th>Estadísticas Globales</th>
-                                <th>Match Engine</th>
+                                <th>Selección Mandataria</th>
+                                <th>Rendimiento</th>
+                                <th>Gestión Táctica</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for dt in dts %}
                                 <tr>
-                                    <td><strong>{{ dt.nombre }}</strong><br><span style="color: #6b7280; font-size: 0.8rem;">ID: {{ dt.documento }}</span></td>
-                                    <td><span style="color: var(--gold);">{{ dt.equipo }}</span><br><span style="font-size: 0.8rem; color: #9ca3af;">Ficha: {{ dt.ficha }}</span></td>
+                                    <td><strong>{{ dt.nombre }}</strong><br><span style="color:#6b7280; font-size:0.8rem;">Ficha: {{ dt.ficha }}</span></td>
                                     <td>
-                                        ⚽ PJs: {{ dt.partidos_jugados }}<br>
-                                        📈 PTS: {{ dt.puntos }} | GF: {{ dt.goles_favor }}
+                                        <span class="badge-team" style="background-color: {{ dt.color_kit }}; color: {% if dt.color_kit == '#FFFFFF' %}#000{% else %}#FFF{% endif %};">
+                                            {{ dt.equipo }} (G: {{ dt.grupo }})
+                                        </span>
                                     </td>
                                     <td>
-                                        <a href="/simular_fifa/{{ dt.documento }}" class="btn-action">Simular Partido</a>
+                                        <strong>🏆 {{ dt.puntos }} PTS</strong><br>
+                                        <span style="font-size:0.8rem; color:#a1b0cb;">PJs: {{ dt.partidos_jugados }} | GF: {{ dt.goles_favor }} | GC: {{ dt.goles_contra }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="/partido/<%- '{0}'.format(dt.documento) if false else dt.documento %>" class="action-link">🎮 Jugar Partido</a>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 {% else %}
-                    <p style="color: #6b7280; text-align: center; padding: 20px 0;">No se registran directores técnicos en el sistema.</p>
+                    <p style="text-align: center; color: #a1b0cb; padding: 30px 0;">No existen directores técnicos registrados en la base de datos de Atlas.</p>
                 {% endif %}
             </div>
         </div>
