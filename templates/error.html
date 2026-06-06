@@ -3,89 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interrupción del Sistema - SENA Arcade</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <title>SENA Engine - Error del Sistema</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #06070a;
-            color: #fff;
-            font-family: 'Courier Prime', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-image: radial-gradient(circle at center, #1a0a0a 0%, #06070a 100%);
-        }
-        .error-panel {
-            background: #111218;
-            border: 2px solid #ff4d4d;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(255, 77, 77, 0.15), inset 0 0 20px rgba(255, 77, 77, 0.05);
-        }
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            color: #ff4d4d;
-            font-size: 2.2rem;
-            margin-top: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
-        }
-        p {
-            color: #8b8f9e;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-        .terminal-log {
-            background: #000;
-            color: #00ffaa;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: left;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            margin: 25px 0;
-            border: 1px solid #333;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-        }
-        .btn-retry {
-            background: linear-gradient(135deg, #39A900, #247300);
-            color: #fff;
-            text-decoration: none;
-            padding: 14px 30px;
-            border-radius: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            display: inline-block;
-            text-transform: uppercase;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(57,169,0,0.3);
-        }
-        .btn-retry:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(57,169,0,0.5);
-            filter: brightness(1.1);
-        }
+        body { background-color: #1a1a1a; color: #ff3333; font-family: 'Courier New', Courier, monospace; }
+        .error-container { max-width: 750px; margin: 80px auto; background-color: #000; border: 3px solid #ff3333; padding: 30px; box-shadow: 0 0 20px rgba(255, 51, 51, 0.4); border-radius: 8px; }
+        .tech-dump { background-color: #111; border: 1px solid #333; color: #00ff00; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 0.9rem; white-space: pre-wrap; }
     </style>
 </head>
 <body>
 
-    <div class="error-panel">
-        <h1>⚠️ {{ titulo_error }}</h1>
-        
-        <p>El sistema de control de excepciones (Try-Except) ha interceptado una falla crítica en la ejecución. El servidor se ha protegido para evitar un colapso total.</p>
-        
-        <div class="terminal-log">
-            <span style="color: #ffaa00;">> DIAGNÓSTICO TÉCNICO:</span><br><br>
-            {{ error_mensaje }}
+    <div class="container">
+        <div class="error-container shadow-lg">
+            <div class="text-center mb-4">
+                <h1 class="fw-bold tracking-wide">⚠️ CRITICAL EXCEPTION DETECTED ⚠️</h1>
+                <h4 class="text-white mt-2">{{ titulo_error }}</h4>
+            </div>
+            
+            <hr style="border-color: #ff3333;">
+
+            <p class="text-white fs-5">
+                El sistema ha interceptado una interrupción controlada a través del bloque de sentencia <strong>Try – Except</strong> de Python Flask.
+            </p>
+
+            <h5 class="text-uppercase fw-bold text-warning mt-4">Informe de Diagnóstico Técnico (Pantallazo del Servidor):</h5>
+            <pre class="tech-dump shadow-inner">{{ error_mensaje }}</pre>
+
+            <div class="mt-4 text-center">
+                <p class="text-muted small">Estado de la Conexión Física: [OFFLINE / INTERRUPTED]</p>
+                <a href="/" class="btn btn-outline-danger px-5 mt-2 fw-bold text-uppercase">Forzar Reinicio del Motor Core</a>
+            </div>
         </div>
-        
-        <a href="/" class="btn-retry">Reintentar Conexión</a>
     </div>
 
 </body>
